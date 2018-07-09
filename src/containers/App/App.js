@@ -7,7 +7,9 @@ import Breadcrumb from '../../components/Breadcrumb/';
 import Aside from '../../components/Aside/';
 import Footer from '../../components/Footer/';
 import Dashboard from '../../views/Dashboard/';
+import Events from '../../views/Events/';
 import Abc from '../../views/abc/';
+
 class App extends Component {
   render() {
     return (
@@ -21,6 +23,7 @@ class App extends Component {
               <Switch>
                 <Route path="/dashboard" exact component={Dashboard} />
                 <Route path="/abc" component={Abc} />
+                <Route path="/events" component={Events} />
                 <Redirect from="/" to="/dashboard" />
                 <Redirect to="/" />
               </Switch>
