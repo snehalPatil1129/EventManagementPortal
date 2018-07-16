@@ -8,6 +8,7 @@ import CardLayout from '../../components/CardLayout/';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import _ from 'lodash';
+
 class Registration extends Component {
     constructor(props) {
         super(props);

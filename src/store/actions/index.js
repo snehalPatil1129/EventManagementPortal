@@ -1,4 +1,9 @@
 export {
+    loginUser,
+    logoutUser
+} from './auth';
+
+export {
     getEvents
 } from './event';
 

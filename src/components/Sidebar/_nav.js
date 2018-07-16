@@ -23,7 +23,17 @@ export default {
     {
       name: 'Attendee List',
       url: '/registrationList',
-      icon: 'icon-users'
+      icon: 'icon-user'
+    },
+    {
+      name: 'Question Forms',
+      url: '/questionForms',
+      icon: 'icon-question'
+    },
+    {
+      name: 'Logout',
+      url: '/logout',
+      icon: 'icon-question'
     }
   ]
 };
