@@ -13,10 +13,10 @@ import { connect } from 'react-redux';
 let routes;
 class App extends Component {
   componentWillMount () {
-      
+       
   }
   render() {
-    if(this.props.email !== "") {
+    //if(this.props.email !== "") {
       routes = (
        <Layout>
          <Switch>
@@ -32,16 +32,16 @@ class App extends Component {
          </Switch>
        </Layout>
      );
-   }
-   else {
-      routes = (
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Redirect from="/" to="/login" />
-          <Redirect to="/" />
-        </Switch>
-     )
-   }
+ //  }
+  //  else {
+  //     routes = (
+  //       <Switch>
+  //         <Route path="/login" component={Login} />
+  //         <Redirect from="/" to="/login" />
+  //         <Redirect to="/" />
+  //       </Switch>
+  //    )
+  //  }
     return (
       <div>
         {routes}

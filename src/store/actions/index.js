@@ -20,3 +20,7 @@ export {
     storeAttendeeData,
     deleteAttendee
 } from './registration';
+
+export {
+   getSessionsOfEvent
+} from './questionForms';

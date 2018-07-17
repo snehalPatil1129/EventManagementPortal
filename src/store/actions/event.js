@@ -15,6 +15,12 @@ export const getEvents = () => {
         axios.get('http://localhost:3000/api/event')
             .then((response) => {
                 console.log(response.data);
+                let event = response.data;
+                event.forEach((eventObj)=>{
+                    eventList.push({label : eventObj.eventName , value : eventObj._id});
+                    eventData.push({eventObj});
+                })
+                dispatch(storeEvents(eventList, eventData));
             })
             .catch((error) => {
                 console.log("errror");
