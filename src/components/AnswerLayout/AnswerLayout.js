@@ -25,7 +25,7 @@ const AnswerLayout = (props) => {
     else if (props.inputType === 'Check Box') {
         return (
             <FormGroup row>
-                <Col xs="12" md="8">
+                <Col xs="12" md="9">
                     {
                         props.options.map((opt, id) => {
                             return (

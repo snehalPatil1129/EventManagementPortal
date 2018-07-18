@@ -4,7 +4,10 @@ export {
 } from './auth';
 
 export {
-    getEvents
+    getEvents,
+    createEvent,
+    updateEvent,
+    deleteEvent
 } from './event';
 
 export {
@@ -22,5 +25,8 @@ export {
 } from './registration';
 
 export {
-   getSessionsOfEvent
+   getSessionsOfEvent,
+   createForm,
+   getForms,
+   storeCurrentForm
 } from './questionForms';

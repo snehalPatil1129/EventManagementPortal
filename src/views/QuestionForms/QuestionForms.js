@@ -13,36 +13,57 @@ class QuestionForms extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventValue: "",
-      sessionValue: "",
-      formValue: "",
-      Questions: []
+      event: "", session: "", formType: "", formData: []
     }
   }
+
   componentWillMount() {
     this.props.getEvents();
   }
+  componentDidMount() {
+    if (this.props.currentFormData.length !== 0) {
+      let form = this.props.currentFormData;
+      if (form.formType === 'Home Questions') {
+        this.setState({
+          event: form.event._id,
+          formType: form.formType,
+          formData: form.formData
+        });
+      }
+      else {
+        this.setState({
+          // event: form.event._id,
+          // session: form.session._id,
+          formType: form.formType,
+          formData: form.formData
+        });
+      }
+    }
+  }
   handleEventSelectChange(value) {
-    let eventValue = value;
+    let event = value;
     this.setState({
-      eventValue: eventValue
+      event: event
     });
     this.props.getSessions(value);
   }
+
   handleSessionSelectChange(value) {
-    let sessionValue = value;
+    let session = value;
     this.setState({
-      sessionValue: sessionValue
+      session: session
     });
   }
+
   handleFormSelectChange(value) {
-    let formValue = value;
+    let formType = value;
     this.setState({
-      formValue: formValue
+      formType: formType
     });
   }
+
   onDisplayNewQuestion() {
-    QuesLayout = this.state.Questions.map((que, id) => {
+    QuesLayout = this.state.formData.map((que, id) => {
       return (
         <div>
           <QuestionLayout
@@ -59,14 +80,16 @@ class QuestionForms extends Component {
     });
     return QuesLayout;
   }
+
   onAddQuestion() {
     let newQuestion = { question: "", inputType: "", options: [{ value: "" }] };
-    let Question = [...this.state.Questions];
+    let Question = [...this.state.formData];
     Question.push(newQuestion);
     this.setState({
-      Questions: Question
+      formData: Question
     });
   }
+
   displayAnswerField(que, id) {
     return (
       <AnswerLayout
@@ -79,38 +102,41 @@ class QuestionForms extends Component {
       />
     );
   }
+
   onChangeOptionValue(event, id) {
-    let questionArray = [...this.state.Questions];
+    let questionArray = [...this.state.formData];
     let optionsValue = questionArray[id].options;
     optionsValue[parseInt(event.target.name)].value = event.target.value;
     questionArray[id].options = optionsValue;
     this.setState({
-      Questions: questionArray
+      formData: questionArray
     });
   }
+
   onAddOption(id) {
-    let questionArray = [...this.state.Questions];
+    let questionArray = [...this.state.formData];
     let option = { value: "" };
     let optionArray = questionArray[id].options;
     optionArray.push(option);
     questionArray[id].options = optionArray;
     this.setState({
-      Questions: questionArray
+      formData: questionArray
     });
   }
+
   onDeleteOption(id) {
-    let questionArray = [...this.state.Questions];
+    let questionArray = [...this.state.formData];
     let optionArray = questionArray[id].options;
     let length = optionArray.length - 1;
     optionArray.splice(length, 1);;
     questionArray[id].options = optionArray;
     this.setState({
-      Questions: questionArray
+      formData: questionArray
     });
   }
 
   onSelectChange(id, event) {
-    let questionArray = [...this.state.Questions];
+    let questionArray = [...this.state.formData];
     if (event !== null) {
       questionArray[id].inputType = event.value;
       questionArray[id].options = [{ value: "" }];
@@ -119,25 +145,43 @@ class QuestionForms extends Component {
       questionArray[id].options = [{ value: "" }];
     }
     this.setState({
-      Questions: questionArray
+      formData: questionArray
     });
   }
+
   onInputQuestion(event) {
-    let questionArray = [...this.state.Questions];
+    let questionArray = [...this.state.formData];
     questionArray[parseInt(event.target.name)].question = event.target.value;
     this.setState({
-      Questions: questionArray
+      formData: questionArray
     });
   }
+
   onDeleteQuestion(id) {
-    let questionArray = [...this.state.Questions];
+    let questionArray = [...this.state.formData];
     questionArray.splice(id, 1);
     this.setState({
-      Questions: questionArray
+      formData: questionArray
     });
   }
+
+  onSubmitForm() {
+    let formData = { ...this.state };
+    let formObject = _.pick(formData, ['event', 'session', 'formType', 'formData']);
+    if ((this.state.formType === 'Polling Questions' || this.state.formType === 'Feedback Questions') && (this.state.event && this.state.session)) {
+      this.props.createForm(formObject);
+    }
+    else if (this.state.formType === 'Home Questions' && this.state.event) {
+      formObject.session = null;
+      this.props.createForm(formObject);
+    }
+    else {
+      alert("please select required fields");
+    }
+  }
+
   render() {
-    const { eventValue, sessionValue, formValue } = this.state;
+    const { event, session, formType } = this.state;
     const eventOptions = this.props.events;
     const sessionOptions = this.props.sessions;
     const formOptions = this.props.formTypes;
@@ -147,7 +191,7 @@ class QuestionForms extends Component {
           <Col xs="12" md="4">
             <Select
               placeholder="Select Form Type"
-              value={formValue}
+              value={formType}
               options={formOptions}
               simpleValue
               onChange={this.handleFormSelectChange.bind(this)}
@@ -156,7 +200,7 @@ class QuestionForms extends Component {
           <Col md="4" >
             <Select
               placeholder="Select Event"
-              value={eventValue}
+              value={event}
               options={eventOptions}
               simpleValue
               onChange={this.handleEventSelectChange.bind(this)}
@@ -165,7 +209,7 @@ class QuestionForms extends Component {
           <Col md="4">
             <Select
               placeholder="Select Session"
-              value={sessionValue}
+              value={session}
               options={sessionOptions}
               simpleValue
               onChange={this.handleSessionSelectChange.bind(this)}
@@ -182,21 +226,30 @@ class QuestionForms extends Component {
             {this.onDisplayNewQuestion()}
           </Col>
         </FormGroup>
+        <FormGroup row>
+          <Col xs="12" md="10" >
+            <Button type="button" size="md" color="success" onClick={() => this.onSubmitForm()}>Create Form</Button>
+          </Col>
+        </FormGroup>
       </CardLayout>
     )
   }
 }
+
 const mapStateToProps = state => {
   return {
     events: state.event.eventList,
     sessions: state.questionForm.sessions,
-    formTypes: state.questionForm.formTypes
+    formTypes: state.questionForm.formTypes,
+    currentFormData: state.questionForm.formData
   };
 }
+
 const mapDispatchToProps = dispatch => {
   return {
     getEvents: () => dispatch(actions.getEvents()),
-    getSessions: (id) => dispatch(actions.getSessionsOfEvent(id))
+    getSessions: (id) => dispatch(actions.getSessionsOfEvent(id)),
+    createForm: (formObject) => dispatch(actions.createForm(formObject))
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionForms);

@@ -4,7 +4,8 @@ import Dashboard from '../../views/Dashboard/';
 import Events from '../../views/Events/';
 import Rooms from '../../views/Rooms/';
 import Registration from '../../views/Registration/';
-import QuestionForms from '../../views/QuestionForms/';
+import DynamicForms from '../../views/FormList/DynamicForms';
+import QuestionForms from '../../views/QuestionForms/QuestionForms';
 import RegistrationModule from '../../views/RegistrationList/RegistrationModule';
 import Layout from '../../components/Layout/';
 import Logout from '../Authentication/Logout';
@@ -25,6 +26,7 @@ class App extends Component {
            <Route path="/rooms" component={Rooms} />
            <Route path="/registration" component={Registration} />
            <Route path="/registrationList" component={RegistrationModule} />
+           <Route path="/dynamicForms" component={DynamicForms} />
            <Route path="/questionForms" component={QuestionForms} />
            <Route path="/logout" component={Logout} />
            <Redirect from="/" to="/dashboard" />
@@ -32,7 +34,7 @@ class App extends Component {
          </Switch>
        </Layout>
      );
- //  }
+  // }
   //  else {
   //     routes = (
   //       <Switch>

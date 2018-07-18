@@ -10,6 +10,7 @@ import App from './containers/App/';
 import Login from './containers/Authentication/Login';
 import { Provider } from 'react-redux';
 import store from './store';
+import './customStyle.css';
 
 
 const state = store.getState();

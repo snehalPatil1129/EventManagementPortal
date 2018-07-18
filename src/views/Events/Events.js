@@ -1,33 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { connect } from 'react-redux';
-import * as actions from '../../store/actions/index';
+import { Link, Switch, Route, Redirect } from 'react-router-dom';
+import EventList from './EventList';
+import EventForm from './EventForm';
 
 class Events extends Component {
-
-  componentDidMount () {
-        this.props.getEvents();
-    }
-
-  render() {
-    return (
-      <div className="animated fadeIn">
-       Events
-      </div>
-    )
-  }
-}
-
-const mapStateToProps = state => {
-    return {
-       
-    };
-}
-
-const mapDispatchToProps = dispatch => {
-    return {
-        getEvents: () => dispatch(actions.getEvents()),
+    render() {
+        return <div>
+            <Route exact path={this.props.match.path} component={EventList} />
+            <Route path={`${this.props.match.path}/EventForm/:id?`} component={EventForm} />
+        </div>
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)( Events);
+export default Events;

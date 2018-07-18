@@ -26,8 +26,8 @@ export default {
       icon: 'icon-user'
     },
     {
-      name: 'Question Forms',
-      url: '/questionForms',
+      name: 'Dynamic Forms',
+      url: '/dynamicForms',
       icon: 'icon-question'
     },
     {
