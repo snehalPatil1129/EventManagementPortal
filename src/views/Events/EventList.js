@@ -10,6 +10,7 @@ class EventList extends Component {
 
     componentWillMount() {
         this.props.getEvents();
+       
     }
 
  deleteEvent(eventId) {
@@ -96,7 +97,8 @@ class EventList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        events: state.event.events
+        events: state.event.events,
+        eventList : state.event.eventList
     }
 }
 

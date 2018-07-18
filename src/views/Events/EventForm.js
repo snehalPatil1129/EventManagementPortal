@@ -5,6 +5,8 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import _ from 'lodash';
 import 'react-datepicker/dist/react-datepicker.css';
+import InputElement from '../../components/Input/';
+import CardLayout from '../../components/CardLayout/';
 import {
     Input, InputGroup, InputGroupText, InputGroupAddon, Row, Col,
     Card, CardBody, Button, Label, FormGroup, Container
@@ -34,7 +36,7 @@ class EventForm extends Component {
         if (this.props.match.params.id != undefined) {
             this.setState({ updateflag: true })
             let event = this.props.events.find(o => o._id === this.props.match.params.id);
-            let Event = {
+             let Event = {
                 id: event._id,
                 eventName: event.eventName,
                 venue: event.venue,
@@ -145,7 +147,6 @@ class EventForm extends Component {
                                                         name="eventName"
                                                         value={this.state.Event.eventName}
                                                         onChange={this.onChangeHandler.bind(this)} />
-
                                                     {this.state.submitted && !this.state.Event.eventName &&
                                                         <div className="help-block" style={{ color: "red" }}>*Required</div>
                                                     }
@@ -183,7 +184,6 @@ class EventForm extends Component {
                                                         onChange={(event) => this.changeFunction(event, "endDate")}
                                                         placeholderText="Select End date"
                                                     />
-
                                                     {this.state.submitted && this.state.inValidDates &&
                                                         <div className="help-block" style={{ color: "red" }}>*Invalid date</div>
                                                     }
@@ -204,7 +204,6 @@ class EventForm extends Component {
                                                         name="description"
                                                         value={this.state.Event.description}
                                                         onChange={this.onChangeHandler.bind(this)} />
-
                                                     {this.state.submitted && !this.state.Event.description &&
                                                         <div className="help-block" style={{ color: "red" }}>*Required</div>
                                                     }
@@ -223,7 +222,6 @@ class EventForm extends Component {
                                                         name="venue"
                                                         value={this.state.Event.venue}
                                                         onChange={this.onChangeHandler.bind(this)} />
-
                                                     {this.state.submitted && !this.state.Event.venue &&
                                                         <div className="help-block" style={{ color: "red" }}>*Required</div>
                                                     }
@@ -236,7 +234,6 @@ class EventForm extends Component {
                                             </Col>
                                             <Col md="3">
                                                 <Button onClick={this.resetField.bind(this)} type="reset" size="md" color="danger" > Reset</Button>
-
                                             </Col>
                                         </FormGroup>
                                         <FormGroup row>
