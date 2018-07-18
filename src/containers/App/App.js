@@ -12,7 +12,7 @@ class App extends Component {
     return (
       <Layout>
         <Switch>
-          <Route path="/dashboard"  exact component={Dashboard} />
+          <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/events" component={Events} />
           <Route path="/rooms" component={Rooms} />
           <Route path="/registration" component={Registration} />
