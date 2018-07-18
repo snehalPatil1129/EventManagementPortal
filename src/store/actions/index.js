@@ -1,6 +1,3 @@
-export {
-    getEvents
-} from './event';
 
 export {
     getRooms,
@@ -15,3 +12,10 @@ export {
     storeAttendeeData,
     deleteAttendee
 } from './registration';
+
+export {
+    getEvents,
+    createEvent,
+    updateEvent,
+    deleteEvent
+} from './event';
