@@ -2,6 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     events: [],
+    eventList : [],
     loading: false,
     eventCreated: false,
     errorMessage : '',
@@ -9,10 +10,12 @@ const initialState = {
 }
 const eventReducer = (state = initialState, action) => {
     switch (action.type) {
+     
         case actionTypes.GET_EVENTS_SUCCESS:
             return {
                 ...state,
-                events: action.events
+                events: action.events,
+                eventList : action.eventList
             };
         case actionTypes.GET_EVENTS_FAIL:
             return {

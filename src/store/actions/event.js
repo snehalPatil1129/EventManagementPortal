@@ -1,10 +1,11 @@
 import * as actionTypes from '../actions/actionTypes';
 import axios from 'axios';
 
-export const getEventsSuccess = (events) => {
+export const getEventsSuccess = (events,eventList) => {
     return {
         type: actionTypes.GET_EVENTS_SUCCESS,
-        events:events
+        events:events,
+        eventList:eventList
     };
 };
 
@@ -62,7 +63,13 @@ export const getEvents = () => {
     return dispatch => {
         axios.get('http://localhost:3000/api/event')
             .then((response) => {
-                dispatch(getEventsSuccess(response.data));
+        let eventList = [], i;
+        let events = response.data;
+        events.forEach(event => {
+            eventList.push({ label: event.eventName, value: event._id })
+         })
+
+        dispatch(getEventsSuccess(response.data, eventList));
             })
             .catch((error) => {
                  dispatch(getEventsFail(error));
