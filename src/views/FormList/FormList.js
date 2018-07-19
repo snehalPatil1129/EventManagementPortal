@@ -4,8 +4,6 @@ import { Link ,Redirect} from 'react-router-dom';
 import * as actions from '../../store/actions/index';
 import { FormGroup, Col, Button, Input, InputGroup } from 'reactstrap';
 import CardLayout from '../../components/CardLayout/';
-import Select from 'react-select';
-import 'react-select/dist/react-select.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
@@ -20,21 +18,20 @@ class FormList extends Component {
     componentDidMount () {
         this.props.getFormList();
     }
-    // ondeleteAttendee (cell, row) {
-    //     return  <Link to={this}  onClick={() => this.deleteAttendeeData(row)}>
-    //                 <i className="fa fa-trash"></i>
-    //             </Link>  
-    // }
-    // deleteAttendeeData (row) {
-    //    this.props.deleteAttendee(row._id);
-    // }
+    ondeleteForm (cell, row) {
+        return  <Link to={this}  onClick={() => this.deleteFormData(row)}>
+                    <i className="fa fa-trash"></i>
+                </Link>  
+    }
+    deleteFormData (row) {
+       this.props.deleteForm(row._id);
+    }
     onEditForm (cell, row) {
         return  <Link to={`${this.props.match.url}/questionForms/${row._id}`} onClick={() => this.getFormToEdit(row)}>
                     <i className="fa fa-pencil"></i>
                 </Link>  
     }
     getFormToEdit (row) {
-        console.log("onEditForm", row);
         this.props.storeCurrentForm(row);  
     }
     
@@ -60,13 +57,13 @@ class FormList extends Component {
                     </Link>
                 </FormGroup>
                 <FormGroup row>
-                    <BootstrapTable ref='table' data={this.props.formList} pagination={true} search={true} options={options} exportCSV={true}>
+                    <BootstrapTable ref='table' data={this.props.formList} pagination={true} search={true} options={options} >
                         <TableHeaderColumn dataField='_id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
-                        <TableHeaderColumn dataField='eventName' headerAlign='left' width='100' csvHeader='First Name'>Event Name</TableHeaderColumn>
-                        <TableHeaderColumn dataField='sessionName' headerAlign='left' width='100' csvHeader='Last Name'>Session Name</TableHeaderColumn>
-                        <TableHeaderColumn dataField='formType' headerAlign='left' width='100' csvHeader='Email'>form TYpe</TableHeaderColumn>
-                         <TableHeaderColumn dataField='edit' dataFormat={this.onEditForm.bind(this)} headerAlign='left' width='40' export={false}>Edit</TableHeaderColumn>
-                        {/* <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteAttendee.bind(this)} headerAlign='left' width='40' export={false}>Delete</TableHeaderColumn> */}
+                        <TableHeaderColumn dataField='eventName' headerAlign='left' width='100' >Event Name</TableHeaderColumn>
+                        <TableHeaderColumn dataField='sessionName' headerAlign='left' width='100' >Session Name</TableHeaderColumn>
+                        <TableHeaderColumn dataField='formType' headerAlign='left' width='100' >Form Type</TableHeaderColumn>
+                         <TableHeaderColumn dataField='edit' dataFormat={this.onEditForm.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>
+                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteForm.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn> 
                         {/* <TableHeaderColumn dataField='sessionId' headerAlign='left' export={false} hidden></TableHeaderColumn> */}
                     </BootstrapTable>
                 </FormGroup>
@@ -86,7 +83,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
        getFormList : () => dispatch(actions.getForms()),
-       storeCurrentForm : (form) => dispatch(actions.storeCurrentForm(form))
+       storeCurrentForm : (form) => dispatch(actions.storeCurrentForm(form)),
+       deleteForm : (id) => dispatch(actions.deleteForm(id))
      }
 }
 

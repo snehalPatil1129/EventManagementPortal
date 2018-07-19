@@ -1,7 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    rooms: []
+    rooms: [],
+    roomList : []
 }
 const roomReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -9,12 +10,8 @@ const roomReducer = (state = initialState, action) => {
             return {
                 ...state,
                 rooms: action.rooms,
+                roomList : action.roomList
             };
-        // case actionTypes.C_ROOMS:
-        //     return {
-        //         ...state,
-        //         rooms: action.rooms,
-        //     };
         default:
             return state;
     }

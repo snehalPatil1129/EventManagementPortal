@@ -8,7 +8,8 @@ const initialState = {
         { label: "Feedback Questions", value: "Feedback Questions" }
     ],
     forms: [],
-    formData: []
+    formData: [],
+    error : ''
 }
 const formReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -26,6 +27,11 @@ const formReducer = (state = initialState, action) => {
             return {
                 ...state,
                 formData: action.formData
+            };
+        case actionTypes.LOG_FORM_ERROR:
+            return {
+                ...state,
+                error: action.error
             };
         default:
             return state;

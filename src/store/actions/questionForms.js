@@ -13,6 +13,12 @@ export const storeForms = (forms) => {
         forms : forms
     };
 };
+ export const logFormError = (error) => {
+     return {
+        type : actionTypes.LOG_FORM_ERROR,
+        error : error
+     };
+ }
 
 export const storeCurrentForm = (formData) => {
     return {
@@ -32,20 +38,42 @@ export const getSessionsOfEvent = (id) => {
                 dispatch(storeSessionsOfEvent(sessionList));
             })
             .catch((error) => {
-                console.log("errror",error);
+                dispatch(logFormError(error.message));
             })
     }
 };
-export const createForm = (formObject) => { 
-    console.log('formObject',formObject);
+export const createForm = (formObject) => {
     return dispatch => {
-        axios.post(`http://localhost:3000/api/questionForms` , formObject)
+        axios.post(`http://localhost:3000/api/questionForms`, formObject)
             .then((response) => {
-                    console.log("createForm", response);
-               // dispatch(storeSessionsOfEvent(sessionList));
+                dispatch(getForms());
             })
             .catch((error) => {
-                console.log("errror",error);
+                dispatch(logFormError(error.message));
+            })
+    }
+};
+
+export const editForm = (id,formObject) => { 
+    return dispatch => {
+        axios.put(`http://localhost:3000/api/questionForms/${id}` , formObject)
+            .then((response) => {
+                dispatch(getForms());
+            })
+            .catch((error) => {
+                dispatch(logFormError(error.message));
+            })
+    }
+};
+
+export const deleteForm = (id) => { 
+    return dispatch => {
+        axios.delete(`http://localhost:3000/api/questionForms/${id}`)
+            .then((response) => {
+                    dispatch(getForms());
+            })
+            .catch((error) => {
+                dispatch(logFormError(error.message));
             })
     }
 };
@@ -67,7 +95,7 @@ export const getForms = () => {
                 dispatch(storeForms(formData));
             })
             .catch((error) => {
-                console.log("errror",error);
+                dispatch(logFormError(error.message));
             })
     }
 };

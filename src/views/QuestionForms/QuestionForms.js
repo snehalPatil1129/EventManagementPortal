@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import InputElement from '../../components/Input/';
 import CardLayout from '../../components/CardLayout/';
 import QuestionLayout from '../../components/QuestionLayout/';
 import AnswerLayout from '../../components/AnswerLayout/';
@@ -8,15 +7,15 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
+
 let QuesLayout;
 class QuestionForms extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: "", session: "", formType: "", formData: []
+      event: "", session: "", formType: "", formData: [], editForm : false
     }
   }
-
   componentWillMount() {
     this.props.getEvents();
   }
@@ -27,7 +26,8 @@ class QuestionForms extends Component {
         this.setState({
           event: form.event._id,
           formType: form.formType,
-          formData: form.formData
+          formData: form.formData,
+          editForm : true
         });
       }
       else {
@@ -35,7 +35,8 @@ class QuestionForms extends Component {
           // event: form.event._id,
           // session: form.session._id,
           formType: form.formType,
-          formData: form.formData
+          formData: form.formData,
+          editForm : true
         });
       }
     }
@@ -76,7 +77,7 @@ class QuestionForms extends Component {
           />
           {this.displayAnswerField(que, id)}
         </div>
-      )
+      );
     });
     return QuesLayout;
   }
@@ -168,12 +169,13 @@ class QuestionForms extends Component {
   onSubmitForm() {
     let formData = { ...this.state };
     let formObject = _.pick(formData, ['event', 'session', 'formType', 'formData']);
+    let id = this.props.currentFormData._id;
     if ((this.state.formType === 'Polling Questions' || this.state.formType === 'Feedback Questions') && (this.state.event && this.state.session)) {
-      this.props.createForm(formObject);
+      this.state.editForm ? this.props.editForm(id, formObject) : this.props.createForm(formObject);
     }
     else if (this.state.formType === 'Home Questions' && this.state.event) {
       formObject.session = null;
-      this.props.createForm(formObject);
+      this.state.editForm ? this.props.editForm(id, formObject) : this.props.createForm(formObject);
     }
     else {
       alert("please select required fields");
@@ -216,6 +218,12 @@ class QuestionForms extends Component {
             />
           </Col>
         </FormGroup>
+        
+        {/* <FormGroup row>
+          {
+            this.props.formError ? 
+          }
+        </FormGroup> */}
         <FormGroup row>
           <Col xs="12" md="10" >
             <Button type="button" size="md" color="primary" onClick={() => this.onAddQuestion()}>Add Question </Button>
@@ -235,7 +243,6 @@ class QuestionForms extends Component {
     )
   }
 }
-
 const mapStateToProps = state => {
   return {
     events: state.event.eventList,
@@ -244,12 +251,12 @@ const mapStateToProps = state => {
     currentFormData: state.questionForm.formData
   };
 }
-
 const mapDispatchToProps = dispatch => {
   return {
-    getEvents: () => dispatch(actions.getEvents()),
-    getSessions: (id) => dispatch(actions.getSessionsOfEvent(id)),
-    createForm: (formObject) => dispatch(actions.createForm(formObject))
+    getEvents : () => dispatch(actions.getEvents()),
+    getSessions : (id) => dispatch(actions.getSessionsOfEvent(id)),
+    createForm : (formObject) => dispatch(actions.createForm(formObject)),
+    editForm : (id, formObject) => dispatch(actions.editForm(id, formObject)) 
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionForms);

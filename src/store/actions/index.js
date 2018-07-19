@@ -28,5 +28,7 @@ export {
    getSessionsOfEvent,
    createForm,
    getForms,
-   storeCurrentForm
+   storeCurrentForm,
+   editForm,
+   deleteForm
 } from './questionForms';
