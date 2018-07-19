@@ -24,6 +24,7 @@ class Rooms extends Component {
             capacityRequired : false
         }
     }
+    
     onChangeInput(event) {
         const { Room } = { ...this.state };
         Room[event.target.name] = event.target.value;
@@ -66,6 +67,13 @@ class Rooms extends Component {
             }
         }
     }
+    handleEventSelectChange (value) {
+        if(value !== null){
+            let Room = {...this.state.Room };
+            Room.event = value;
+            this.setState({Room : Room});
+        }
+    }
     render() {
         const { Room } = this.state;
         const { availableServices } = this.state.Room;
@@ -76,6 +84,7 @@ class Rooms extends Component {
             { label: 'Hi', value: 'Hi' },{ label: 'Hi', value: 'Hi' },
             { label: 'Hi', value: 'Hi' },
         ];
+        const eventOptions = this.props.eventList;
         //let value = availableServices;
         return (
             <CardLayout name="Room">
@@ -92,7 +101,16 @@ class Rooms extends Component {
                         />
                     </Col>
                     <Col md="6">
-                        <InputElement
+                        <Select
+                            name='Events'
+                            onChange={this.handleEventSelectChange.bind(this)}
+                            placeholder="Select Event"
+                            simpleValue
+                            value={this.state.Room.event}
+                            options={eventOptions}
+                            clearable
+                        />
+                        {/* <InputElement
                             icon="icon-calendar"
                             type="text"
                             placeholder="Event Name"
@@ -100,7 +118,7 @@ class Rooms extends Component {
                             value={Room.event}
                             required= {this.state.eventRequired}
                             onchanged={(event) => this.onChangeInput(event)}
-                        />
+                        /> */}
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -148,7 +166,8 @@ class Rooms extends Component {
 
 const mapStateToProps = state => {
     return {
-        rooms: state.room.rooms
+        rooms: state.room.rooms,
+        eventList : state.event.eventList
     };
 }
 

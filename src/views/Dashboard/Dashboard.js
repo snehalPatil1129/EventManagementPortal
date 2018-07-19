@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import axios from 'axios'
-class Dashboard extends Component {
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions/index';
 
+class Dashboard extends Component {
+  componentWillMount () {
+      this.props.getEvents()
+}
   render() {
     return (
       <div className="animated fadeIn">
@@ -10,5 +14,9 @@ class Dashboard extends Component {
     )
   }
 }
-
-export default Dashboard;
+const mapDispatchToProps = dispatch => {
+  return {
+      getEvents : () => dispatch(actions.getEvents())
+  };
+}
+export default connect(null, mapDispatchToProps)(Dashboard);

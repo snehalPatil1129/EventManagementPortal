@@ -16,17 +16,20 @@ const formReducer = (state = initialState, action) => {
         case actionTypes.GET_SESSIONS_BY_EVENT_ID:
             return {
                 ...state,
-                sessions: action.sessions
+                sessions: action.sessions,
+                error: ""
             };
         case actionTypes.STORE_FORMS:
             return {
                 ...state,
-                forms: action.forms
+                forms: action.forms,
+                error: ""
             };
         case actionTypes.STORE_CURRENT_FORM:
             return {
                 ...state,
-                formData: action.formData
+                formData: action.formData,
+                error: ""
             };
         case actionTypes.LOG_FORM_ERROR:
             return {

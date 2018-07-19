@@ -218,15 +218,14 @@ class QuestionForms extends Component {
             />
           </Col>
         </FormGroup>
-        
-        {/* <FormGroup row>
-          {
-            this.props.formError ? 
-          }
-        </FormGroup> */}
         <FormGroup row>
           <Col xs="12" md="10" >
             <Button type="button" size="md" color="primary" onClick={() => this.onAddQuestion()}>Add Question </Button>
+          </Col>
+          <Col md="2" >
+          {
+            this.props.formError!== "" ? <div style={{color: "red" , fontSize : 15 ,marginTop : 10 }} className="help-block">*Something Went Wrong</div> : null 
+          }          
           </Col>
         </FormGroup>
         <FormGroup row>
@@ -248,7 +247,8 @@ const mapStateToProps = state => {
     events: state.event.eventList,
     sessions: state.questionForm.sessions,
     formTypes: state.questionForm.formTypes,
-    currentFormData: state.questionForm.formData
+    currentFormData: state.questionForm.formData,
+    formError : state.questionForm.error
   };
 }
 const mapDispatchToProps = dispatch => {
