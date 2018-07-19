@@ -3,7 +3,7 @@
 
 //ROOMS
 export const GET_ROOMS = 'GET_ROOMS';
-
+export const STORE_CURRENT_ROOM = 'STORE_CURRENT_ROOM';
 
 
 

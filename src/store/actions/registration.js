@@ -50,7 +50,7 @@ export const editAttendeeData = (id , attendee) => {
     return dispatch => {
         axios.put(`http://localhost:3000/api/attendee/${id}` , attendee)
             .then((response) => {
-                console.log("Printed in editAttendeeData[action file]",response.data);
+                //console.log("Printed in editAttendeeData[action file]",response.data);
             })
             .catch((error) => {
                 console.log("errror",error);
@@ -62,7 +62,7 @@ export const createAttendee = (attendee) => {
     return dispatch => {
         axios.post('http://localhost:3000/api/attendee', attendee )
             .then((response) => {
-                console.log("Printed in attendee.js[action file]",response.data);
+                //console.log("Printed in attendee.js[action file]",response.data);
             })
             .catch((error) => {
                 console.log("errror", error);
@@ -75,7 +75,7 @@ export const deleteAttendee = (id) => {
     return dispatch => {
         axios.delete(`http://localhost:3000/api/attendee/${id}`)
             .then((response) => {
-                console.log("Printed in attendee.j delete[action file]",response.data);
+                //console.log("Printed in attendee.j delete[action file]",response.data);
                 dispatch(getAttendees())
             })
             .catch((error) => {

@@ -7,12 +7,13 @@ export {
     getEvents,
     createEvent,
     updateEvent,
-    deleteEvent
+    deleteEvent,
 } from './event';
 
 export {
     getRooms,
-    createRoom
+    createRoom,
+    storeCurrentRoom
 } from './room';
 
 export {

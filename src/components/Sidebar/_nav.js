@@ -11,8 +11,8 @@ export default {
       icon: 'icon-calendar'
     },
     {
-      name: 'Rooms',
-      url: '/rooms',
+      name: 'Rooms List',
+      url: '/roomsList',
       icon: 'icon-home'
     },
     {

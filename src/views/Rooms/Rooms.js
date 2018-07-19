@@ -24,10 +24,31 @@ class Rooms extends Component {
             capacityRequired : false
         }
     }
-    
+    componentDidMount () {
+        let currentroom = this.props.currentRoom;
+       
+        let notEmpty = !Object.keys(currentroom).length;
+        if(!notEmpty) {
+            let currentroom1 = {
+                roomName: currentroom.roomName,
+                event: currentroom.eventName,
+                capacity: currentroom.capacity,
+                bufferCapacity: currentroom.bufferCapacity,
+                availableServices: currentroom.availableServices,
+            }
+            console.log("currentroom1111",currentroom1);
+            this.setState({ 
+                ...this.state.Room ,
+                Room : currentroom1
+            });
+        }
+    }
     onChangeInput(event) {
         const { Room } = { ...this.state };
         Room[event.target.name] = event.target.value;
+        this.setState({
+            Room : Room
+        })
     }
     onSubmit() {
         let Room = { ...this.state.Room };
@@ -75,8 +96,11 @@ class Rooms extends Component {
         }
     }
     render() {
+     
         const { Room } = this.state;
         const { availableServices } = this.state.Room;
+        const { event } = this.state.Room;
+        console.log("event",event);
         const options = [
             { label: 'Hi', value: 'Hi' },
             { label: 'Hello', value: 'Hello' },
@@ -96,29 +120,19 @@ class Rooms extends Component {
                             placeholder="Room Name"
                             name="roomName"
                             required= {this.state.roomNameRequired}
-                            value={Room.roomName}
+                            value={this.state.Room.roomName}
                             onchanged={(event) => this.onChangeInput(event)}
                         />
                     </Col>
                     <Col md="6">
                         <Select
-                            name='Events'
-                            onChange={this.handleEventSelectChange.bind(this)}
                             placeholder="Select Event"
-                            simpleValue
-                            value={this.state.Room.event}
+                            value={event}
                             options={eventOptions}
-                            clearable
+                            simpleValue
+                            onChange={this.handleEventSelectChange.bind(this)}
                         />
-                        {/* <InputElement
-                            icon="icon-calendar"
-                            type="text"
-                            placeholder="Event Name"
-                            name="event"
-                            value={Room.event}
-                            required= {this.state.eventRequired}
-                            onchanged={(event) => this.onChangeInput(event)}
-                        /> */}
+
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -167,8 +181,10 @@ class Rooms extends Component {
 const mapStateToProps = state => {
     return {
         rooms: state.room.rooms,
-        eventList : state.event.eventList
+        eventList : state.event.eventList,
+        currentRoom : state.room.currentRoom
     };
+
 }
 
 const mapDispatchToProps = dispatch => {

@@ -32,7 +32,7 @@ class FormList extends Component {
                 </Link>  
     }
     getFormToEdit (row) {
-        this.props.storeCurrentForm(row);  
+        this.props.storeCurrentForm(row);
     }
     
     render() {

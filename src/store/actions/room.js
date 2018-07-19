@@ -8,6 +8,12 @@ export const storeRooms = (roomData, roomList) => {
         roomList : roomList
     };
 };
+export const storeCurrentRoom = (currentRoom) => {
+    return {
+        type: actionTypes.STORE_CURRENT_ROOM,
+        currentRoom : currentRoom
+    };
+} 
 
 export const getRooms = () => {
     let roomData = [];  let roomList = [];
@@ -17,7 +23,8 @@ export const getRooms = () => {
                 roomData = response.data;
                 roomData.forEach((room) =>{
                     roomList.push({label : room.roomName , value : room._id});
-                })
+                    room.eventName = room.event.eventName;
+                });
                 dispatch(storeRooms(roomData, roomList));
             })
             .catch((error) => {
@@ -39,4 +46,5 @@ export const createRoom = (room) => {
     }
 };
 
+ 
 

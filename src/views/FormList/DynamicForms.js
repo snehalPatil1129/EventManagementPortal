@@ -1,5 +1,5 @@
 import FormList from './FormList.js';
-import QuestionForms  from '../QuestionForms/QuestionForms.js';
+import QuestionForms  from './QuestionForms.js';
 import React, { Component } from 'react';
 import {BrowserRouter as Router,Link, Switch, Route, Redirect} from 'react-router-dom';
 

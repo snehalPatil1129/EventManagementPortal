@@ -172,16 +172,29 @@ class QuestionForms extends Component {
     let id = this.props.currentFormData._id;
     if ((this.state.formType === 'Polling Questions' || this.state.formType === 'Feedback Questions') && (this.state.event && this.state.session)) {
       this.state.editForm ? this.props.editForm(id, formObject) : this.props.createForm(formObject);
+      this.resetForm();
     }
     else if (this.state.formType === 'Home Questions' && this.state.event) {
       formObject.session = null;
       this.state.editForm ? this.props.editForm(id, formObject) : this.props.createForm(formObject);
+      this.resetForm();
     }
     else {
       alert("please select required fields");
     }
   }
-
+  resetForm () {
+    if(this.props.formError == ""){
+        this.setState({
+          event: "",
+          session: "", 
+          formType: "", 
+          formData: [], 
+          editForm : false
+        });
+        this.props.history.push("/dynamicForms");
+    }
+  }
   render() {
     const { event, session, formType } = this.state;
     const eventOptions = this.props.events;

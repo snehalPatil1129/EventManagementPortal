@@ -9,7 +9,7 @@ const initialState = {
     ],
     forms: [],
     formData: [],
-    error : ''
+    error : ""
 }
 const formReducer = (state = initialState, action) => {
     switch (action.type) {
