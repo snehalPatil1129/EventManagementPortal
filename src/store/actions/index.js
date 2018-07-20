@@ -32,3 +32,10 @@ export {
    editForm,
    deleteForm
 } from './questionForms';
+
+export {
+    getProfiles,
+    createProfile,
+    deleteProfile,
+    updateProfile
+} from './userProfile'
