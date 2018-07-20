@@ -8,6 +8,8 @@ import Registration from '../../views/Registration/Registration';
 import DynamicForms from '../../views/DynamicForms/DynamicForms';
 import QuestionForms from '../../views/DynamicForms/QuestionForms';
 import RegistrationModule from '../../views/Registration/RegistrationModule';
+import Sessions from '../../views/Sessions/SessionForm';
+import Profiles from '../../views/UserProfiles/Profiles';
 import Layout from '../../components/Layout/';
 import Logout from '../Authentication/Logout';
 import Login from '../Authentication/Login';
@@ -24,12 +26,14 @@ class App extends Component {
          <Switch>
            <Route path="/dashboard" exact component={Dashboard} />
            <Route path="/events" component={Events} />
+            <Route path="/sessions" component={Sessions} />
            <Route path="/rooms" component={Rooms} />
            <Route path="/roomsList" component={RoomsModule} />
            <Route path="/registration" component={Registration} />
            <Route path="/registrationList" component={RegistrationModule} />
            <Route path="/dynamicForms" component={DynamicForms} />
            <Route path="/questionForms" component={QuestionForms} />
+           <Route path="/profiles" component={Profiles} />
            <Route path="/logout" component={Logout} />
            <Redirect from="/" to="/dashboard" />
            <Redirect to="/" />

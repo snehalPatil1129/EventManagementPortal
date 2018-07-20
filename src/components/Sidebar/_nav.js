@@ -10,6 +10,11 @@ export default {
       url: '/events',
       icon: 'icon-calendar'
     },
+     {
+      name: 'Sessions',
+      url: '/sessions',
+      icon: 'icon-calendar'
+    },
     {
       name: 'Rooms List',
       url: '/roomsList',
@@ -24,6 +29,11 @@ export default {
       name: 'Dynamic Forms',
       url: '/dynamicForms',
       icon: 'icon-question'
+    },
+     {
+      name: 'User Profiles',
+      url: '/profiles',
+      icon: 'icon-user'
     },
     {
       name: 'Logout',
