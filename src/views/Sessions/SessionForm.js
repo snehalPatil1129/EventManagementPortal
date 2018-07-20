@@ -15,8 +15,6 @@ class SessionForm extends Component {
     }
 }
 
-
-
 const mapStateToProps = ()=>{
     return{
 
