@@ -11,5 +11,4 @@ class RoomsModule extends Component {
       </div>
     }
 }
-
 export default RoomsModule;

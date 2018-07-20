@@ -12,10 +12,6 @@ import { Provider } from 'react-redux';
 import store from './store';
 import './customStyle.css';
 
-
-const state = store.getState();
-console.log("state",state);
-
 const app = (
   <Provider store={store}>
     <HashRouter>

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 import { FormGroup, Col, Button, Input, InputGroup } from 'reactstrap';
 import InputElement from '../../components/Input/';
 import CardLayout from '../../components/CardLayout/';
 import Select from 'react-select';
-
+import _ from 'lodash';
 
 class Rooms extends Component {
     constructor(props) {
@@ -19,27 +18,21 @@ class Rooms extends Component {
                 bufferCapacity: '',
                 availableServices: []
             },
+            editRoom : false,
             roomNameRequired : false,
             eventRequired : false,
             capacityRequired : false
         }
     }
     componentDidMount () {
-        let currentroom = this.props.currentRoom;
-       
+        let currentroom = _.pick(this.props.currentRoom , ['roomName' ,'capacity' , 'bufferCapacity' ,'availableServices']);
         let notEmpty = !Object.keys(currentroom).length;
-        if(!notEmpty) {
-            let currentroom1 = {
-                roomName: currentroom.roomName,
-                event: currentroom.eventName,
-                capacity: currentroom.capacity,
-                bufferCapacity: currentroom.bufferCapacity,
-                availableServices: currentroom.availableServices,
-            }
-            console.log("currentroom1111",currentroom1);
-            this.setState({ 
-                ...this.state.Room ,
-                Room : currentroom1
+        if (!notEmpty) {
+            currentroom.event = this.props.currentRoom.event._id;
+            this.setState({
+                ...this.state.Room,
+                Room: currentroom,
+                editRoom: true
             });
         }
     }
@@ -52,9 +45,11 @@ class Rooms extends Component {
     }
     onSubmit() {
         let Room = { ...this.state.Room };
+        let id = this.props.currentRoom._id;
         if (Room.roomName && Room.capacity && Room.event) {
-            this.props.createRoom(Room);
+            this.state.editRoom ? this.props.editRoom(id , Room) : this.props.createRoom(Room);
             this.onReset();
+            this.props.history.push('/roomsList');
         }
         else {
             !Room.roomName ? this.setState({roomNameRequired : true}) : null;
@@ -68,8 +63,8 @@ class Rooms extends Component {
             Room: {
                 roomName: '',
                 event: '',
-                capacity: 0,
-                bufferCapacity: 0,
+                capacity: '',
+                bufferCapacity: '',
                 availableServices: [],
             }
         });
@@ -96,11 +91,7 @@ class Rooms extends Component {
         }
     }
     render() {
-     
         const { Room } = this.state;
-        const { availableServices } = this.state.Room;
-        const { event } = this.state.Room;
-        console.log("event",event);
         const options = [
             { label: 'Hi', value: 'Hi' },
             { label: 'Hello', value: 'Hello' },
@@ -109,7 +100,6 @@ class Rooms extends Component {
             { label: 'Hi', value: 'Hi' },
         ];
         const eventOptions = this.props.eventList;
-        //let value = availableServices;
         return (
             <CardLayout name="Room">
                 <FormGroup row>
@@ -120,19 +110,19 @@ class Rooms extends Component {
                             placeholder="Room Name"
                             name="roomName"
                             required= {this.state.roomNameRequired}
-                            value={this.state.Room.roomName}
+                            value={Room.roomName}
                             onchanged={(event) => this.onChangeInput(event)}
                         />
                     </Col>
                     <Col md="6">
                         <Select
                             placeholder="Select Event"
-                            value={event}
+                            value={Room.event}
                             options={eventOptions}
                             simpleValue
                             onChange={this.handleEventSelectChange.bind(this)}
                         />
-
+                        {this.state.eventRequired ? <div style={{color: "red" , marginTop: 0}} className="help-block">*Required</div> : null}
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -161,37 +151,46 @@ class Rooms extends Component {
                 <FormGroup row>
                     <Col md="6">
                         <Select
-                            name = 'Services'
                             multi
                             onChange={this.handleSelectChange.bind(this)}
                             placeholder="Select your Services(s)"
                             simpleValue
-                            value={availableServices}
+                            value={Room.availableServices}
                             options={options}
                             clearable
                         />
                     </Col>
                 </FormGroup >
-                <Button type="button" size="md" color="success" onClick={() => this.onSubmit()} >SUBMIT</Button>
+                <FormGroup row>
+                    <Col xs="12" md="3">
+                        <Button type="button" size="md" color="success" onClick={() => this.onSubmit()} >Submit</Button>
+                    </Col>
+                    <Col  md="3">
+                        <Button type="button" size="md" color="danger" style={{marginLeft : -160}} onClick={() => this.onReset()} >Reset</Button>
+                    </Col>
+                    <Col md="6">
+                        {
+                            this.props.roomError !== "" ? <div style={{color: "red" , fontSize : 15 , marginTop : 0}} className="help-block">{this.props.roomError}</div> : null 
+                        }
+                    </Col>
+                </FormGroup >
             </CardLayout>
         )
     }
 }
-
 const mapStateToProps = state => {
     return {
         rooms: state.room.rooms,
         eventList : state.event.eventList,
-        currentRoom : state.room.currentRoom
+        currentRoom : state.room.currentRoom,
+        roomError : state.room.error
     };
-
 }
-
 const mapDispatchToProps = dispatch => {
     return {
         getRooms: () => dispatch(actions.getRooms()),
-        createRoom: (room) => dispatch(actions.createRoom(room))
+        createRoom: (room) => dispatch(actions.createRoom(room)),
+        editRoom : (id, room) => dispatch(actions.editRoom(id, room))
     }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(Rooms);

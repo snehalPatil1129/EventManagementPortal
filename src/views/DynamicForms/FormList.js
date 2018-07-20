@@ -8,33 +8,24 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 class FormList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            Registration : {
-            }
-        }
-    }
     componentDidMount () {
         this.props.getFormList();
     }
     ondeleteForm (cell, row) {
-        return  <Link to={this}  onClick={() => this.deleteFormData(row)}>
+        return  <Link to={this}  onClick={() => this.props.deleteForm(row._id)}>
                     <i className="fa fa-trash"></i>
                 </Link>  
     }
-    deleteFormData (row) {
-       this.props.deleteForm(row._id);
-    }
     onEditForm (cell, row) {
-        return  <Link to={`${this.props.match.url}/questionForms/${row._id}`} onClick={() => this.getFormToEdit(row)}>
+        return  <Link to={`${this.props.match.url}/questionForms/${row._id}`} onClick={() => this.props.storeCurrentForm(row)}>
                     <i className="fa fa-pencil"></i>
                 </Link>  
     }
-    getFormToEdit (row) {
-        this.props.storeCurrentForm(row);
+    onViewForm(cell, row) {
+        return <Link to={`${this.props.match.url}/renderForm/${row._id}`} onClick={() => this.props.storeCurrentForm(row)}>
+            <i className="fa fa-eye"></i>
+        </Link>
     }
-    
     render() {
           const options = {
             sizePerPageList: [{
@@ -45,8 +36,8 @@ class FormList extends Component {
                 text: '1000', value: 1000
                 }, {
                 text: 'All', value: this.props.formList.length
-                } ], // you can change the dropdown list for size per page
-                sizePerPage: 250,  // which size per page you want to locate as default
+                } ], 
+                sizePerPage: 250,
         };
         return (
             <CardLayout name="Forms List">
@@ -62,24 +53,21 @@ class FormList extends Component {
                         <TableHeaderColumn dataField='eventName' headerAlign='left' width='100' >Event Name</TableHeaderColumn>
                         <TableHeaderColumn dataField='sessionName' headerAlign='left' width='100' >Session Name</TableHeaderColumn>
                         <TableHeaderColumn dataField='formType' headerAlign='left' width='100' >Form Type</TableHeaderColumn>
-                         <TableHeaderColumn dataField='edit' dataFormat={this.onEditForm.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>
-                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteForm.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn> 
-                        {/* <TableHeaderColumn dataField='sessionId' headerAlign='left' export={false} hidden></TableHeaderColumn> */}
+                        <TableHeaderColumn dataField='view' dataFormat={this.onViewForm.bind(this)} headerAlign='left' width='20' export={false} ></TableHeaderColumn>
+                        <TableHeaderColumn dataField='edit' dataFormat={this.onEditForm.bind(this)} headerAlign='left' width='20' export={false}></TableHeaderColumn>
+                        <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteForm.bind(this)} headerAlign='left' width='20' export={false}></TableHeaderColumn>
                     </BootstrapTable>
                 </FormGroup>
             </CardLayout>
         )
     }
 }
-
 const mapStateToProps = state => {
     return {
         error: state.registration.error,
-        //attendeeList : state.registration.attendeeList
         formList  : state.questionForm.forms
     };
 }
-
 const mapDispatchToProps = dispatch => {
     return {
        getFormList : () => dispatch(actions.getForms()),
@@ -87,5 +75,4 @@ const mapDispatchToProps = dispatch => {
        deleteForm : (id) => dispatch(actions.deleteForm(id))
      }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(FormList);

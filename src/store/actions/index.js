@@ -13,7 +13,9 @@ export {
 export {
     getRooms,
     createRoom,
-    storeCurrentRoom
+    storeCurrentRoom,
+    editRoom,
+    deleteRoom
 } from './room';
 
 export {

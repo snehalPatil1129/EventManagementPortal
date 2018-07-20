@@ -14,7 +14,12 @@ export const storeCurrentRoom = (currentRoom) => {
         currentRoom : currentRoom
     };
 } 
-
+export const logRoomError = () => {
+    return {
+        type: actionTypes.LOG_ROOM_ERROR,
+        error : 'Oops...Something went wrong.Please try again...'
+    };
+}
 export const getRooms = () => {
     let roomData = [];  let roomList = [];
     return dispatch => {
@@ -28,7 +33,7 @@ export const getRooms = () => {
                 dispatch(storeRooms(roomData, roomList));
             })
             .catch((error) => {
-                console.log("errror");
+                dispatch(logRoomError());
             })
     }
 };
@@ -37,14 +42,37 @@ export const createRoom = (room) => {
     return dispatch => {
         axios.post('http://localhost:3000/api/room', room )
             .then((response) => {
-                //dispatch(storeRooms(response.data));
-                console.log("Printed in room.js[action file]",response.data);
+                dispatch(getRooms());
             })
             .catch((error) => {
-                console.log("errror");
+                dispatch(logRoomError());
             })
     }
 };
+
+export const editRoom = (id ,room) => {
+    return dispatch => {
+        axios.put(`http://localhost:3000/api/room/${id}`, room )
+            .then((response) => {
+                dispatch(getRooms());
+            })
+            .catch((error) => {
+                dispatch(logRoomError());
+            })
+    }
+};
+
+export const deleteRoom = (id) => {
+    return dispatch => {
+        axios.delete(`http://localhost:3000/api/room/${id}`)
+        .then((response) => {
+            dispatch(getRooms());
+        })
+        .catch((error) => {
+            dispatch(logRoomError());
+        })
+    }
+}
 
  
 

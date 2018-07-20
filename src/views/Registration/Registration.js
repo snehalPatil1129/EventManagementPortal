@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 import { FormGroup, Col, Button, Input, InputGroup } from 'reactstrap';
@@ -21,16 +20,17 @@ class Registration extends Component {
                 profiles : [],
                 briefInfo : '',
                 profileImageURL : '',
-                eventId : ''
-            },
-            existingAttendee : false
+                event : ''
+            }, 
+            firstNameRequired : false,  lastNameRequired : false,  emailRequired : false,  contactRequired : false, eventRequired : false, 
+            editAttendee : false
         }
     }
     componentDidMount () {
         if(this.props.match.params.id !== undefined) {
             this.setState({
                 Registration: this.props.attendeeData,
-                existingAttendee :  true
+                editAttendee :  true
             });
         }
     }
@@ -41,19 +41,18 @@ class Registration extends Component {
     }
     onSubmit() {
         let attendee = {...this.state.Registration};
-        if(attendee.firstName && attendee.lastName && attendee.email &&attendee.contact){
-                if(this.state.existingAttendee){
-                    let editedAttendee = _.pick(attendee , ['firstName' , 'lastName' , 'email' , 'contact' , 'briefInfo' , 'profileImageURL']);
-                    this.props.editAttendeeData(attendee._id , editedAttendee);
-                    this.onReset();
-                }
-                else{
-                    this.props.createAttendee(attendee);
-                    this.onReset();
-                }
+        if(attendee.firstName && attendee.lastName && attendee.email &&attendee.contact && attendee.event){
+            let editedAttendee = _.pick(attendee , ['firstName' , 'lastName' , 'email' , 'contact' , 'briefInfo' , 'profileImageURL' ,'event']);
+            this.state.editAttendee ? this.props.editAttendeeData(attendee._id , editedAttendee) : this.props.createAttendee(attendee);
+            this.onReset();
+            this.props.history.push('/registrationList');
        }
        else{
-            alert("plz fill required fields");
+        !attendee.firstName ? this.setState({firstNameRequired : true}) : null;
+        !attendee.lastName ? this.setState({lastNameRequired : true}) : null;
+        !attendee.email ? this.setState({emailRequired : true}) : null; 
+        !attendee.contact ? this.setState({contactRequired : true}) : null; 
+        !attendee.event ? this.setState({eventRequired : true}) : null; 
        }   
     }
     onReset() {
@@ -61,6 +60,13 @@ class Registration extends Component {
         Registration.firstName = ''; Registration.lastName = ''; Registration.email = ''; Registration.contact = '';
         Registration.profiles = []; Registration.briefInfo = ''; Registration.profileImageURL = ''; Registration.event = '';
         this.setState({ Registration: Registration });
+    }
+    handleEventSelectChange (value ){
+        if(value !== null){
+            let Registration = {...this.state.Registration };
+            Registration.event = value;
+            this.setState({Registration : Registration});
+        }
     }
     handleSelectChange(value) {
         if(value !== null){
@@ -84,6 +90,8 @@ class Registration extends Component {
         });
     }
     render() {
+        const { Registration } = {...this.state};
+        const eventOptions = this.props.eventList;
         return (
             <CardLayout name="Registration">
                 <FormGroup row>
@@ -93,7 +101,8 @@ class Registration extends Component {
                             placeholder = 'First Name'
                             name = 'firstName'
                             icon = 'icon-user'
-                            value = {this.state.Registration.firstName}
+                            value = {Registration.firstName}
+                            required= {this.state.firstNameRequired}
                             onchanged = {(event) => this.onChangeInput(event)}
                         />
                     </Col>
@@ -103,7 +112,8 @@ class Registration extends Component {
                             placeholder = 'Last Name'
                             name = 'lastName'
                             icon = 'icon-user'
-                            value = {this.state.Registration.lastName}
+                            value = {Registration.lastName}
+                            required= {this.state.lastNameRequired}
                             onchanged = {(event) => this.onChangeInput(event)}
                         />
                     </Col>
@@ -115,7 +125,8 @@ class Registration extends Component {
                             placeholder = 'Email'
                             name = 'email'
                             icon = 'icon-envelope'
-                            value = {this.state.Registration.email}
+                            value = {Registration.email}
+                            required= {this.state.emailRequired}
                             onchanged = {(event) => this.onChangeInput(event)}
                         />
                     </Col>
@@ -125,7 +136,8 @@ class Registration extends Component {
                             placeholder = 'Contact Number'
                             name = 'contact'
                             icon = 'icon-phone'
-                            value = {this.state.Registration.contact}
+                            value = {Registration.contact}
+                            required= {this.state.emailRequired}
                             onchanged = {(event) => this.onChangeInput(event)}
                         />
                     </Col>
@@ -147,7 +159,7 @@ class Registration extends Component {
                             placeholder = 'Brief Info'
                             name = 'briefInfo'
                             icon = 'icon-info'
-                            value = {this.state.Registration.briefInfo}
+                            value = {Registration.briefInfo}
                             onchanged = {(event) => this.onChangeInput(event)}
                         />
                     </Col>
@@ -159,28 +171,30 @@ class Registration extends Component {
                             placeholder = 'Profile Image URL'
                             name = 'profileImageURL'
                             icon = 'icon-link'
-                            value = {this.state.Registration.profileImageURL}
+                            value = {Registration.profileImageURL}
                             onchanged = {(event) => this.onChangeInput(event)}
                         />
                     </Col>
                     <Col md="6">
-                        <InputElement
-                            type= 'text'
-                            placeholder = 'Event'
-                            name = 'eventId'
-                            icon = 'icon-calendar'
-                            value = {this.state.Registration.eventId}
-                            onchanged = {(event) => this.onChangeInput(event)}
-
+                        <Select
+                            placeholder="Select Event"
+                            value={Registration.event}
+                            options={eventOptions}
+                            simpleValue
+                            onChange={this.handleEventSelectChange.bind(this)}
                         />
+                        {this.state.eventRequired ? <div style={{color: "red" , marginTop: 0}} className="help-block">*Required</div> : null}
                     </Col>
                 </FormGroup >
                 <FormGroup row>
-                <Col xs="12" md="6">
-                <Button type="button" size="md" color="success" onClick={() => this.onSubmit()} >SUBMIT</Button>
-                </Col>
-                    <Col  md="6">
-                        <div style={{ color: "red" }} className="help-block">{this.props.error}</div>
+                    <Col xs="12" md="3">
+                        <Button type="button" size="md" color="success" onClick={() => this.onSubmit()} >Submit</Button>
+                    </Col>
+                    <Col md="3">
+                        <Button type="button" size="md" color="danger" style={{ marginLeft : -150 }} onClick={() => this.onReset()} >Reset</Button>
+                    </Col>
+                    <Col md="6">
+                        <div style={{ color: "red" }} className="help-block">{this.props.registrationError}</div>
                     </Col>
                 </FormGroup >
             </CardLayout>
@@ -190,8 +204,9 @@ class Registration extends Component {
 
 const mapStateToProps = state => {
     return {
-        error: state.registration.error,
-        attendeeData : state.registration.attendeeData
+        registrationError: state.registration.error,
+        attendeeData : state.registration.attendeeData,
+        eventList : state.event.eventList,
     };
 }
 

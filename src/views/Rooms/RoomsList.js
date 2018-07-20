@@ -15,15 +15,13 @@ class RoomsList extends Component {
     }
     componentDidMount () {
         this.props.getRoomsList();
+        this.props.getEvents();
     }
-    // ondeleteForm (cell, row) {
-    //     return  <Link to={this}  onClick={() => this.deleteFormData(row)}>
-    //                 <i className="fa fa-trash"></i>
-    //             </Link>  
-    // }
-    // deleteFormData (row) {
-    //    this.props.deleteForm(row._id);
-    // }
+    onDeleteRoom (cell, row) {
+        return  <Link to={this}  onClick={() => this.props.deleteRoom(row._id)}>
+                    <i className="fa fa-trash"></i>
+                </Link>  
+    }
     onEditRoom(cell, row) {
         return (
             <Link to={`${this.props.match.url}/rooms/${row._id}`} onClick={() => this.getRoomToEdit(row)}>
@@ -50,10 +48,10 @@ class RoomsList extends Component {
         return (
             <CardLayout name="Rooms List">
                 <FormGroup row>
-                    <Link to={`${this.props.match.url}/rooms`}>
-                        <Button type="button" color="primary" size="small"> <i className="fa fa-plus"></i>
-                            Create Form </Button>
-                    </Link>
+                        <Link to={`${this.props.match.url}/rooms`}>
+                            <Button type="button" color="primary" style={{marginBottom : -35}} size="small"> <i className="fa fa-plus"></i>
+                                Create Room </Button>
+                        </Link>
                 </FormGroup>
                 <FormGroup row>
                     <BootstrapTable ref='table' data={this.props.roomList} pagination={true} search={true} options={options} >
@@ -62,26 +60,24 @@ class RoomsList extends Component {
                         <TableHeaderColumn dataField='eventName' headerAlign='left' width='100' >Event Name</TableHeaderColumn>
                         <TableHeaderColumn dataField='capacity' headerAlign='left' width='100' >Capacity</TableHeaderColumn>
                         <TableHeaderColumn dataField='edit' dataFormat={this.onEditRoom.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>
-                         {/*<TableHeaderColumn dataField='delete' dataFormat={this.ondeleteForm.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>  */}
-                        {/* <TableHeaderColumn dataField='sessionId' headerAlign='left' export={false} hidden></TableHeaderColumn> */}
+                        <TableHeaderColumn dataField='delete' dataFormat={this.onDeleteRoom.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn> 
                     </BootstrapTable>
                 </FormGroup>
             </CardLayout>
         )
     }
 }
-
 const mapStateToProps = state => {
     return {
         roomList : state.room.rooms
     };
 }
-
 const mapDispatchToProps = dispatch => {
     return {
        getRoomsList : () => dispatch(actions.getRooms()),
-       storeCurrentRoom : (room) => dispatch(actions.storeCurrentRoom(room))
-     }
+       storeCurrentRoom : (room) => dispatch(actions.storeCurrentRoom(room)),
+       deleteRoom : (id) => dispatch(actions.deleteRoom(id)),
+       getEvents : () => dispatch(actions.getEvents())
+    }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(RoomsList);

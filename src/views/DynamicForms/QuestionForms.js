@@ -8,7 +8,7 @@ import 'react-select/dist/react-select.css';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
-let QuesLayout;
+let formLayout;
 class QuestionForms extends Component {
   constructor(props) {
     super(props);
@@ -48,23 +48,20 @@ class QuestionForms extends Component {
     });
     this.props.getSessions(value);
   }
-
   handleSessionSelectChange(value) {
     let session = value;
     this.setState({
       session: session
     });
   }
-
   handleFormSelectChange(value) {
     let formType = value;
     this.setState({
       formType: formType
     });
   }
-
   onDisplayNewQuestion() {
-    QuesLayout = this.state.formData.map((que, id) => {
+    formLayout = this.state.formData.map((que, id) => {
       return (
         <div>
           <QuestionLayout
@@ -79,9 +76,8 @@ class QuestionForms extends Component {
         </div>
       );
     });
-    return QuesLayout;
+    return formLayout;
   }
-
   onAddQuestion() {
     let newQuestion = { question: "", inputType: "", options: [{ value: "" }] };
     let Question = [...this.state.formData];
@@ -90,7 +86,6 @@ class QuestionForms extends Component {
       formData: Question
     });
   }
-
   displayAnswerField(que, id) {
     return (
       <AnswerLayout
@@ -103,7 +98,6 @@ class QuestionForms extends Component {
       />
     );
   }
-
   onChangeOptionValue(event, id) {
     let questionArray = [...this.state.formData];
     let optionsValue = questionArray[id].options;
@@ -113,7 +107,6 @@ class QuestionForms extends Component {
       formData: questionArray
     });
   }
-
   onAddOption(id) {
     let questionArray = [...this.state.formData];
     let option = { value: "" };
@@ -124,7 +117,6 @@ class QuestionForms extends Component {
       formData: questionArray
     });
   }
-
   onDeleteOption(id) {
     let questionArray = [...this.state.formData];
     let optionArray = questionArray[id].options;
@@ -135,7 +127,6 @@ class QuestionForms extends Component {
       formData: questionArray
     });
   }
-
   onSelectChange(id, event) {
     let questionArray = [...this.state.formData];
     if (event !== null) {
@@ -149,7 +140,6 @@ class QuestionForms extends Component {
       formData: questionArray
     });
   }
-
   onInputQuestion(event) {
     let questionArray = [...this.state.formData];
     questionArray[parseInt(event.target.name)].question = event.target.value;
@@ -157,7 +147,6 @@ class QuestionForms extends Component {
       formData: questionArray
     });
   }
-
   onDeleteQuestion(id) {
     let questionArray = [...this.state.formData];
     questionArray.splice(id, 1);
@@ -165,19 +154,45 @@ class QuestionForms extends Component {
       formData: questionArray
     });
   }
+  handleFormValidations () {
+    let blankQuestionsPresent = false;
+    let formData = [...this.state.formData];
+    formData.forEach(fItem => {
+      if (fItem.question === "" || fItem.question === null) {
+        blankQuestionsPresent = true;
+      }
+      if (fItem.inputType === "Mulitple Choice" || fItem.inputType === "Check Box") {
+        for (var i = 0; i < fItem.options.length; i++) {
+          if (fItem.options[i].value === "" || fItem.options[i].value === null) {
+            blankQuestionsPresent = true;
+          }
+        }
+      }
+    })
+    this.setState({
+      blankQuestionsPresent: blankQuestionsPresent
+    })
+    return blankQuestionsPresent;
+  }
 
   onSubmitForm() {
     let formData = { ...this.state };
     let formObject = _.pick(formData, ['event', 'session', 'formType', 'formData']);
     let id = this.props.currentFormData._id;
-    if ((this.state.formType === 'Polling Questions' || this.state.formType === 'Feedback Questions') && (this.state.event && this.state.session)) {
+    let invalid = this.handleFormValidations();
+    if ((this.state.formType === 'Polling Questions' || this.state.formType === 'Feedback Questions')
+      && (this.state.event && this.state.session)
+      && (this.state.formData.length !== 0)
+      && (!invalid)) {
       this.state.editForm ? this.props.editForm(id, formObject) : this.props.createForm(formObject);
       this.resetForm();
+      this.props.history.push("/dynamicForms");
     }
-    else if (this.state.formType === 'Home Questions' && this.state.event) {
+    else if (this.state.formType === 'Home Questions' && this.state.event && (this.state.formData.length !== 0) && (!invalid)) {
       formObject.session = null;
       this.state.editForm ? this.props.editForm(id, formObject) : this.props.createForm(formObject);
       this.resetForm();
+      this.props.history.push("/dynamicForms");
     }
     else {
       alert("please select required fields");
@@ -192,7 +207,6 @@ class QuestionForms extends Component {
           formData: [], 
           editForm : false
         });
-        this.props.history.push("/dynamicForms");
     }
   }
   render() {
@@ -205,6 +219,7 @@ class QuestionForms extends Component {
         <FormGroup row>
           <Col xs="12" md="4">
             <Select
+              name = "form"
               placeholder="Select Form Type"
               value={formType}
               options={formOptions}
@@ -247,8 +262,11 @@ class QuestionForms extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Col xs="12" md="10" >
+          <Col md="3" >
             <Button type="button" size="md" color="success" onClick={() => this.onSubmitForm()}>Create Form</Button>
+          </Col>
+          <Col md="3" >
+            <Button type="button" size="md" color="danger" style={{marginLeft : -150}} onClick={() => this.resetForm()}>Reset Form</Button>
           </Col>
         </FormGroup>
       </CardLayout>

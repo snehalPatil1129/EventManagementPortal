@@ -4,7 +4,7 @@ import * as actions from '../../store/actions/index';
 
 class Dashboard extends Component {
   componentWillMount () {
-      this.props.getEvents()
+      //this.props.getEvents()
 }
   render() {
     return (
@@ -16,7 +16,7 @@ class Dashboard extends Component {
 }
 const mapDispatchToProps = dispatch => {
   return {
-      getEvents : () => dispatch(actions.getEvents())
+      //getEvents : () => dispatch(actions.getEvents())
   };
 }
 export default connect(null, mapDispatchToProps)(Dashboard);

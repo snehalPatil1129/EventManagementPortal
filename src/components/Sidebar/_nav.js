@@ -16,11 +16,6 @@ export default {
       icon: 'icon-home'
     },
     {
-      name: 'Registration',
-      url: '/registration',
-      icon: 'icon-user'
-    },
-    {
       name: 'Attendee List',
       url: '/registrationList',
       icon: 'icon-user'

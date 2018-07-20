@@ -11,13 +11,15 @@ const registrationReducer = (state = initialState, action) => {
             return {
                 ...state,
                 attendeeList: action.attendeeList,
+                error: '',
             };
         case actionTypes.GET_ATTENDEE_DATA:
             return {
                 ...state,
                 attendeeData: action.attendeeData,
+                error: '',
             };
-        case actionTypes.LOG_ERROR:
+        case actionTypes.LOG_REGISTRATION_ERROR:
             return {
                 ...state,
                 error: action.error,

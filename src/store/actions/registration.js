@@ -1,10 +1,10 @@
 import * as actionTypes from '../actions/actionTypes';
 import axios from 'axios';
 
-export const logError = (error) => {
+export const logRegistrationError = () => {
     return {
-        type: actionTypes.LOG_ERROR,
-        error : error
+        type: actionTypes.LOG_REGISTRATION_ERROR,
+        error : 'Oops...Something went wrong.Please try again...'
     };
 };
 
@@ -29,7 +29,7 @@ export const getAttendees = () => {
                 dispatch(storeAttendees(response.data));
             })
             .catch((error) => {
-                console.log("errror",error);
+                dispatch(logRegistrationError());
             })
     }
 };
@@ -38,10 +38,9 @@ export const getAttendeeData = (id) => {
         axios.get(`http://localhost:3000/api/attendee/${id}`)
             .then((response) => {
                 dispatch(storeAttendeeData(response.data));
-                //console.log("Printed in getAttendeeData[action file]",response.data);
             })
             .catch((error) => {
-                console.log("errror",error);
+                dispatch(logRegistrationError());
             })
     }
 };
@@ -50,10 +49,10 @@ export const editAttendeeData = (id , attendee) => {
     return dispatch => {
         axios.put(`http://localhost:3000/api/attendee/${id}` , attendee)
             .then((response) => {
-                //console.log("Printed in editAttendeeData[action file]",response.data);
+                dispatch(getAttendees());
             })
             .catch((error) => {
-                console.log("errror",error);
+                dispatch(logRegistrationError());
             })
     }
 }
@@ -62,11 +61,10 @@ export const createAttendee = (attendee) => {
     return dispatch => {
         axios.post('http://localhost:3000/api/attendee', attendee )
             .then((response) => {
-                //console.log("Printed in attendee.js[action file]",response.data);
+                dispatch(getAttendees());
             })
             .catch((error) => {
-                console.log("errror", error);
-                dispatch(logError(error.message));
+                dispatch(logRegistrationError());
             })
     }
 };
@@ -75,12 +73,10 @@ export const deleteAttendee = (id) => {
     return dispatch => {
         axios.delete(`http://localhost:3000/api/attendee/${id}`)
             .then((response) => {
-                //console.log("Printed in attendee.j delete[action file]",response.data);
                 dispatch(getAttendees())
             })
             .catch((error) => {
-                console.log("errror", error);
-                dispatch(logError(error.message));
+                dispatch(logRegistrationError());
             })
     }
 };
