@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import Dashboard from '../../views/Dashboard/';
 import Events from '../../views/Events/';
+import Sessions from '../../views/Sessions/SessionForm';
+import Profiles from '../../views/UserProfiles/Profiles';
 import Rooms from '../../views/Rooms/';
 import Registration from '../../views/Registration/';
 import DynamicForms from '../../views/FormList/DynamicForms';
@@ -23,11 +25,13 @@ class App extends Component {
          <Switch>
            <Route path="/dashboard" exact component={Dashboard} />
            <Route path="/events" component={Events} />
+            <Route path="/sessions" component={Sessions} />
            <Route path="/rooms" component={Rooms} />
            <Route path="/registration" component={Registration} />
            <Route path="/registrationList" component={RegistrationModule} />
            <Route path="/dynamicForms" component={DynamicForms} />
            <Route path="/questionForms" component={QuestionForms} />
+           <Route path="/profiles" component={Profiles} />
            <Route path="/logout" component={Logout} />
            <Redirect from="/" to="/dashboard" />
            <Redirect to="/" />
