@@ -1,7 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    profiles: []
+    profiles: [],
+    profileList : []
 }
 
 const profileReducer = (state = initialState, action) => {
@@ -9,7 +10,8 @@ const profileReducer = (state = initialState, action) => {
         case actionTypes.GET_PROFILES_SUCCESS:
             return {
                 ...state,
-                profiles: action.profiles
+                profiles: action.profiles,
+                profileList : action.profileList
             }
         default:
             return {

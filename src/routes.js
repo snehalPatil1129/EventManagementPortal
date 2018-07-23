@@ -9,8 +9,8 @@ const routes = {
   '/registrationList/registration' : 'Registration',
   '/questionForms' : 'Question Forms',
   '/dynamicForms' : 'Dynamic Forms',
-  '/dynamicForms/questionForms' : 'Question Forms'
-
+  '/dynamicForms/questionForms' : 'Question Forms',
+  '/attendance' : 'Attendance'
 
 };
 export default routes;

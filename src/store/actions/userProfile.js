@@ -1,18 +1,23 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
-export const getProfilesSuccess = (profiles) => {
+export const getProfilesSuccess = (profiles , profileList) => {
     return {
         type: actionTypes.GET_PROFILES_SUCCESS,
-        profiles: profiles
+        profiles: profiles,
+        profileList : profileList
     }
 }
 
 export const getProfiles = () => {
+    let profileList = [];
     return dispatch => {
         axios.get('http://localhost:3000/api/userProfile')
             .then((response) => {
-                dispatch(getProfilesSuccess(response.data))
+                response.data.forEach ((profile) => {
+                    profileList.push({label : profile.profileName , value : profile._id })
+                })
+                dispatch(getProfilesSuccess(response.data , profileList))
             })
             .catch((error) => {
                 // console.log(error)

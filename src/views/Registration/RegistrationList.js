@@ -13,13 +13,13 @@ class RegistrationList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            Registration : {
-            }
+           event : ''
         }
     }
     componentDidMount () {
         this.props.getAttendeeList();
-        this.props.getEvents()
+        this.props.getEvents();
+        this.props.getProfiles();
     }
     ondeleteAttendee (cell, row) {
         return  <Link to={this}  onClick={() =>  this.props.deleteAttendee(row._id)}>
@@ -30,6 +30,20 @@ class RegistrationList extends Component {
         return  <Link to={`${this.props.match.url}/registration/${row._id}`} onClick={() => this.props.storeAttendeeData(row) }>
                     <i className="fa fa-pencil"></i>
                 </Link>  
+    }
+    handleEventChange (value) {
+        if(value !== null){
+            this.setState ({
+                event : value
+            });
+            this.props.getAttendeesForEvent(value);
+        }
+        else{
+            this.setState ({
+                event : ''
+            });
+            this.props.getAttendeeList();
+        }
     }
     render() {
           const options = {
@@ -47,10 +61,22 @@ class RegistrationList extends Component {
         return (
             <CardLayout name="Attendee List">
                 <FormGroup row>
-                    <Link to={`${this.props.match.url}/registration`}>
-                        <Button type="button" color="primary" size="small"> <i className="fa fa-plus"></i>
-                            Add Attendee </Button>
-                    </Link>
+                    <Col xs="12" md="8">
+                        <Link to={`${this.props.match.url}/registration`}>
+                            <Button type="button" color="primary" style ={{marginLeft : -14}} size="small"> <i className="fa fa-plus"></i>
+                                Add Attendee </Button>
+                        </Link>
+                    </Col>
+                    <Col md="4">
+                        <Select 
+                            name= "Event"
+                            placeholder =  "Select Event"
+                            options = {this.props.eventList}
+                            value = {this.state.event}
+                            simpleValue
+                            onChange = {this.handleEventChange.bind(this)}
+                            />
+                    </Col>
                 </FormGroup>
                 <FormGroup row>
                     <BootstrapTable ref='table' data={this.props.attendeeList} pagination={true} search={true} options={options} exportCSV={true}>
@@ -58,6 +84,7 @@ class RegistrationList extends Component {
                         <TableHeaderColumn dataField='firstName' headerAlign='left' width='100' csvHeader='First Name'>First Name</TableHeaderColumn>
                         <TableHeaderColumn dataField='lastName' headerAlign='left' width='100' csvHeader='Last Name'>Last Name</TableHeaderColumn>
                         <TableHeaderColumn dataField='email' headerAlign='left' width='100' csvHeader='Email'>Email</TableHeaderColumn>
+                        <TableHeaderColumn dataField='eventName' headerAlign='left' width='100' csvHeader='Event'>Event</TableHeaderColumn>
                         <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left' width='40' export={false}>Edit</TableHeaderColumn>
                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteAttendee.bind(this)} headerAlign='left' width='40' export={false}>Delete</TableHeaderColumn>
                     </BootstrapTable>
@@ -75,7 +102,8 @@ class RegistrationList extends Component {
 const mapStateToProps = state => {
     return {
         registrationError: state.registration.error,
-        attendeeList : state.registration.attendeeList
+        attendeeList : state.registration.attendeeList,
+        eventList :  state.event.eventList
     };
 }
 
@@ -84,7 +112,9 @@ const mapDispatchToProps = dispatch => {
         getAttendeeList : () => dispatch(actions.getAttendees()),
         storeAttendeeData : (attendee) => dispatch(actions.storeAttendeeData(attendee)),
         deleteAttendee : (id) => dispatch(actions.deleteAttendee(id)),
-        getEvents : () => dispatch(actions.getEvents())
+        getEvents : () => dispatch(actions.getEvents()),
+        getAttendeesForEvent : (eventId) => dispatch(actions.getAttendeesForEvent(eventId)),
+        getProfiles : () => dispatch(actions.getProfiles())
     }
 }
 

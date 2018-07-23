@@ -42,24 +42,15 @@ class QuestionForms extends Component {
     }
   }
   handleEventSelectChange(value) {
-    let event = value;
-    this.setState({
-      event: event
-    });
-    this.props.getSessions(value);
+    value !== null ? this.setState({ event : value}) : this.setState({event : ''});
   }
   handleSessionSelectChange(value) {
-    let session = value;
-    this.setState({
-      session: session
-    });
+    value !== null ? this.setState({ session : value}) : this.setState({session : ''});
   }
   handleFormSelectChange(value) {
-    let formType = value;
-    this.setState({
-      formType: formType
-    });
+    value !== null ? this.setState({ formType : value}) : this.setState({formType : ''});
   }
+  
   onDisplayNewQuestion() {
     formLayout = this.state.formData.map((que, id) => {
       return (

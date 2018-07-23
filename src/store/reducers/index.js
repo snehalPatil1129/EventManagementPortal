@@ -5,14 +5,15 @@ import  registrationReducer from './registration';
 import  authReducer from './auth';
 import  formReducer from './questionForms';
 import  profileReducer from './userProfile';
-
+import  attendanceReducer from './attendance';
 const rootReducer = combineReducers({
   event : eventReducer,
   room : roomReducer,
   registration : registrationReducer,
   auth : authReducer,
   questionForm : formReducer,
-  profile : profileReducer
+  profile : profileReducer,
+  attendance : attendanceReducer
 });
 
 export default rootReducer;

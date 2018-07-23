@@ -23,16 +23,39 @@ export const storeAttendeeData = (attendeeData) => {
 };
 
 export const getAttendees = () => {
+    let attendees = []; 
     return dispatch => {
         axios.get('http://localhost:3000/api/attendee')
             .then((response) => {
-                dispatch(storeAttendees(response.data));
+                attendees = response.data;
+                attendees.forEach((attendee) => {
+                    attendee.eventName = attendee.event.eventName;
+                });
+                dispatch(storeAttendees(attendees));
             })
             .catch((error) => {
                 dispatch(logRegistrationError());
             })
     }
 };
+
+export const getAttendeesForEvent = (eventId) => {
+    let attendees = []; 
+    return dispatch => {
+        axios.get(`http://localhost:3000/api/attendee/event/${eventId}`)
+            .then((response) => {
+                attendees = response.data;
+                attendees.forEach((attendee) => {
+                    attendee.eventName = attendee.event.eventName;
+                });
+                dispatch(storeAttendees(attendees));
+            })
+            .catch((error) => {
+                dispatch(logRegistrationError());
+            })
+    }
+};
+
 export const getAttendeeData = (id) => {
     return dispatch => {
         axios.get(`http://localhost:3000/api/attendee/${id}`)
