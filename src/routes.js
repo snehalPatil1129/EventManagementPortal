@@ -10,7 +10,11 @@ const routes = {
   '/questionForms' : 'Question Forms',
   '/dynamicForms' : 'Dynamic Forms',
   '/dynamicForms/questionForms' : 'Question Forms',
-  '/attendance' : 'Attendance'
-
+  '/attendance' : 'Attendance',
+  '/staticPages' : 'Static Pages',
+  '/staticPages/aboutUs' : 'About Us',
+  '/staticPages/aboutEternus' : 'About Eternus',
+  '/staticPages/helpDesk' : 'Help Desk',
+  '/staticPages/eventLocation' : 'Event Location'
 };
 export default routes;

@@ -41,6 +41,33 @@ export default {
       icon: 'icon-user'
     },
     {
+    name: 'Static Pages',
+    url: '/staticPages/',
+    icon: 'icon-puzzle',
+    children: [
+      {
+        name: 'About Us',
+        url: '/staticPages/aboutUs',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: 'About Eternus',
+        url: '/staticPages/aboutEternus',
+        icon: 'icon-note'
+      }, 
+      {
+        name: 'Help Desk',
+        url: '/staticPages/helpDesk',
+        icon: 'icon-note'
+      }, 
+      {
+        name: 'Event Location',
+        url: '/staticPages/eventLocation',
+        icon: 'icon-note'
+      }, 
+    ]
+  },
+    {
       name: 'Logout',
       url: '/logout',
       icon: 'icon-question'

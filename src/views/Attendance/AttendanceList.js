@@ -19,28 +19,19 @@ class AttendanceList extends Component {
         }
     }
     componentWillMount () {
-        //this.props.getAttendanceList();
-        //this.props.getEvents();
+        this.props.getAttendanceList();
+        this.props.getEvents();
     }
-    componentDidMount () {
-        this.props.attendanceList.length !== 0 
-        ? this.setState({ attendance : this.props.attendanceList })
-        : this.setState({ attendance : [] });
-    }
+    componentDidUpdate(prevProps, prevState) {
+       if (prevProps.attendanceList !== this.props.attendanceList) {
+            this.setState({
+                attendance : this.props.attendanceList
+            })
+        }
+      }
     handleEventChange(value) {
-        if (value !== null) {
-            let event = value;
-            this.setState({
-                event: event
-            });
-            this.props.getSessions(value);
-        }
-        else {
-            this.setState({
-                event: '',
-                session: ''
-            });
-        }
+        value !== null ? (this.setState({event: value}) ,this.props.getSessions(value)) 
+        : this.setState({ event: '', session: ''});
     }
     render() {
           const options = {
@@ -96,7 +87,6 @@ class AttendanceList extends Component {
                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteAttendee.bind(this)} headerAlign='left' width='40' export={false}>Delete</TableHeaderColumn> */}
                     </BootstrapTable>
                 </FormGroup>
-               
             </CardLayout>
         )
     }
@@ -113,9 +103,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-       // getAttendanceList : () => dispatch(actions.getAttendanceList()),
-       // getEvents : () => dispatch(actions.getEvents()),
-        getSessions : (id) => dispatch(actions.getSessionsOfEvent(id)),
+        getAttendanceList: () => dispatch(actions.getAttendanceList()),
+        getEvents: () => dispatch(actions.getEvents()),
+        getSessions: (id) => dispatch(actions.getSessionsOfEvent(id)),
     }
 }
 

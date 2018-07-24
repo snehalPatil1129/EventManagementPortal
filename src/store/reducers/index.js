@@ -6,6 +6,8 @@ import  authReducer from './auth';
 import  formReducer from './questionForms';
 import  profileReducer from './userProfile';
 import  attendanceReducer from './attendance';
+import  staticPageReducer from './staticPages';
+
 const rootReducer = combineReducers({
   event : eventReducer,
   room : roomReducer,
@@ -13,7 +15,8 @@ const rootReducer = combineReducers({
   auth : authReducer,
   questionForm : formReducer,
   profile : profileReducer,
-  attendance : attendanceReducer
+  attendance : attendanceReducer,
+  staticPages : staticPageReducer
 });
 
 export default rootReducer;

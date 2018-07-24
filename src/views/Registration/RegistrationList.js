@@ -32,18 +32,8 @@ class RegistrationList extends Component {
                 </Link>  
     }
     handleEventChange (value) {
-        if(value !== null){
-            this.setState ({
-                event : value
-            });
-            this.props.getAttendeesForEvent(value);
-        }
-        else{
-            this.setState ({
-                event : ''
-            });
-            this.props.getAttendeeList();
-        }
+        value !== null ? ( this.setState({ event : value}) , this.props.getAttendeesForEvent(value)) 
+        : (this.setState ({ event : ''}) ,  this.props.getAttendeeList());
     }
     render() {
           const options = {

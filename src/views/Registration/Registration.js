@@ -75,7 +75,6 @@ class Registration extends Component {
                 if (profile.eventId === value)
                     profiles.push({ value: profile._id, label: profile.profileName })
             });
-
             this.setState({ Registration: Registration ,profileList : profiles });
         }
         else{

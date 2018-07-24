@@ -47,3 +47,15 @@ export {
 export {
     getAttendanceList
 } from './attendance'
+
+export {
+    getAboutUsInfo,
+    createAboutUsInfo,
+    editAboutUsInfo,
+    getAboutEternusInfo,
+    createAboutEternusInfo,
+    editAboutEternusInfo,
+    getHelpDeskForEvent,
+    createHelpDeskInfo,
+    editHelpDeskInfo
+} from './staticPages'
