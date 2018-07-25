@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import  eventReducer from './event';
+import  sessionReducer from './session';
 import  roomReducer from './room';
 import  registrationReducer from './registration';
 import  authReducer from './auth';
@@ -10,6 +11,7 @@ import  staticPageReducer from './staticPages';
 
 const rootReducer = combineReducers({
   event : eventReducer,
+  session : sessionReducer,
   room : roomReducer,
   registration : registrationReducer,
   auth : authReducer,

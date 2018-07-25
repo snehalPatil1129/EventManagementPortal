@@ -59,3 +59,8 @@ export {
     createHelpDeskInfo,
     editHelpDeskInfo
 } from './staticPages'
+
+export {
+    createSession,
+    getSessions
+} from './session'
