@@ -42,11 +42,11 @@ export {
     createProfile,
     deleteProfile,
     updateProfile
-} from './userProfile'
+} from './userProfile';
 
 export {
     getAttendanceList
-} from './attendance'
+} from './attendance';
 
 export {
     getAboutUsInfo,
@@ -57,10 +57,15 @@ export {
     editAboutEternusInfo,
     getHelpDeskForEvent,
     createHelpDeskInfo,
-    editHelpDeskInfo
-} from './staticPages'
+    editHelpDeskInfo ,
+    getLocationForEvent,
+    getEventLocation,
+    createEventLocation,
+    editEventLocation
+} from './staticPages';
 
 export {
     createSession,
     getSessions
-} from './session'
+} from './session';
+   

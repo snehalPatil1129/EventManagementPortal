@@ -13,22 +13,31 @@ const staticPageReducer = (state = initialState, action) => {
         case actionTypes.STORE_ABOUT_US:
             return {
                 ...state,
-                aboutUs: action.aboutUs
+                aboutUs: action.aboutUs,
+                error: ''
             }
         case actionTypes.STORE_ABOUT_ETERNUS:
             return {
                 ...state,
-                aboutEternus: action.aboutEternus
+                aboutEternus: action.aboutEternus,
+                error: ''
             }
         case actionTypes.STORE_HELPDESK_DETAILS:
             return {
                 ...state,
-                helpDesk: action.helpDesk
+                helpDesk: action.helpDesk,
+                error: ''
             }
         case actionTypes.STORE_EVENT_LOCATION:
             return {
                 ...state,
-                eventLocation: action.eventLocation
+                eventLocation: action.eventLocation,
+                error: ''
+            }
+        case actionTypes.LOG_STATIC_PAGE_ERROR:
+            return {
+                ...state,
+                error: action.error
             }
         default:
             return {

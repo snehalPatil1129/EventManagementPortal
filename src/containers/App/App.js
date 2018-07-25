@@ -15,6 +15,7 @@ import AboutUs from '../../views/StaticPages/AboutUs';
 import AboutEternus from '../../views/StaticPages/AboutEternus';
 import HelpDesk from '../../views/StaticPages/HelpDesk';
 import EventLocation from '../../views/StaticPages/Location';
+import Sponsors from '../../views/Sponsors/Sponsors';
 import Layout from '../../components/Layout/';
 import Logout from '../Authentication/Logout';
 import Login from '../Authentication/Login';
@@ -42,6 +43,7 @@ class App extends Component {
           <Route path="/attendance" component={AttendanceList} />
           <Route path="/dynamicForms" component={DynamicForms} />
           <Route path="/questionForms" component={QuestionForms} />
+          <Route path="/sponsors" component={Sponsors} />
           <Route path="/profiles" component={Profiles} />
           <Route path="/logout" component={Logout} />
           <Redirect from="/" to="/dashboard" />

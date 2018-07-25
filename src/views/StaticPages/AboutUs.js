@@ -12,7 +12,8 @@ class AboutUs extends Component {
     this.state = {
       aboutUs: {
         info: '', url: ''
-      }
+      },
+      infoRequired : false
     }
   }
   componentWillMount() {
@@ -33,17 +34,21 @@ class AboutUs extends Component {
     });
   }
   onSubmit() {
-    let isEmpty = !Object.keys(this.props.aboutUs).length;
-    if (isEmpty) { //post
-      let aboutUs = _.pick(this.state.aboutUs , ['info' , 'url']);
-      this.props.createAboutUs(aboutUs);
-      this.onReset();
-    }
-    else { //put
-      let aboutUs = _.pick(this.state.aboutUs , ['info' , 'url']);
-      let id = this.props.aboutUs._id;
-      this.props.editAboutUs(id, aboutUs);
-      this.onReset();
+    if(this.state.aboutUs.info){
+      let isEmpty = !Object.keys(this.props.aboutUs).length;
+      if (isEmpty) { //post
+        let aboutUs = _.pick(this.state.aboutUs , ['info' , 'url']);
+        this.props.createAboutUs(aboutUs);
+        this.onReset();
+      }
+      else { //put
+        let aboutUs = _.pick(this.state.aboutUs , ['info' , 'url']);
+        let id = this.props.aboutUs._id;
+        this.props.editAboutUs(id, aboutUs);
+        this.onReset();
+      }
+    }else{
+      !this.state.aboutUs.info ? this.setState({ infoRequired: true }) : null;
     }
   }
   onReset() {
@@ -67,6 +72,7 @@ class AboutUs extends Component {
               placeholder="Information about Eternus..."
               name="info"
               value={info}
+              required= {this.state.infoRequired}
               onchanged={(event) => this.onChangeInput(event)}
             />
           </Col>
@@ -89,7 +95,7 @@ class AboutUs extends Component {
             <Button type="button" size="md" color="danger" onClick={() => this.onReset()} style={{ marginLeft: -160 }} >Reset</Button>
           </Col>
           <Col md="6">
-                {/* error */}
+            <div style={{ color: "red" }} className="help-block">{this.props.error}</div>
           </Col>
         </FormGroup >
       </CardLayout>
@@ -98,7 +104,8 @@ class AboutUs extends Component {
 }
 const mapStateToProps = state => {
   return {
-    aboutUs: state.staticPages.aboutUs
+    aboutUs: state.staticPages.aboutUs,
+    error : state.staticPages.error
   };
 }
 const mapDispatchToProps = dispatch => {

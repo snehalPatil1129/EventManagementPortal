@@ -11,7 +11,8 @@ class AboutEternus extends Component {
     this.state = {
       aboutEternus: {
         info: '', url: ''
-      }
+      },
+      infoRequired: false
     }
   }
   componentWillMount() {
@@ -24,25 +25,30 @@ class AboutEternus extends Component {
       })
     }
   }
-  onChangeInput (event) {
-    let aboutEternus = {...this.state.aboutEternus};
+  onChangeInput(event) {
+    let aboutEternus = { ...this.state.aboutEternus };
     aboutEternus[event.target.name] = event.target.value;
     this.setState({
-      aboutEternus : aboutEternus
+      aboutEternus: aboutEternus
     });
   }
   onSubmit() {
-    let isEmpty = !Object.keys(this.props.aboutEternus).length;
-    if (isEmpty) { //post
-      let aboutEternus = _.pick(this.state.aboutEternus , ['info' , 'url']);
-      this.props.createAboutEternus(aboutEternus);
-      this.onReset();
+    if (this.state.aboutEternus.info) {
+      let isEmpty = !Object.keys(this.props.aboutEternus).length;
+      if (isEmpty) { //post
+        let aboutEternus = _.pick(this.state.aboutEternus, ['info', 'url']);
+        this.props.createAboutEternus(aboutEternus);
+        this.onReset();
+      }
+      else { //put
+        let aboutEternus = _.pick(this.state.aboutEternus, ['info', 'url']);
+        let id = this.props.aboutEternus._id;
+        this.props.editAboutEternus(id, aboutEternus);
+        this.onReset();
+      }
     }
-    else { //put
-      let aboutEternus = _.pick(this.state.aboutEternus , ['info' , 'url']);
-      let id = this.props.aboutEternus._id;
-      this.props.editAboutEternus(id, aboutEternus);
-      this.onReset();
+    else {
+      !this.state.aboutEternus.info ? this.setState({ infoRequired: true }) : null;
     }
   }
   onReset() {
@@ -51,34 +57,12 @@ class AboutEternus extends Component {
         ...prevState.aboutEternus,
         info: '',
         url: ''
-      }
-    }))
-  }
-  onSubmit() {
-    let isEmpty = !Object.keys(this.props.aboutEternus).length;
-    if (isEmpty) { //post
-      let aboutEternus = _.pick(this.state.aboutEternus , ['info' , 'url']);
-      this.props.createAboutEternus(aboutEternus);
-      this.onReset();
-    }
-    else { //put
-      let aboutEternus = _.pick(this.state.aboutEternus , ['info' , 'url']);
-      let id = this.props.aboutEternus._id;
-      this.props.editAboutEternus(id, aboutEternus);
-      this.onReset();
-    }
-  }
-  onReset() {
-    this.setState(prevState => ({
-      aboutEternus: {
-        ...prevState.aboutEternus,
-        info: '',
-        url: ''
-      }
+      },
+      infoRequired: false
     }))
   }
   render() {
-    const { info , url } = {...this.state.aboutEternus}
+    const { info, url } = { ...this.state.aboutEternus }
     return (
       <CardLayout name="About Eternus">
         <FormGroup row>
@@ -89,7 +73,7 @@ class AboutEternus extends Component {
               placeholder="Information about Eternus..."
               name="info"
               value={info}
-            // required= {this.state.capacityRequired}
+              required={this.state.infoRequired}
               onchanged={(event) => this.onChangeInput(event)}
             />
           </Col>
@@ -112,7 +96,7 @@ class AboutEternus extends Component {
             <Button type="button" size="md" color="danger" style={{ marginLeft: -160 }} onClick={() => this.onReset()} >Reset</Button>
           </Col>
           <Col md="6">
-
+                 <div style={{color: "red"}} className="help-block">{this.props.error}</div>
           </Col>
         </FormGroup >
       </CardLayout>
@@ -121,14 +105,15 @@ class AboutEternus extends Component {
 }
 const mapStateToProps = state => {
   return {
-    aboutEternus: state.staticPages.aboutEternus
+    aboutEternus: state.staticPages.aboutEternus,
+    error : state.staticPages.error
   };
 }
 const mapDispatchToProps = dispatch => {
   return {
     getAboutEternus: () => dispatch(actions.getAboutEternusInfo()),
-    createAboutEternus : (aboutEternus) => dispatch(actions.createAboutEternusInfo(aboutEternus)),
-    editAboutEternus : (id , aboutEternus) => dispatch(actions.editAboutEternusInfo(id, aboutEternus))
+    createAboutEternus: (aboutEternus) => dispatch(actions.createAboutEternusInfo(aboutEternus)),
+    editAboutEternus: (id, aboutEternus) => dispatch(actions.editAboutEternusInfo(id, aboutEternus))
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(AboutEternus);

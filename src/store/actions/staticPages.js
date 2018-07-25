@@ -148,7 +148,6 @@ export const editHelpDeskInfo = (id, helpDesk) => {
             })
     }
 }
-
 export const getHelpDeskForEvent = (id) => {
     let helpDesk = {};
     return dispatch => {
@@ -165,6 +164,58 @@ export const getHelpDeskForEvent = (id) => {
     }
 }
 
-
-
+///eventLocation
+export const getLocationForEvent = (id) => {
+    let eventLocation = {};
+    return dispatch => {
+        axios.get(`http://localhost:3000/api/location/eventId/${id}`)
+            .then((response) => {
+                if (response.data.length !== 0) {
+                    eventLocation = response.data[0];
+                }
+                dispatch(storeLocationInfo(eventLocation));
+            })
+            .catch((error) => {
+                dispatch(logStaticPageError());
+                //console.log('error',error);
+            })
+    }
+}
+export const getEventLocation = () => {
+    let eventLocation = {};
+    return dispatch => {
+        axios.get('http://localhost:3000/api/location')
+            .then((response) => {
+                if (response.data.length !== 0) {
+                    eventLocation = response.data[0];
+                }
+                dispatch(storeLocationInfo(eventLocation));
+            })
+            .catch((error) => {
+                dispatch(logStaticPageError());
+            })
+    }
+}
+export const createEventLocation = (eventLocation) => {
+    return dispatch => {
+        axios.post('http://localhost:3000/api/location', eventLocation)
+            .then((response) => {
+                dispatch(storeLocationInfo(response.data));
+            })
+            .catch((error) => {
+                dispatch(logStaticPageError());
+            })
+    }
+}
+export const editEventLocation = (id, eventLocation) => {
+    return dispatch => {
+        axios.put(`http://localhost:3000/api/location/${id}`, eventLocation)
+            .then((response) => {
+                dispatch(storeLocationInfo(response.data));
+            })
+            .catch((error) => {
+                dispatch(logStaticPageError());
+            })
+    }
+}
 

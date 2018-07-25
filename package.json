@@ -44,6 +44,7 @@
     "react-chartjs-2": "2.7.0",
     "react-datepicker": "^1.5.0",
     "react-dom": "16.2.0",
+    "react-geocode": "^0.1.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "4.2.2",
     "react-select": "^1.2.1",

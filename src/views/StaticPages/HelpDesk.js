@@ -11,12 +11,11 @@ class HelpDesk extends Component {
     super(props);
     this.state = {
       helpDesk: {
-        event: '',
-        eventSupportEmail: '',
-        eventSupportContact: '',
-        techSupportEmail: '',
-        techSupportContact: '',
-      }
+        event: '', eventSupportEmail: '', eventSupportContact: '',
+        techSupportEmail: '', techSupportContact: ''
+      } ,
+      eventEmailRequired : false, eventContactRequired : false ,
+      techEmailRequired : false, techContactRequired : false, eventRequired :false
     }
   }
   componentWillMount () {
@@ -46,14 +45,16 @@ class HelpDesk extends Component {
     let helpDesk = { ...this.state.helpDesk };
     helpDesk[event.target.name] = event.target.value;
     this.setState({
-      helpDesk: helpDesk
+      helpDesk: helpDesk ,eventEmailRequired : false, eventContactRequired : false ,
+      techEmailRequired : false, techContactRequired : false
     });
   }
   handleEventChange (value) {
     if(value !== null){
      let helpDesk = {...this.state.helpDesk};
      helpDesk.event = value;
-     this.setState({ helpDesk : helpDesk});
+     this.setState({ helpDesk : helpDesk , eventEmailRequired : false, eventContactRequired : false ,
+      techEmailRequired : false, techContactRequired : false, eventRequired :false});
      this.props.getHelpDeskForEvent(value);
     }
     else{
@@ -61,17 +62,25 @@ class HelpDesk extends Component {
     }
   }
   onSubmit () {
-    let isEmpty = !Object.keys(this.props.helpDesk).length;
-    if (isEmpty) { //post
-      let helpDesk = _.pick(this.state.helpDesk , ['event', 'eventSupportEmail','eventSupportContact','techSupportEmail','techSupportContact']);
-      this.props.createHelpDeskInfo(helpDesk);
-      this.onReset();
-    }
-    else { //put
-      let helpDesk = _.pick(this.state.helpDesk , ['event', 'eventSupportEmail','eventSupportContact','techSupportEmail','techSupportContact']);      
-      let id = this.props.helpDesk._id;
-      this.props.editHelpDeskInfo(id, helpDesk);
-      this.onReset();
+    let helpDesk = { ...this.state.helpDesk };
+    if (helpDesk.event && helpDesk.eventSupportContact && helpDesk.eventSupportEmail && helpDesk.techSupportEmail && helpDesk.techSupportContact) {
+      let isEmpty = !Object.keys(this.props.helpDesk).length;
+      let helpDesk = _.pick(this.state.helpDesk, ['event', 'eventSupportEmail', 'eventSupportContact', 'techSupportEmail', 'techSupportContact']);
+      if (isEmpty) { //post
+        this.props.createHelpDeskInfo(helpDesk);
+        this.onReset();
+      }
+      else { //put
+        let id = this.props.helpDesk._id;
+        this.props.editHelpDeskInfo(id, helpDesk);
+        this.onReset();
+      }
+    } else {
+      !helpDesk.event ? this.setState({ eventRequired: true }) : null;
+      !helpDesk.eventSupportEmail ? this.setState({ eventEmailRequired: true }) : null;
+      !helpDesk.eventSupportContact ? this.setState({ eventContactRequired: true }) : null;
+      !helpDesk.techSupportEmail ? this.setState({ techEmailRequired: true }) : null;
+      !helpDesk.techSupportContact ? this.setState({ techContactRequired: true }) : null;
     }
   } 
   onReset(){
@@ -83,7 +92,9 @@ class HelpDesk extends Component {
         eventSupportContact: '',
         techSupportEmail: '',
         techSupportContact: '',
-      }
+      },
+      eventEmailRequired : false, eventContactRequired : false ,
+      techEmailRequired : false, techContactRequired : false, eventRequired :false
     }))
   }
   render() {
@@ -99,6 +110,9 @@ class HelpDesk extends Component {
               simpleValue
               onChange={this.handleEventChange.bind(this)}
             />
+            {
+              this.state.eventRequired ? <div style={{ color: "red" ,marginTop: -1 }} className="help-block">*Required</div> : null
+            }
           </Col>
         </FormGroup>
         <FormGroup row>
@@ -108,6 +122,7 @@ class HelpDesk extends Component {
               type="email"
               placeholder="Event Support Email"
               name="eventSupportEmail"
+              required ={this.state.eventEmailRequired}
               value={helpDesk.eventSupportEmail}
               onchanged={(event) => this.onChangeInput(event)}
             />
@@ -118,6 +133,7 @@ class HelpDesk extends Component {
               type="number"
               placeholder="Technical Support Contact"
               name="eventSupportContact"
+              required ={this.state.eventContactRequired}
               value={helpDesk.eventSupportContact}
               onchanged={(event) => this.onChangeInput(event)}
             />
@@ -130,6 +146,7 @@ class HelpDesk extends Component {
               type="email"
               placeholder="Technical Support Email"
               name="techSupportEmail"
+              required ={this.state.techEmailRequired}
               value={helpDesk.techSupportEmail}
               onchanged={(event) => this.onChangeInput(event)}
             />
@@ -140,6 +157,7 @@ class HelpDesk extends Component {
               type="number"
               placeholder="Technical Support Contact"
               name="techSupportContact"
+              required ={this.state.techContactRequired}
               value={helpDesk.techSupportContact}
               onchanged={(event) => this.onChangeInput(event)}
             />
@@ -153,8 +171,8 @@ class HelpDesk extends Component {
             <Button type="button" size="md" color="danger" style={{ marginLeft: -160 }} >Reset</Button>
           </Col>
           <Col md="6">
-
-          </Col>
+          <div style={{ color: "red" }} className="help-block">{this.props.error}</div>
+        </Col>
         </FormGroup >
       </CardLayout>
     )
@@ -163,7 +181,8 @@ class HelpDesk extends Component {
 const mapStateToProps = state => {
   return {
       eventList : state.event.eventList,
-      helpDesk : state.staticPages.helpDesk
+      helpDesk : state.staticPages.helpDesk,
+      error : state.staticPages.error
   };
 }
 const mapDispatchToProps = dispatch => {
