@@ -36,7 +36,7 @@ class EventForm extends Component {
         if (this.props.match.params.id != undefined) {
             this.setState({ updateflag: true })
             let event = this.props.events.find(o => o._id === this.props.match.params.id);
-             let Event = {
+            let Event = {
                 id: event._id,
                 eventName: event.eventName,
                 venue: event.venue,
@@ -114,138 +114,78 @@ class EventForm extends Component {
 
     render() {
         //const purchasedRedirect = this.props.eventCreated ?  <Link to={'/events'}/> : null;
-        this.headerText = '';
-        if (this.state.updateflag) {
-            this.headerText = "Event";
+      
+        if (this.state.updateflag) 
             this.buttons = <Button type="submit" size="md" color="success" onClick={this.onUpdateHandler.bind(this)} ><i className="icon-note"></i> Update</Button>
-        }
-        else {
-            this.headerText = "Event Form";
+        else 
             this.buttons = <Button type="submit" size="md" color="success" onClick={this.onSubmitHandler.bind(this)} ><i className="icon-note"></i> Register</Button>
-        }
+        
         return (
-            <div>
-                <ToastContainer autoClose={2000} />
-                <div className="animated fadeIn">
-                    <Container>
-                        <Row className="justify-content-left">
-                            <Col md="8">
-                                <Card className="mx-6">
-                                    <CardBody className="p-4">
-                                        <h1>{this.headerText}</h1>
-                                        <FormGroup row>
-                                            <Col xs="12" >
-                                                <InputGroup className="mb-3">
-                                                    <InputGroupAddon addonType="prepend">
-                                                        <InputGroupText>
-                                                            <i className="icon-user"></i>
-                                                        </InputGroupText>
-                                                    </InputGroupAddon>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Event Name"
-                                                        name="eventName"
-                                                        value={this.state.Event.eventName}
-                                                        onChange={this.onChangeHandler.bind(this)} />
-                                                    {this.state.submitted && !this.state.Event.eventName &&
-                                                        <div className="help-block" style={{ color: "red" }}>*Required</div>
-                                                    }
-                                                </InputGroup>
-                                            </Col>
-                                        </FormGroup>
-                                        <FormGroup row>
-                                            <Col xs="12" md="6" >
-                                                <InputGroup className="mb-3">
-                                                    <InputGroupAddon addonType="prepend">
-                                                        <InputGroupText>
-                                                            <i className="icon-user"></i>
-                                                        </InputGroupText>
-                                                    </InputGroupAddon>
-                                                    <DatePicker
-                                                        id="start"
-                                                        selected={this.state.Event.startDate}
-                                                        onChange={(event) => this.changeFunction(event, "startDate")}
-                                                        placeholderText="Select start date"
-                                                    />
-                                                    {this.state.submitted && this.state.inValidDates &&
-                                                        <div className="help-block" style={{ color: "red" }}>*Invalid date</div>
-                                                    }
-                                                </InputGroup>
-                                            </Col>
-                                            <Col md="6" >
-                                                <InputGroup className="mb-6">
-                                                    <InputGroupAddon addonType="prepend">
-                                                        <InputGroupText>
-                                                            <i className="icon-user"></i>
-                                                        </InputGroupText>
-                                                    </InputGroupAddon>
-                                                    <DatePicker
-                                                        selected={this.state.Event.endDate}
-                                                        onChange={(event) => this.changeFunction(event, "endDate")}
-                                                        placeholderText="Select End date"
-                                                    />
-                                                    {this.state.submitted && this.state.inValidDates &&
-                                                        <div className="help-block" style={{ color: "red" }}>*Invalid date</div>
-                                                    }
-                                                </InputGroup>
-                                            </Col>
-                                        </FormGroup>
-                                        <FormGroup row>
-                                            <Col xs="12" md="6" >
-                                                <InputGroup className="mb-3">
-                                                    <InputGroupAddon addonType="prepend">
-                                                        <InputGroupText>
-                                                            <i className="icon-user"></i>
-                                                        </InputGroupText>
-                                                    </InputGroupAddon>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Description"
-                                                        name="description"
-                                                        value={this.state.Event.description}
-                                                        onChange={this.onChangeHandler.bind(this)} />
-                                                    {this.state.submitted && !this.state.Event.description &&
-                                                        <div className="help-block" style={{ color: "red" }}>*Required</div>
-                                                    }
-                                                </InputGroup>
-                                            </Col>
-                                            <Col md="6" >
-                                                <InputGroup className="mb-3">
-                                                    <InputGroupAddon addonType="prepend">
-                                                        <InputGroupText>
-                                                            <i className="icon-user"></i>
-                                                        </InputGroupText>
-                                                    </InputGroupAddon>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Venue"
-                                                        name="venue"
-                                                        value={this.state.Event.venue}
-                                                        onChange={this.onChangeHandler.bind(this)} />
-                                                    {this.state.submitted && !this.state.Event.venue &&
-                                                        <div className="help-block" style={{ color: "red" }}>*Required</div>
-                                                    }
-                                                </InputGroup>
-                                            </Col>
-                                        </FormGroup>
-                                        <FormGroup row>
-                                            <Col xs="8" md="3">
-                                                {this.buttons}
-                                            </Col>
-                                            <Col md="3">
-                                                <Button onClick={this.resetField.bind(this)} type="reset" size="md" color="danger" > Reset</Button>
-                                            </Col>
-                                        </FormGroup>
-                                        <FormGroup row>
-                                            {/* {purchasedRedirect}  */}
-                                        </FormGroup>
-                                    </CardBody>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </Container>
-                </div>
-            </div>
+            <CardLayout name="Event">
+                <FormGroup row>
+                    <Col xs="12" md="6">
+                        <InputElement
+                            type='text'
+                            placeholder='Event Name'
+                            name='eventName'
+                            icon='icon-user'
+                            value={this.state.Event.eventName}
+                            onchanged={(event) => this.onChangeHandler(event)} />
+                    </Col>
+                    <Col md="6">
+                        <InputGroup className="mb-3">
+                                <InputGroupText>
+                                    <i className="icon-user"></i>
+                                </InputGroupText>
+                            <DatePicker
+                                selected={this.state.Event.startDate}
+                                onChange={(event) => this.changeFunction(event, "startDate")}
+                                placeholderText="Select start date" />
+                        </InputGroup>
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Col xs="12" md="6">
+                        <InputGroup className="mb-3">
+                                <InputGroupText>
+                                    <i className="icon-user"></i>
+                                </InputGroupText>
+                            <DatePicker
+                                selected={this.state.Event.endDate}
+                                onChange={(event) => this.changeFunction(event, "endDate")}
+                                placeholderText="Select start date" />
+                        </InputGroup>
+                    </Col>
+                    <Col md="6">
+                        <InputElement
+                            type='text'
+                            placeholder='Description'
+                            name='description'
+                            icon='icon-phone'
+                            value={this.state.Event.description}
+                            onchanged={(event) => this.onChangeHandler(event)} />
+                    </Col>
+                </FormGroup>
+                <FormGroup row>
+                    <Col xs="12" md="6">
+                        <InputElement
+                            type='text'
+                            placeholder='Venue'
+                            name='venue'
+                            icon='icon-phone'
+                            value={this.state.Event.venue}
+                            onchanged={(event) => this.onChangeHandler(event)} />
+                    </Col>
+                </FormGroup >
+                <FormGroup row>
+                    <Col xs="8" md="3">
+                        {this.buttons}
+                    </Col>
+                    <Col md="3">
+                        <Button onClick={this.resetField.bind(this)} type="reset" size="md" color="danger" > Reset</Button>
+                    </Col>
+                </FormGroup>
+            </CardLayout>
         );
     }
 }
