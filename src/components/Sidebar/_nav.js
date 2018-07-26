@@ -30,6 +30,11 @@ export default {
       url: '/registrationList',
       icon: 'icon-user'
     },
+     {
+      name: 'speakers',
+      url: '/speakers',
+      icon: 'icon-user'
+    },
     {
       name: 'Dynamic Forms',
       url: '/dynamicForms',

@@ -69,3 +69,12 @@ export {
     getSessions
 } from './session';
    
+export {
+    createSpeaker,
+    getSpeakers,
+    getSpeakerData,
+    editSpeakerData,
+    storeSpeakerData,
+    deleteSpeaker,
+    getSpeakersForEvent
+} from './speaker';

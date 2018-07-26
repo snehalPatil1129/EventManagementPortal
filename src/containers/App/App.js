@@ -9,6 +9,7 @@ import AttendanceList from '../../views/Attendance/AttendanceList';
 import DynamicForms from '../../views/DynamicForms/DynamicForms';
 import QuestionForms from '../../views/DynamicForms/QuestionForms';
 import RegistrationModule from '../../views/Registration/RegistrationModule';
+import Speakers from '../../views/Speakers/Speakers';
 import Sessions from '../../views/Sessions/SessionForm';
 import Profiles from '../../views/UserProfiles/Profiles';
 import AboutUs from '../../views/StaticPages/AboutUs';
@@ -35,6 +36,7 @@ class App extends Component {
           <Route path="/rooms" component={Rooms} />
           <Route path="/roomsList" component={RoomsModule} />
           <Route path="/registration" component={Registration} />
+          <Route path="/speakers" component={Speakers} />
           <Route path="/registrationList" component={RegistrationModule} />
           <Route path="/staticPages/aboutUs" component={AboutUs} />
           <Route path="/staticPages/aboutEternus" component={AboutEternus} />
