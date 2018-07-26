@@ -9,6 +9,7 @@ import  formReducer from './questionForms';
 import  profileReducer from './userProfile';
 import  attendanceReducer from './attendance';
 import  staticPageReducer from './staticPages';
+import  sponsorReducer from './sponsor';
 
 const rootReducer = combineReducers({
   event : eventReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   questionForm : formReducer,
   profile : profileReducer,
   attendance : attendanceReducer,
-  staticPages : staticPageReducer
+  staticPages : staticPageReducer,
+  sponsor : sponsorReducer
 });
 
 export default rootReducer;

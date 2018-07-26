@@ -78,3 +78,11 @@ export {
     deleteSpeaker,
     getSpeakersForEvent
 } from './speaker';
+export {
+    getSponsors,
+    createSponsor,
+    editSponsor,
+    deleteSponsor,
+    storeCurrentSponsor,
+    getSponsorsForEvent
+} from './sponsor';

@@ -27,7 +27,7 @@ export const getSponsors = () => {
             .then((response) => {
                 sponsorData = response.data;
                 sponsorData.forEach((sponsor) =>{
-                    sponsorList.push({label : sponsor.sponsorName , value : sponsor._id});
+                    sponsorList.push({label : sponsor.name , value : sponsor._id});
                     sponsor.eventName = sponsor.event.eventName;
                 });
                 dispatch(storeSponsors(sponsorData, sponsorList));
@@ -74,5 +74,23 @@ export const deleteSponsor = (id) => {
     }
 }
 
+
+export const getSponsorsForEvent = (eventId) => {
+    let sponsorData = [];  let sponsorList = [];
+    return dispatch => {
+        axios.get(`http://localhost:3000/api/sponsor/event/${eventId}`)
+        .then((response) => {
+            sponsorData = response.data;
+            sponsorData.forEach((sponsor) =>{
+                sponsorList.push({label : sponsor.name , value : sponsor._id});
+                sponsor.eventName = sponsor.event.eventName;
+            });
+            dispatch(storeSponsors(sponsorData, sponsorList));
+        })
+        .catch((error) => {
+            dispatch(logSponsorsError());
+        })
+    }
+}
  
 
