@@ -44,6 +44,7 @@ class EventForm extends Component {
                 startDate: moment(event.startDate),
                 endDate: moment(event.endDate)
             }
+            console.log("Event", Event);
             this.setState({
                 Event: Event
             })
@@ -113,6 +114,7 @@ class EventForm extends Component {
     }
 
     render() {
+        console.log("moment()",moment());
         //const purchasedRedirect = this.props.eventCreated ?  <Link to={'/events'}/> : null;
       
         if (this.state.updateflag) 

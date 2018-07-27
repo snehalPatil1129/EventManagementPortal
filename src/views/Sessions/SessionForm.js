@@ -4,8 +4,11 @@ import * as actions from '../../store/actions/index';
 import InputElement from '../../components/Input/';
 import CardLayout from '../../components/CardLayout/';
 import {
-    Input, InputGroup, InputGroupText, InputGroupAddon, Row, Col,
-    Card, CardBody, Button, Label, FormGroup, Container} from 'reactstrap';
+    Input, InputGroup, InputGroupText, InputGroupAddon, Row,
+    Col, Card, CardBody, Button, Label, FormGroup, Container
+} from 'reactstrap';
+import moment from 'moment';
+import _ from 'lodash'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import Calendar from '../../components/Calendar/'
@@ -16,13 +19,13 @@ class SessionForm extends Component {
 
         this.state = {
             Session: {
-                sessionId: '', sessionName: '', room: '', event :'',
+                sessionId: '', sessionName: '', room: '', event: '',
                 description: '', extraServices: '', speakers: [], volunteers: [],
                 startTime: '', endTime: '', sessionCapacity: '',
-                sessionType : 'test', isBreak: false, isRegistrationRequired:false
+                sessionType: 'test', isBreak: false, isRegistrationRequired: false
             },
-            submitted: false, calendarSessionList: [],eventValue: '',
-            roomValue: '', speakerValue: '', volunteerValue: ''
+            submitted: false, calendarSessionList: [], eventValue: '',
+            roomValue: '', speakerValue: '', volunteerValue: '', updateFlag: false
         }
     }
 
@@ -47,18 +50,19 @@ class SessionForm extends Component {
         let Session = { ...this.state.Session };
         Session['room'] = roomValue;
         let calendarSessionList = [];
-        this.setState({ roomValue,  Session: Session })
-       
-        // if(this.state.eventValue && roomValue){
-        //     this.props.sessions.forEach( session =>{
-        //        if(session.event == this.state.eventValue && session.room == roomValue){
-        //            console.log(session)
-        //            calendarSessionList.push({start:session.startTime, end:session.endTime, title: session.sessionName});
-        //            this.setState({ calendarSessionList : calendarSessionList })
-        //        }
-        //     })
-        // }
-      
+        this.setState({ roomValue, Session: Session });
+
+        if (this.state.eventValue && roomValue) {
+            this.props.sessions.forEach(session => {
+                if (session.event == this.state.eventValue && session.room == roomValue) {
+                    let sessionObj = Object.assign({}, session)
+                    let sessionTimeDetails = ({ start: moment(session.startTime).toDate(), end: moment(session.endTime).toDate(), title: session.sessionName })
+                    calendarSessionList.push(Object.assign({}, sessionObj, sessionTimeDetails));
+
+                    this.setState({ calendarSessionList: calendarSessionList })
+                }
+            })
+        }
     }
 
     changeEvent(eventValue) {
@@ -66,7 +70,7 @@ class SessionForm extends Component {
         let attendees = this.props.attendees;
         let rooms = this.props.rooms;
         let Session = { ...this.state.Session };
-        Session['event'] = eventValue
+        Session['event'] = eventValue;
 
         this.setState({
             eventValue,
@@ -87,7 +91,8 @@ class SessionForm extends Component {
                     }
                     if (profile == 'Speaker') {
                         speakerList.push({ label: attendee.firstName + ' ' + attendee.lastName, value: attendee._id })
-                    } })
+                    }
+                })
             }
         });
         this.setState({
@@ -126,36 +131,47 @@ class SessionForm extends Component {
     }
 
     onSubmitHandler() {
-        let session = { ...this.state.Session}
-        this.setState({  submitted: true});
-     
+        let session = { ...this.state.Session }
+        this.setState({ submitted: true });
+
         if (session.sessionName) {
             this.props.createSession(session);
         }
     }
 
     onUpdateHandler() {
-        let session = {
-            ...this.state.Session
+        let session = { ...this.state.Session }
+        if (session.sessionName) {
+            this.props.updateSession(session);
         }
-        // if (session.eventName && session.description) {
-        //     this.props.updateEvent(session);
-        // }
     }
-    
-    selectSlot(slotInfo){
-   
-     alert(
-          `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
+
+    onDeleteHandler() {
+        let session = { ...this.state.Session }
+        this.props.deleteSession(session._id);
+    }
+
+    selectSlot(slotInfo) {
+        alert(
+            `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
             `\nend: ${slotInfo.end.toLocaleString()}` +
             `\naction: ${slotInfo.action}`
         )
-     let Session = {...this.state.Session}
-   
-     
-     Session['startTime'] = slotInfo.start.toString(); 
-     Session['endTime'] = slotInfo.end.toString() ;
-     this.setState({Session : Session});
+        let Session = { ...this.state.Session }
+
+        Session['startTime'] = slotInfo.start.toString();
+        Session['endTime'] = slotInfo.end.toString();
+        this.setState({ Session: Session });
+    }
+
+    selectSession(session) {
+        let sessionObj = ({ ...this.state.Session })
+        sessionObj = Object.assign({}, session);
+
+        this.setState({
+            Session: sessionObj, updateFlag: true,
+            speakerValue: sessionObj.speakers, volunteerValue: sessionObj.volunteers
+        })
     }
 
     resetField() {
@@ -166,15 +182,18 @@ class SessionForm extends Component {
         }
         this.setState({
             Session: Session, eventValue: '', roomValue: '',
-            speakerValue: '', volunteerValue: ''
+            speakerValue: '', volunteerValue: '', updateFlag: false
         });
     }
     render() {
-       
-        if (this.state.updateflag)
+        this.deleteButton = '';
+        if (this.state.updateFlag) {
             this.buttons = <Button type="submit" size="md" color="success" onClick={this.onUpdateHandler.bind(this)} ><i className="icon-note"></i> Update</Button>
+            this.deleteButton = <Button type="submit" size="md" color="danger" onClick={this.onDeleteHandler.bind(this)} ><i className="icon-trash"></i> Delete</Button>
+        }
         else
             this.buttons = <Button type="submit" size="md" color="success" onClick={this.onSubmitHandler.bind(this)} ><i className="icon-note"></i> Register</Button>
+
         return (
             <div>
                 <FormGroup row>
@@ -194,7 +213,8 @@ class SessionForm extends Component {
                 </FormGroup>
                 <Row>
                     <Col md='8'>
-                        <Calendar events={this.state.calendarSessionList} onSelectSlot={(slotInfo) => this.selectSlot(slotInfo)}/>
+                        <Calendar events={this.state.calendarSessionList} onSelectSlot={(slotInfo) => this.selectSlot(slotInfo)}
+                            selectSession={event => this.selectSession(event)} />
                     </Col>
                     <Col md='4'>
                         <CardLayout name="">
@@ -247,6 +267,9 @@ class SessionForm extends Component {
                                 <Col xs="8" md="3">
                                     {this.buttons}
                                 </Col>
+                                <Col xs="8" md="3">
+                                    {this.deleteButton}
+                                </Col>
                                 <Col md="3">
                                     <Button onClick={this.resetField.bind(this)} type="reset" size="md" color="danger" > Reset</Button>
                                 </Col>
@@ -273,8 +296,10 @@ const mapDispatchToProps = dispatch => {
         getEvents: () => dispatch(actions.getEvents()),
         getAttendees: () => dispatch(actions.getAttendees()),
         getRooms: () => dispatch(actions.getRooms()),
-        createSession : (session) =>  dispatch(actions.createSession(session)),
-        getSessions : () => dispatch(actions.getSessions())
+        createSession: (session) => dispatch(actions.createSession(session)),
+        getSessions: () => dispatch(actions.getSessions()),
+        deleteSession: (sessionId) => dispatch(actions.deleteSession(sessionId)),
+        updateSession: (session) => dispatch(actions.updateSession(session))
     };
 }
 
