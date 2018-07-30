@@ -15,7 +15,7 @@ const Calendar = (props) => {
          defaultView="week"
          selectable={true} 
          defaultDate={new Date()}
-        // onSelectEvent={event => this.formAction(event)} 
+         onSelectEvent={props.selectSession} 
          onSelectSlot={props.onSelectSlot}
          min={new Date('2018, 1, 1, 08:00')} 
          max={new Date('2018, 1, 1, 20:00')} 

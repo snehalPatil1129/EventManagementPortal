@@ -59,24 +59,26 @@ export const createSession = (session)=>{
     }
 }
 
-export const updateSession = (event)=>{
-     let id = event.id;
-     let eventObj  = _.pick(event , ['eventName' , 'venue' , 'description' , 'startDate' , 'endDate']);
+export const updateSession = (session)=>{
+     let id = session._id;
+     let sessionObj  = _.pick(session , ['sessionName','event' ,'speakers','volunteers' ,'room','description','sessionType',
+                                          'sessionCapacity','startTime','endTime','isBreak', 'isRegistrationRequired']);
+ 
     return dispatch => {
-     axios.put(`http://localhost:3000/api/event/${id}`, eventObj)
+     axios.put(`http://localhost:3000/api/session/${id}`, sessionObj)
             .then((response) => {
-             dispatch(updateSessionSuccess(response.data._id, event))
+            // dispatch(updateSessionSuccess(response.data._id, session))
             })
             .catch((error) => {
-              dispatch(updateSessionFail(error))
+              //dispatch(updateSessionFail(error))
             })
     }
 }
 
-export const deleteSession = (eventId)=>{
-     let id = eventId;
+export const deleteSession = (sessionId)=>{
+     let id = sessionId;
     return dispatch => {
-     axios.delete(`http://localhost:3000/api/event/${id}`)
+     axios.delete(`http://localhost:3000/api/session/${id}`)
             .then((response) => {
             dispatch(getSessions())
             // dispatch(deleteSessionSuccess(response.data._id))

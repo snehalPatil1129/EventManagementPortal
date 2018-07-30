@@ -66,7 +66,9 @@ export {
 
 export {
     createSession,
-    getSessions
+    getSessions,
+    deleteSession,
+    updateSession
 } from './session';
    
 export {
