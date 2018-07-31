@@ -17,6 +17,10 @@ const routes = {
   '/staticPages/helpDesk' : 'Help Desk',
   '/staticPages/eventLocation' : 'Event Location',
   '/sponsors' : 'Sponsors List',
-  '/sponsors/sponsorForm' : 'Sponsor Form'
+  '/sponsors/sponsorForm' : 'Sponsor Form',
+  '/reports' : 'Reports',
+  '/reports/eventReports' : 'Event Reports',
+  '/reports/attendeeReports' : 'Attendee Reports',
+  '/reports/sessionReports' : 'Session Reports',
 };
 export default routes;

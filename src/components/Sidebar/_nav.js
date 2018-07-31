@@ -46,6 +46,28 @@ export default {
       icon: 'icon-user'
     },
     {
+      name: 'Reports ',
+      url: '/reports/',
+      icon: 'icon-pie',
+      children: [
+        {
+          name: 'Event Reports',
+          url: '/reports/eventReports',
+          icon: 'icon-puzzle'
+        },
+        {
+          name: 'Session Reports',
+          url: '/reports/sessionReports',
+          icon: 'icon-note'
+        },
+        {
+          name: 'Attendee Reports',
+          url: '/reports/attendeeReports',
+          icon: 'icon-note'
+        }
+      ]
+    },
+    {
       name: 'Static Pages',
       url: '/staticPages/',
       icon: 'icon-puzzle',
