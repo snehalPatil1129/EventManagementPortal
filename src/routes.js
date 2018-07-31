@@ -15,6 +15,8 @@ const routes = {
   '/staticPages/aboutUs' : 'About Us',
   '/staticPages/aboutEternus' : 'About Eternus',
   '/staticPages/helpDesk' : 'Help Desk',
-  '/staticPages/eventLocation' : 'Event Location'
+  '/staticPages/eventLocation' : 'Event Location',
+  '/sponsors' : 'Sponsors List',
+  '/sponsors/sponsorForm' : 'Sponsor Form'
 };
 export default routes;
