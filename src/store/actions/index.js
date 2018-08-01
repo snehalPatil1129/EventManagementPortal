@@ -88,3 +88,7 @@ export {
     storeCurrentSponsor,
     getSponsorsForEvent
 } from './sponsor';
+
+export{
+ getAttendeeCountForEvent
+} from './attendeeCount'
