@@ -29,7 +29,7 @@ class SessionForm extends Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount () {
         this.props.getEvents();
         this.props.getAttendees();
         this.props.getRooms();
@@ -176,13 +176,12 @@ class SessionForm extends Component {
 
     resetField() {
         let Session = {
-            sessionId: '', sessionName: '', room: '',
+            sessionId: '', sessionName: '', 
             description: '', extraServices: '', speakers: [],
             volunteers: [], startTime: '', endTime: '', sessionCapacity: ''
         }
         this.setState({
-            Session: Session, eventValue: '', roomValue: '',
-            speakerValue: '', volunteerValue: '', updateFlag: false
+            Session: Session, speakerValue: '', volunteerValue: '', updateFlag: false
         });
     }
     render() {
