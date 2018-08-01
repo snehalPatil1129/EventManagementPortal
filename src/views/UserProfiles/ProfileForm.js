@@ -74,6 +74,7 @@ class ProfileForm extends Component {
     
         if (profile.profileName &&  profile.eventValue){
          this.props.createProfile(profile);
+          this.props.history.push('/profiles');
         }
     }
 
@@ -83,6 +84,7 @@ class ProfileForm extends Component {
         }
           if (profile.profileName &&  profile.eventValue){
          this.props.updateProfile(profile);
+          this.props.history.push('/profiles');
         }
     }
 

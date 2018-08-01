@@ -87,6 +87,7 @@ class EventForm extends Component {
         }
         if (event.eventName && valiDate && event.description) {
             this.props.createEvent(event);
+             this.props.history.push('/events');
         }
 
     }
@@ -97,6 +98,7 @@ class EventForm extends Component {
         }
         if (event.eventName && event.description) {
             this.props.updateEvent(event);
+             this.props.history.push('/events');
         }
     }
 
