@@ -74,5 +74,21 @@ export const deleteRoom = (id) => {
     }
 }
 
- 
+export const getRoomsForEvent = (eventId) => {
+    let roomData = [];  let roomList = [];
+    return dispatch => {
+        axios.get(`http://localhost:3000/api/room/event/${eventId}`)
+            .then((response) => {
+                roomData = response.data;
+                roomData.forEach((room) =>{
+                    roomList.push({label : room.roomName , value : room._id});
+                    room.event!== null ?  room.eventName = room.event.eventName : null;
+                });
+                dispatch(storeRooms(roomData, roomList));
+            })
+            .catch((error) => {
+                dispatch(logRoomError());
+            })
+    }
+};
 

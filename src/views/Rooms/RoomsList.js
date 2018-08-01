@@ -6,11 +6,13 @@ import { FormGroup, Col, Button, Input, InputGroup } from 'reactstrap';
 import CardLayout from '../../components/CardLayout/';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
-
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 class RoomsList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            event : ''
         }
     }
     componentDidMount () {
@@ -32,6 +34,20 @@ class RoomsList extends Component {
     getRoomToEdit (row) {
         this.props.storeCurrentRoom(row);  
     }
+    handleEventChange (value) {
+        if(value !== null){
+            this.setState({
+                event : value
+            });
+            this.props.getRoomsForEvent(value);
+        }
+        else{
+            this.setState({
+                event : ''
+            });
+            this.props.getRoomsList();
+        }
+    }
     render() {
           const options = {
             sizePerPageList: [{
@@ -48,10 +64,21 @@ class RoomsList extends Component {
         return (
             <CardLayout name="Rooms List">
                 <FormGroup row>
+                    <Col xs="12" md="8">
                         <Link to={`${this.props.match.url}/rooms`}>
-                            <Button type="button" color="primary" style={{marginBottom : -35}} size="small"> <i className="fa fa-plus"></i>
+                            <Button type="button" color="primary" style={{ marginBottom: -35 }} size="small"> <i className="fa fa-plus"></i>
                                 Create Room </Button>
                         </Link>
+                    </Col>  <Col md="4">
+                        <Select
+                            name="Event"
+                            placeholder="Select Event"
+                            options={this.props.eventList}
+                            value={this.state.event}
+                            simpleValue
+                            onChange={this.handleEventChange.bind(this)}
+                        />
+                    </Col>
                 </FormGroup>
                 <FormGroup row>
                     <BootstrapTable ref='table' data={this.props.roomList} pagination={true} search={true} options={options} >
@@ -69,7 +96,8 @@ class RoomsList extends Component {
 }
 const mapStateToProps = state => {
     return {
-        roomList : state.room.rooms
+        roomList : state.room.rooms,
+        eventList : state.event.eventList
     };
 }
 const mapDispatchToProps = dispatch => {
@@ -77,7 +105,8 @@ const mapDispatchToProps = dispatch => {
        getRoomsList : () => dispatch(actions.getRooms()),
        storeCurrentRoom : (room) => dispatch(actions.storeCurrentRoom(room)),
        deleteRoom : (id) => dispatch(actions.deleteRoom(id)),
-       getEvents : () => dispatch(actions.getEvents())
+       getEvents : () => dispatch(actions.getEvents()),
+       getRoomsForEvent : (eventId) => dispatch(actions.getRoomsForEvent(eventId))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(RoomsList);

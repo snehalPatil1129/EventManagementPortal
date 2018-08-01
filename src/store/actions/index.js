@@ -15,7 +15,8 @@ export {
     createRoom,
     storeCurrentRoom,
     editRoom,
-    deleteRoom
+    deleteRoom,
+    getRoomsForEvent
 } from './room';
 
 export {
