@@ -17,7 +17,9 @@ import AboutEternus from '../../views/StaticPages/AboutEternus';
 import HelpDesk from '../../views/StaticPages/HelpDesk';
 import EventLocation from '../../views/StaticPages/Location';
 import Sponsors from '../../views/Sponsors/Sponsors';
-import Reports from '../../views/Reports/Reports';
+import EventReports from '../../views/Reports/EventReports';
+import SessionReports from '../../views/Reports/SessionReports';
+import AttendeeReports from '../../views/Reports/AttendeeReports';
 import Layout from '../../components/Layout/';
 import Logout from '../Authentication/Logout';
 import Login from '../Authentication/Login';
@@ -45,7 +47,9 @@ class App extends Component {
           <Route path="/staticPages/eventLocation" component={EventLocation} />
           <Route path="/staticPages/helpDesk" component={HelpDesk} />
           <Route path="/attendance" component={AttendanceList} />
-          <Route path="/reports" component={Reports} />
+          <Route path="/reports/eventReports" component={EventReports} />
+          <Route path="/reports/sessionReports" component={SessionReports} />
+          <Route path="/reports/attendeeReports" component={AttendeeReports} />
           <Route path="/dynamicForms" component={DynamicForms} />
           <Route path="/questionForms" component={QuestionForms} />
           <Route path="/sponsors" component={Sponsors} />
