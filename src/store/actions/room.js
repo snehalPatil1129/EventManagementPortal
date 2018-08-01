@@ -28,7 +28,7 @@ export const getRooms = () => {
                 roomData = response.data;
                 roomData.forEach((room) =>{
                     roomList.push({label : room.roomName , value : room._id});
-                    room.eventName = room.event.eventName;
+                    room.event!== null ?  room.eventName = room.event.eventName : null;
                 });
                 dispatch(storeRooms(roomData, roomList));
             })
