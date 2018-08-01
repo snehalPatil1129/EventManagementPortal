@@ -18,7 +18,7 @@ class profileList extends Component {
             eventValue: ''
         }
     }
-    componentWillMount() {
+    componentDidMount() {
         this.props.getProfiles();
         this.props.getEvents();
     }
@@ -42,6 +42,7 @@ class profileList extends Component {
         if (x) {
             let compRef = this;
            this.props.deleteProfile(profileId);
+          
         }
         else
             return false;
