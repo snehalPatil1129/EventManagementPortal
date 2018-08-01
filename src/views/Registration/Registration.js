@@ -20,6 +20,7 @@ class Registration extends Component {
             editAttendee: false  , profileList : []
         }
     }
+
     componentDidMount() {
         let isEmpty = !Object.keys(this.props.attendeeData).length;
         if (this.props.match.params.id !== undefined &&  !isEmpty) {
@@ -30,7 +31,7 @@ class Registration extends Component {
             let profiles = [];
             this.props.profiles.forEach(profile => {
                 if (profile.eventId == this.props.attendeeData.event._id)
-                    profiles.push({ value: profile._id, label: profile.profileName })
+                    profiles.push({ value: profile.profileName, label:profile.profileName })
             });
             this.setState({
                 Registration: Attendee,
@@ -39,16 +40,19 @@ class Registration extends Component {
             });
         }
     }
+
     onChangeInput(event) {
         const { Registration } = { ...this.state };
         Registration[event.target.name] = event.target.value;
         this.setState({ Registration: Registration });
     }
+
     onSubmit() {
+        let attendeeCount = this.props.attendeeCount
         let attendee = { ...this.state.Registration };
         if (attendee.firstName && attendee.lastName && attendee.email && attendee.contact && attendee.event) {
             let editedAttendee = _.pick(attendee, ['firstName', 'lastName', 'email', 'contact', 'briefInfo', 'profileImageURL', 'event', 'profiles']);
-            this.state.editAttendee ? this.props.editAttendeeData(attendee._id, editedAttendee) : this.props.createAttendee(attendee);
+            this.state.editAttendee ? this.props.editAttendeeData(attendee._id, editedAttendee) : this.props.createAttendee(attendee, attendeeCount );
             this.onReset();
             this.props.history.push('/registrationList');
         }
@@ -60,20 +64,23 @@ class Registration extends Component {
             !attendee.event ? this.setState({ eventRequired: true }) : null;
         }
     }
+
     onReset() {
         let Registration = { ...this.state.Registration };
         Registration.firstName = ''; Registration.lastName = ''; Registration.email = ''; Registration.contact = '';
         Registration.profiles = []; Registration.briefInfo = ''; Registration.profileImageURL = ''; Registration.event = '';
         this.setState({ Registration: Registration });
     }
+
     handleEventSelectChange(value) {
         if (value !== null) {
+            this.props.getAttendeeCountForEvent(value);
             let Registration = { ...this.state.Registration };
             Registration.event = value;
             let profiles = [];
             this.props.profiles.forEach(profile => {
                 if (profile.eventId === value)
-                    profiles.push({ value: profile._id, label: profile.profileName })
+                    profiles.push({ value:  profile.profileName , label: profile.profileName })
             });
             this.setState({ Registration: Registration ,profileList : profiles });
         }
@@ -83,6 +90,7 @@ class Registration extends Component {
             this.setState({ Registration: Registration });
         }
     }
+
     handleSelectChange(value) {
         if (value !== null) {
             let profileArray = this.state.Registration.profiles;
@@ -97,6 +105,7 @@ class Registration extends Component {
             }
         }
     }
+
     getAttendeeDetails() {
         let Registration = { ...this.state.Registration };
         Registration = this.props.attendeeData;
@@ -104,6 +113,7 @@ class Registration extends Component {
             Registration: Registration
         });
     }
+
     render() {
         const { Registration } = { ...this.state };
         const eventOptions = this.props.eventList;
@@ -217,19 +227,24 @@ class Registration extends Component {
         )
     }
 }
+
 const mapStateToProps = state => {
     return {
         registrationError: state.registration.error,
         attendeeData: state.registration.attendeeData,
         eventList: state.event.eventList,
-        profiles : state.profile.profiles
+        profiles : state.profile.profiles,
+        attendeeCount : state.attendeeCount.attendeeCount
     };
 }
+
 const mapDispatchToProps = dispatch => {
     return {
-        createAttendee: (attendee) => dispatch(actions.createAttendee(attendee)),
+        createAttendee: (attendee,attendeeCount) => dispatch(actions.createAttendee(attendee, attendeeCount)),
         getAttendeeData: (id) => dispatch(actions.getAttendeeData(id)),
+        getAttendeeCountForEvent: (id) => dispatch(actions.getAttendeeCountForEvent(id)),
         editAttendeeData: (id, attendee) => dispatch(actions.editAttendeeData(id, attendee))
     }
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(Registration);

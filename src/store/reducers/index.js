@@ -4,6 +4,7 @@ import  sessionReducer from './session';
 import  roomReducer from './room';
 import  registrationReducer from './registration';
 import  speakerReducer from './speaker';
+import  attendeeCountReducer from './attendeeCount';        
 import  authReducer from './auth';
 import  formReducer from './questionForms';
 import  profileReducer from './userProfile';
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   session : sessionReducer,
   room : roomReducer,
   registration : registrationReducer,
+  attendeeCount : attendeeCountReducer,
   speaker : speakerReducer,
   auth : authReducer,
   questionForm : formReducer,

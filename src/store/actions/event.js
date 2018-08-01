@@ -79,10 +79,15 @@ export const getEvents = () => {
 
 export const createEvent = (event)=>{
      let eventObj  = _.pick(event , ['eventName' , 'venue' , 'description' , 'startDate' , 'endDate']);
+    
     return dispatch => {
         axios.post('http://localhost:3000/api/event',eventObj)
             .then((response) => {
-            dispatch(createEventSuccess(response.data._id, eventObj))
+              let attendeeCountObj = {attendeeCount:0, speakerCount:0, totalCount: 0, eventId : response.data._id}
+             axios.post('http://localhost:3000/api/attendeeCount',attendeeCountObj)
+             .then((response) => {   
+                   dispatch(createEventSuccess(response.data._id, eventObj)); 
+             })
             })
             .catch((error) => {
               dispatch(createEventFail(error))

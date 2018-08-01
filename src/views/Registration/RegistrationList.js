@@ -4,6 +4,7 @@ import { Link ,Redirect} from 'react-router-dom';
 import * as actions from '../../store/actions/index';
 import { FormGroup, Col, Button, Input, InputGroup } from 'reactstrap';
 import CardLayout from '../../components/CardLayout/';
+import * as attendeeCardMethod from '../../components/AttendeeCard/';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
@@ -21,11 +22,20 @@ class RegistrationList extends Component {
         this.props.getEvents();
         this.props.getProfiles();
     }
+
+     onPrintAttendeeQRCode(cell, row) {
+        let componentRef = this;
+        return <Link to={this} onClick={() => attendeeCardMethod.onGenerateQRcode(row)}>
+            <i className="fa fa-print"></i>
+        </Link>
+    }
+
     ondeleteAttendee (cell, row) {
         return  <Link to={this}  onClick={() =>  this.props.deleteAttendee(row._id)}>
                     <i className="fa fa-trash"></i>
                 </Link>  
     }
+
     onEditAttendee (cell, row) {
         return  <Link to={`${this.props.match.url}/registration/${row._id}`} onClick={() => this.props.storeAttendeeData(row) }>
                     <i className="fa fa-pencil"></i>
@@ -77,6 +87,7 @@ class RegistrationList extends Component {
                         <TableHeaderColumn dataField='eventName' headerAlign='left' width='100' csvHeader='Event'>Event</TableHeaderColumn>
                         <TableHeaderColumn dataField='edit' dataFormat={this.onEditAttendee.bind(this)} headerAlign='left' width='40' export={false}>Edit</TableHeaderColumn>
                         <TableHeaderColumn dataField='delete' dataFormat={this.ondeleteAttendee.bind(this)} headerAlign='left' width='40' export={false}>Delete</TableHeaderColumn>
+                        <TableHeaderColumn dataField='print' dataFormat={this.onPrintAttendeeQRCode.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>
                     </BootstrapTable>
                 </FormGroup>
                 <FormGroup row>
