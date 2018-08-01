@@ -33,9 +33,11 @@ class Dashboard extends Component {
     return (
       <div className="animated fadeIn">
         {
-          this.state.events.map((event) => {
+          this.state.events.map((event, index) => {
             event.startDate = moment(event.startDate).format('hh:mm on DD-MM-YYYY');
-            var ColorCode = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+            var ColorCode = '#808587';
+            index % 2 == 0 ? ColorCode = '#8bc3d7' : ColorCode = '#808587';
+            //var ColorCode = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
             return (
               <Row className="justify-content-left">
                 <Col xs="12" >
