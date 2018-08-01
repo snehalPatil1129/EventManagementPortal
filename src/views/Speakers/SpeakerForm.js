@@ -46,7 +46,7 @@ class SpeakerForm extends Component {
             let editedSpeaker = _.pick(speaker, ['firstName', 'lastName', 'email', 'contact', 'briefInfo', 'profileImageURL', 'event']);
             this.state.editSpeaker ? this.props.editSpeakerData(speaker._id, editedSpeaker) : this.props.createSpeaker(speaker);
             this.onReset();
-            this.props.history.push('/speakerList');
+            this.props.history.push('/speakers');
         }
         else {
             !speaker.firstName ? this.setState({ firstNameRequired: true }) : null;
