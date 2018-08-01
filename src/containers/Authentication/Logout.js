@@ -6,6 +6,7 @@ import * as actions from '../../store/actions/index';
 class Logout extends Component {
     componentWillMount() {
         this.props.logoutUser();
+        localStorage.clear();
         this.props.history.push("/");
     }
     render() {
