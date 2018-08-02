@@ -29,7 +29,7 @@ export const getAttendees = () => {
             .then((response) => {
                 attendees = response.data;
                 attendees.forEach((attendee) => {
-                    attendee.eventName = attendee.event.eventName;
+                    attendee.event !== null ? attendee.eventName = attendee.event.eventName : null;
                 });
                 dispatch(storeAttendees(attendees));
             })
@@ -46,7 +46,7 @@ export const getAttendeesForEvent = (eventId) => {
             .then((response) => {
                 attendees = response.data;
                 attendees.forEach((attendee) => {
-                    attendee.eventName = attendee.event.eventName;
+                    attendee.event !== null ? attendee.eventName = attendee.event.eventName : null;
                 });
                 dispatch(storeAttendees(attendees));
             })

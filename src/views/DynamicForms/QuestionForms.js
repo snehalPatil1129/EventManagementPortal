@@ -32,8 +32,8 @@ class QuestionForms extends Component {
       }
       else {
         this.setState({
-          // event: form.event._id,
-          // session: form.session._id,
+          event: form.event._id,
+          session: form.session._id,
           formType: form.formType,
           formData: form.formData,
           editForm : true
@@ -165,7 +165,6 @@ class QuestionForms extends Component {
     })
     return blankQuestionsPresent;
   }
-
   onSubmitForm() {
     let formData = { ...this.state };
     let formObject = _.pick(formData, ['event', 'session', 'formType', 'formData']);
