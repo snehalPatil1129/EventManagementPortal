@@ -47,10 +47,11 @@ class SessionForm extends Component {
     }
 
     changeRoom(roomValue) {
+
         let Session = { ...this.state.Session };
         Session['room'] = roomValue;
         let calendarSessionList = [];
-        this.setState({ roomValue, Session: Session });
+        this.setState({ roomValue, Session: Session , calendarSessionList: [] });
 
         if (this.state.eventValue && roomValue) {
             this.props.sessions.forEach(session => {
@@ -58,7 +59,6 @@ class SessionForm extends Component {
                     let sessionObj = Object.assign({}, session)
                     let sessionTimeDetails = ({ start: moment(session.startTime).toDate(), end: moment(session.endTime).toDate(), title: session.sessionName })
                     calendarSessionList.push(Object.assign({}, sessionObj, sessionTimeDetails));
-
                     this.setState({ calendarSessionList: calendarSessionList })
                 }
             })
@@ -72,30 +72,27 @@ class SessionForm extends Component {
         let Session = { ...this.state.Session };
         Session['event'] = eventValue;
 
-        this.setState({
-            eventValue,
-            Session: Session
-        })
-
+        this.setState({eventValue,Session: Session })
+        
         rooms.forEach(room => {
             if (room.event._id == eventValue) {
                 roomList.push({ label: room.roomName, value: room._id })
             }
         })
-
+      
         attendees.forEach(attendee => {
-            if(attendee.event !== null){
-                if (attendee.event._id == eventValue) {
-                    attendee.profiles.forEach(profile => {
-                        if (profile == 'Volunteer') {
-                            volunteerList.push({ label: attendee.firstName + ' ' + attendee.lastName, value: attendee._id })
-                        }
-                        if (profile == 'Speaker') {
-                            speakerList.push({ label: attendee.firstName + ' ' + attendee.lastName, value: attendee._id })
-                        }
-                    })
-                }
-            } 
+            if(attendee.event != null){
+            if (attendee.event._id == eventValue) {
+                attendee.profiles.forEach(profile => {
+                    if (profile == 'Volunteer') {
+                        volunteerList.push({ label: attendee.firstName + ' ' + attendee.lastName, value: attendee._id })
+                    }
+                    if (profile == 'Speaker') {
+                        speakerList.push({ label: attendee.firstName + ' ' + attendee.lastName, value: attendee._id })
+                    }
+                })
+              }
+            }
         });
         this.setState({
             roomList, volunteerList, speakerList
