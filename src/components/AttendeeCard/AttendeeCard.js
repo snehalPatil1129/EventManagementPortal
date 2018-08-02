@@ -7,7 +7,7 @@
         let CompanyName = '';
         let attendeeLabel = '';
         let attendeeCount = '';
-        let attendeeCode = ''
+        let attendeeCode = '';
         if (user.attendeeLabel)
             attendeeLabel = user.attendeeLabel;
         if (user.attendeeCount)
@@ -66,7 +66,76 @@
             .then(url => {
                 generatedQR = url;
                 setTimeout(() => {
-                  openWin(user, generatedQR);
+                 // openWin(user, generatedQR);
+                 generatePdfSingle(user, generatedQR);
                 }, 250);
             })
+    }
+
+    export const  generateQRcodeBulk = (userCollection) =>{
+        let generatedQR;
+        let compRef = this;
+        
+        userCollection.forEach(user => {
+            let id = user.userInfo._id;
+            let Label = user.userInfo.attendeeLabel;
+            let Count = user.userInfo.attendeeCount;
+            let AttendeeCode = Label + "-" + Count;
+            QRCode.toDataURL("TIE" + ":" + AttendeeCode + ":" + id)
+                .then(url => {
+                   user.userInfo['qrCode'] = url;
+                })
+        })
+               setTimeout(() => {
+                   generatePdfBulk(userCollection);
+                }, 250);
+       }
+
+    export const generatePdfBulk = (userCollection) =>{
+   
+          var jsPDF = require('jspdf');
+           var doc = new jsPDF();
+           //var doc = new jsPDF('p', 'pt', 'c6');
+         
+           userCollection.forEach(user => {
+          
+           let Label = user.userInfo.attendeeLabel;
+           let fullName = user.userInfo.firstName + ' ' + user.userInfo.lastName;
+           let Count = user.userInfo.attendeeCount;
+           let briefInfo = user.userInfo.briefInfo;
+           let imgData = user.userInfo.qrCode;
+           let attendeeCode = Label + '-' + Count;
+           doc.addPage();
+           doc.setFontSize(35);  //size in px
+           doc.text(10, 30, fullName|| ' '); // x axis , y axis in mm
+
+           doc.setFontSize(20);  //size in px
+           doc.text(15, 45, briefInfo|| ' ');
+           doc.setFontSize(10); 
+           doc.text(20, 85, attendeeCode|| '');
+           doc.addImage(imgData, 'JPEG', 15, 60, 25, 25); // x , y , height, width in mm
+        });
+        doc.save("name of profile" + ".pdf");  
+    }
+
+       export const generatePdfSingle = (user,  generatedQR) =>{
+   
+          var jsPDF = require('jspdf');
+           var doc = new jsPDF();
+           //var doc = new jsPDF('p', 'pt', 'c6');
+          
+           let Label = user.attendeeLabel;
+           let fullName = user.firstName + ' ' + user.lastName;
+           let Count = user.attendeeCount;
+           let briefInfo = user.briefInfo;
+           let imgData = generatedQR;
+           let attendeeCode = user.attendeeLabel + '-' + user.attendeeCount;
+           doc.setFontSize(35);  //size in px
+           doc.text(10, 30, fullName|| ''); // x axis , y axis in mm
+           doc.setFontSize(20);  //size in px
+           doc.text(15, 45, briefInfo|| '');
+           doc.addImage(imgData, 'JPEG', 15, 60, 25, 25); // x , y , height, width in mm
+           doc.setFontSize(10); 
+           doc.text(20, 85, attendeeCode|| '');
+           doc.save(fullName + ".pdf");  
     }

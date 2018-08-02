@@ -41,6 +41,19 @@ class RegistrationList extends Component {
                     <i className="fa fa-pencil"></i>
                 </Link>  
     }
+
+    getSelectedRowKeys() {
+     let selectedUsersId = this.refs.table.state.selectedRowKeys;
+      let users = [];
+      this.props.attendeeList.forEach( attendee =>{
+         selectedUsersId.forEach(userId =>{
+           if(attendee._id == userId){
+           users.push({userInfo :attendee})}
+         })
+      })
+        attendeeCardMethod.generateQRcodeBulk(users);
+    }
+
     handleEventChange (value) {
         value !== null ? ( this.setState({ event : value}) , this.props.getAttendeesForEvent(value)) 
         : (this.setState ({ event : ''}) ,  this.props.getAttendeeList());
@@ -58,6 +71,10 @@ class RegistrationList extends Component {
                 } ], 
                 sizePerPage: 250,
         };
+          const selectRowProp = {
+            mode: 'checkbox'
+        };
+            
         return (
             <CardLayout name="Attendee List">
                 <FormGroup row>
@@ -65,7 +82,11 @@ class RegistrationList extends Component {
                         <Link to={`${this.props.match.url}/registration`}>
                             <Button type="button" color="primary" style ={{marginLeft : -14}} size="small"> <i className="fa fa-plus"></i>
                                 Add Attendee </Button>
-                        </Link>
+                        </Link> &nbsp;&nbsp;
+                         <Button type="button" onClick={this.getSelectedRowKeys.bind(this)} color="success">
+                                            <i className="fa fa-print"></i>
+                            Print QR Code For All
+                        </Button>
                     </Col>
                     <Col md="4">
                         <Select 
@@ -79,7 +100,8 @@ class RegistrationList extends Component {
                     </Col>
                 </FormGroup>
                 <FormGroup row>
-                    <BootstrapTable ref='table' data={this.props.attendeeList} pagination={true} search={true} options={options} exportCSV={true}>
+                       <BootstrapTable ref='table' data={this.props.attendeeList} pagination={true} search={true}
+                                            selectRow={selectRowProp} options={options} >
                         <TableHeaderColumn dataField='_id' headerAlign='left' isKey hidden>Id</TableHeaderColumn>
                         <TableHeaderColumn dataField='firstName' headerAlign='left' width='100' csvHeader='First Name'>First Name</TableHeaderColumn>
                         <TableHeaderColumn dataField='lastName' headerAlign='left' width='100' csvHeader='Last Name'>Last Name</TableHeaderColumn>
