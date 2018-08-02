@@ -17,10 +17,13 @@ class Registration extends Component {
                 briefInfo: '', profileImageURL: '', event: ''
             },
             firstNameRequired: false, lastNameRequired: false, emailRequired: false, contactRequired: false, eventRequired: false,
-            editAttendee: false  , profileList : []
+            editAttendee: false  , profileList : [] ,  profileSelect : true
         }
     }
-
+    componentWillMount () {
+        this.props.getEvents();
+        this.props.getProfiles();
+    }
     componentDidMount() {
         let isEmpty = !Object.keys(this.props.attendeeData).length;
         if (this.props.match.params.id !== undefined &&  !isEmpty) {
@@ -72,7 +75,7 @@ class Registration extends Component {
         this.setState({ Registration: Registration });
     }
 
-    handleEventSelectChange(value) {
+    handleEventChange(value) {
         if (value !== null) {
             this.props.getAttendeeCountForEvent(value);
             let Registration = { ...this.state.Registration };
@@ -82,16 +85,18 @@ class Registration extends Component {
                 if (profile.eventId === value)
                     profiles.push({ value:  profile.profileName , label: profile.profileName })
             });
-            this.setState({ Registration: Registration ,profileList : profiles });
+            this.setState({ Registration: Registration ,profileList : profiles , profileSelect : false });
         }
         else{
             let Registration = { ...this.state.Registration };
             Registration.event = '';
-            this.setState({ Registration: Registration });
+            Registration.profiles = [];
+            Registration.profileSelect = true;
+            this.setState({ Registration: Registration  , profileSelect : true});
         }
     }
 
-    handleSelectChange(value) {
+    handleProfileChange(value) {
         if (value !== null) {
             let profileArray = this.state.Registration.profiles;
             profileArray.push(value);
@@ -174,7 +179,7 @@ class Registration extends Component {
                             value={Registration.event}
                             options={eventOptions}
                             simpleValue
-                            onChange={this.handleEventSelectChange.bind(this)}
+                            onChange={this.handleEventChange.bind(this)}
                         />
                         {this.state.eventRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">*Required</div> : null}
                     </Col>
@@ -207,7 +212,8 @@ class Registration extends Component {
                             value={Registration.profiles}
                             options={this.state.profileList}
                             simpleValue
-                            onChange={this.handleSelectChange.bind(this)}
+                            disabled = {this.state.profileSelect}
+                            onChange={this.handleProfileChange.bind(this)}
                         />
                         {this.state.Registration.event === '' ? <div style={{ color: "red", marginTop: 0 }} className="help-block">*Please select event first !!</div> : null}
                     </Col>
@@ -243,7 +249,9 @@ const mapDispatchToProps = dispatch => {
         createAttendee: (attendee,attendeeCount) => dispatch(actions.createAttendee(attendee, attendeeCount)),
         getAttendeeData: (id) => dispatch(actions.getAttendeeData(id)),
         getAttendeeCountForEvent: (id) => dispatch(actions.getAttendeeCountForEvent(id)),
-        editAttendeeData: (id, attendee) => dispatch(actions.editAttendeeData(id, attendee))
+        editAttendeeData: (id, attendee) => dispatch(actions.editAttendeeData(id, attendee)),
+        getEvents : () => dispatch(actions.getEvents()),
+        getProfiles : () => dispatch(actions.getProfiles())
     }
 }
 

@@ -6,7 +6,7 @@ const routes = {
   '/roomsList' : 'Rooms List',
   '/registration' : 'Registration',
   '/registrationList' : 'Attendee List',
-  '/registrationList/registration' : 'Registration',
+  '/registrationList/registration' : 'Attendee Registration',
   '/questionForms' : 'Question Forms',
   '/dynamicForms' : 'Dynamic Forms',
   '/dynamicForms/questionForms' : 'Question Forms',
@@ -22,5 +22,12 @@ const routes = {
   '/reports/eventReports' : 'Event Reports',
   '/reports/attendeeReports' : 'Attendee Reports',
   '/reports/sessionReports' : 'Session Reports',
+  '/events/EventForm' : 'Add Event',
+  '/speakers' : 'Speakers List',
+  '/speakers/speakerForm' : 'Speakers Registration',
+  '/profiles' : 'Profiles List',
+  '/profiles/profileForm' : 'Add Profile',
+  '/sessions' : 'Sessions'
+
 };
 export default routes;

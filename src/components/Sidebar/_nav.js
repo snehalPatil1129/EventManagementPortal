@@ -31,9 +31,9 @@ export default {
       icon: 'icon-user'
     },
      {
-      name: 'speakers',
+      name: 'Speakers',
       url: '/speakers',
-      icon: 'icon-user'
+      icon: 'icon-microphone'
     },
     {
       name: 'Dynamic Forms',
