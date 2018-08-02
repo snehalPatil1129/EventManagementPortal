@@ -83,7 +83,7 @@ export const getSponsorsForEvent = (eventId) => {
             sponsorData = response.data;
             sponsorData.forEach((sponsor) =>{
                 sponsorList.push({label : sponsor.name , value : sponsor._id});
-                sponsor.eventName = sponsor.event.eventName;
+                sponsor.event !== null ?  sponsor.eventName = sponsor.event.eventName : null;
             });
             dispatch(storeSponsors(sponsorData, sponsorList));
         })

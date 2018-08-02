@@ -29,7 +29,7 @@ export const getSpeakers = () => {
             .then((response) => {
                 speakers = response.data;
                 speakers.forEach((speaker) => {
-                    speaker.eventName = speaker.event.eventName;
+                    speaker.event !== null ? speaker.eventName = speaker.event.eventName : null;
                 });
                 dispatch(storeSpeakers(speakers));
             })
@@ -46,7 +46,7 @@ export const getSpeakersForEvent = (eventId) => {
             .then((response) => {
                 speakers = response.data;
                 speakers.forEach((speaker) => {
-                    speaker.eventName = speaker.event.eventName;
+                    speaker.event !== null ? speaker.eventName = speaker.event.eventName : null;
                 });
                 dispatch(storeSpeakers(speakers));
             })

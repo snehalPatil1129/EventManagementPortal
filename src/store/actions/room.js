@@ -28,7 +28,7 @@ export const getRooms = () => {
                 roomData = response.data;
                 roomData.forEach((room) =>{
                     roomList.push({label : room.roomName , value : room._id});
-                    room.event!== null ?  room.eventName = room.event.eventName : null;
+                    room.event !== null ?  room.eventName = room.event.eventName : null;
                 });
                 dispatch(storeRooms(roomData, roomList));
             })
@@ -82,7 +82,7 @@ export const getRoomsForEvent = (eventId) => {
                 roomData = response.data;
                 roomData.forEach((room) =>{
                     roomList.push({label : room.roomName , value : room._id});
-                    room.event!== null ?  room.eventName = room.event.eventName : null;
+                    room.event !== null ?  room.eventName = room.event.eventName : null;
                 });
                 dispatch(storeRooms(roomData, roomList));
             })
