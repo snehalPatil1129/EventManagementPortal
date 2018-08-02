@@ -12,6 +12,7 @@ import {
     Card, CardBody, Button, Label, FormGroup, Container
 } from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Route, Redirect, Link } from 'react-router-dom';
 
 class EventForm extends Component {
@@ -33,6 +34,7 @@ class EventForm extends Component {
     }
 
     componentWillMount() {
+           
         if (this.props.match.params.id != undefined) {
             this.setState({ updateflag: true })
             let event = this.props.events.find(o => o._id === this.props.match.params.id);
@@ -72,6 +74,7 @@ class EventForm extends Component {
     }
 
     onSubmitHandler() {
+         let compRef = this;
         let event = {
             ...this.state.Event
         }
@@ -85,11 +88,21 @@ class EventForm extends Component {
                 inValidDates: true
             });
         }
-        if (event.eventName && valiDate && event.description) {
+         if (event.eventName && valiDate && event.description) {
             this.props.createEvent(event);
-             this.props.history.push('/events');
+           
+             setTimeout(function() {
+               if(compRef.props.eventCreated)
+              {
+               toast.success("Event Created Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+               }); 
+                setTimeout(function() {
+                       compRef.props.history.push('/events');
+                }, 1500);
+               }  
+               }, 1000);
         }
-
     }
 
     onUpdateHandler() {
@@ -186,6 +199,7 @@ class EventForm extends Component {
                     </Col>
                     <Col md="3">
                         <Button onClick={this.resetField.bind(this)} type="reset" size="md" color="danger" > Reset</Button>
+                          <ToastContainer autoClose={2000} />
                     </Col>
                 </FormGroup>
             </CardLayout>
@@ -195,7 +209,8 @@ class EventForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        events: state.event.events
+        events: state.event.events,
+        eventCreated : state.event.eventCreated
     };
 }
 
