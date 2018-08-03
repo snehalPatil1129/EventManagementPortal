@@ -11,7 +11,7 @@ import moment from 'moment';
 import _ from 'lodash'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import Calendar from '../../components/Calendar/'
+import Calendar from '../../components/Calendar/';
 
 class SessionForm extends Component {
     constructor(props) {
@@ -47,15 +47,13 @@ class SessionForm extends Component {
     }
 
     changeRoom(roomValue) {
-
         let Session = { ...this.state.Session };
         Session['room'] = roomValue;
         let calendarSessionList = [];
         this.setState({ roomValue, Session: Session , calendarSessionList: [] });
-
         if (this.state.eventValue && roomValue) {
             this.props.sessions.forEach(session => {
-                if (session.event == this.state.eventValue && session.room == roomValue) {
+                if (session.event._id == this.state.eventValue && session.room == roomValue) {
                     let sessionObj = Object.assign({}, session)
                     let sessionTimeDetails = ({ start: moment(session.startTime).toDate(), end: moment(session.endTime).toDate(), title: session.sessionName })
                     calendarSessionList.push(Object.assign({}, sessionObj, sessionTimeDetails));

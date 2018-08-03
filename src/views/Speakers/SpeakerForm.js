@@ -40,11 +40,14 @@ class SpeakerForm extends Component {
         Speaker[event.target.name] = event.target.value;
         this.setState({ Speaker: Speaker });
     }
+
     onSubmit() {
         let speaker = { ...this.state.Speaker };
+        let attendeeCount = this.props.attendeeCount;
+        
         if (speaker.firstName && speaker.lastName && speaker.email && speaker.contact && speaker.event) {
             let editedSpeaker = _.pick(speaker, ['firstName', 'lastName', 'email', 'contact', 'briefInfo', 'profileImageURL', 'event']);
-            this.state.editSpeaker ? this.props.editSpeakerData(speaker._id, editedSpeaker) : this.props.createSpeaker(speaker);
+            this.state.editSpeaker ? this.props.editSpeakerData(speaker._id, editedSpeaker) : this.props.createSpeaker(speaker, attendeeCount);
             this.onReset();
             this.props.history.push('/speakers');
         }
@@ -56,13 +59,16 @@ class SpeakerForm extends Component {
             !speaker.event ? this.setState({ eventRequired: true }) : null;
         }
     }
+
     onReset() {
         let Speaker = { ...this.state.Speaker };
         Speaker.firstName = ''; Speaker.lastName = ''; Speaker.email = ''; Speaker.contact = '';
         Speaker.briefInfo = ''; Speaker.profileImageURL = ''; Speaker.event = '';
         this.setState({ Speaker: Speaker });
     }
+    
     handleEventSelectChange(value) {
+         this.props.getAttendeeCountForEvent(value);
         if (value !== null) {
             let Speaker = { ...this.state.Speaker };
             Speaker.event = value;
@@ -190,13 +196,15 @@ const mapStateToProps = state => {
         speakerError: state.speaker.error,
         speakerData: state.speaker.speakerData,
         eventList: state.event.eventList,
+        attendeeCount : state.attendeeCount.attendeeCount
     };
 }
 const mapDispatchToProps = dispatch => {
     return {
-        createSpeaker: (speaker) => dispatch(actions.createSpeaker(speaker)),
+        createSpeaker: (speaker, attendeeCount) => dispatch(actions.createSpeaker(speaker ,attendeeCount)),
         getSpeakerData: (id) => dispatch(actions.getSpeakerData(id)),
-        editSpeakerData: (id, speaker) => dispatch(actions.editSpeakerData(id, speaker))
+        editSpeakerData: (id, speaker) => dispatch(actions.editSpeakerData(id, speaker)),
+        getAttendeeCountForEvent: (id) => dispatch(actions.getAttendeeCountForEvent(id)),
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(SpeakerForm);

@@ -112,7 +112,7 @@
            doc.setFontSize(20);  //size in px
            doc.text(15, 45, briefInfo|| ' ');
            doc.setFontSize(10); 
-           doc.text(20, 85, attendeeCode|| '');
+           doc.text(20, 88, attendeeCode|| '');
            doc.addImage(imgData, 'JPEG', 15, 60, 25, 25); // x , y , height, width in mm
         });
         doc.save("name of profile" + ".pdf");  
@@ -136,6 +136,6 @@
            doc.text(15, 45, briefInfo|| '');
            doc.addImage(imgData, 'JPEG', 15, 60, 25, 25); // x , y , height, width in mm
            doc.setFontSize(10); 
-           doc.text(20, 85, attendeeCode|| '');
+           doc.text(20, 88, attendeeCode|| '');
            doc.save(fullName + ".pdf");  
     }
