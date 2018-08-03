@@ -44,7 +44,7 @@ class SpeakerForm extends Component {
     onSubmit() {
         let speaker = { ...this.state.Speaker };
         let attendeeCount = this.props.attendeeCount;
-        console.log("attendeeCount", attendeeCount);
+        
         if (speaker.firstName && speaker.lastName && speaker.email && speaker.contact && speaker.event) {
             let editedSpeaker = _.pick(speaker, ['firstName', 'lastName', 'email', 'contact', 'briefInfo', 'profileImageURL', 'event']);
             this.state.editSpeaker ? this.props.editSpeakerData(speaker._id, editedSpeaker) : this.props.createSpeaker(speaker, attendeeCount);
@@ -66,6 +66,7 @@ class SpeakerForm extends Component {
         Speaker.briefInfo = ''; Speaker.profileImageURL = ''; Speaker.event = '';
         this.setState({ Speaker: Speaker });
     }
+    
     handleEventSelectChange(value) {
          this.props.getAttendeeCountForEvent(value);
         if (value !== null) {

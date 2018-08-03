@@ -86,7 +86,7 @@ export const createSpeaker = (speaker, attendeeCount) => {
         attendeeCount : attendeeCount.attendeeCount,
         totalCount : attendeeCount.totalCount + 1,
         speakerCount : attendeeCount.speakerCount + 1,
-        eventId : attendeeCount.eventId
+        event : attendeeCount.event
     }
     speaker['attendeeCount'] = attendeeCount.speakerCount + 1;
     speaker['attendeeLabel'] = 'SPE';
