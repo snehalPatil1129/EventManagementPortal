@@ -9,20 +9,21 @@ BigCalendar.setLocalizer(
 
 const Calendar = (props) => {
  return(
-         <div>
+        <div>
         <BigCalendar 
          events={props.events}
          defaultView="week"
          selectable={true} 
-         defaultDate={new Date()}
          onSelectEvent={props.selectSession} 
          onSelectSlot={props.onSelectSlot}
+         date={props.eventStartDate}
          min={new Date('2018, 1, 1, 08:00')} 
          max={new Date('2018, 1, 1, 20:00')} 
          step={15} />
-    </div>
+         </div>
  )
 
 }
-
+{/* min={new Date('2018, 1, 1, 08:00')} 
+         max={new Date('2018, 1, 1, 20:00')}  */}
 export default Calendar;
