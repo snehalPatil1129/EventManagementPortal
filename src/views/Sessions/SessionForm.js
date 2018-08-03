@@ -34,16 +34,13 @@ class SessionForm extends Component {
         this.props.getAttendees();
         this.props.getRooms();
         this.props.getSessions();
+        this.props.getSpeakerList();
     }
 
     onChangeHandler(session) {
-        let sessionDetails = {
-            ...this.state.Session
-        };
+        let sessionDetails = {...this.state.Session};
         sessionDetails[session.target.name] = session.target.value;
-        this.setState({
-            Session: sessionDetails
-        })
+        this.setState({  Session: sessionDetails})
     }
 
     changeRoom(roomValue) {
@@ -66,7 +63,10 @@ class SessionForm extends Component {
     changeEvent(eventValue) {
         let volunteerList = [], speakerList = [], roomList = [];
         let attendees = this.props.attendees;
-        let rooms = this.props.rooms;
+        let rooms = this.props.rooms; 
+        let speakers = this.props.speakers;
+        let events = this.props.events;
+        let eventStartDate;
         let Session = { ...this.state.Session };
         Session['event'] = eventValue;
 
@@ -74,27 +74,31 @@ class SessionForm extends Component {
         
         rooms.forEach(room => {
             if (room.event._id == eventValue) {
-                roomList.push({ label: room.roomName, value: room._id })
+                roomList.push({ label: room.roomName, value: room._id })}
+        })
+        
+         events.forEach(event => {
+            if (event._id == eventValue) {
+              eventStartDate = moment(event.startDate).toDate()
             }
         })
       
+        speakers.forEach(speaker => {
+            if (speaker.event._id == eventValue) {
+                speakerList.push({ label: speaker.firstName + ' ' + speaker.lastName, value: speaker._id })}
+        })
+
         attendees.forEach(attendee => {
             if(attendee.event != null){
             if (attendee.event._id == eventValue) {
                 attendee.profiles.forEach(profile => {
                     if (profile == 'Volunteer') {
-                        volunteerList.push({ label: attendee.firstName + ' ' + attendee.lastName, value: attendee._id })
-                    }
-                    if (profile == 'Speaker') {
-                        speakerList.push({ label: attendee.firstName + ' ' + attendee.lastName, value: attendee._id })
-                    }
+                        volunteerList.push({ label: attendee.firstName + ' ' + attendee.lastName, value: attendee._id })}
                 })
               }
             }
         });
-        this.setState({
-            roomList, volunteerList, speakerList
-        })
+        this.setState({ roomList, volunteerList, speakerList, eventStartDate})
     }
 
     changeSpeakers(speakerValue) {
@@ -177,10 +181,9 @@ class SessionForm extends Component {
             description: '', extraServices: '', speakers: [],
             volunteers: [], startTime: '', endTime: '', sessionCapacity: ''
         }
-        this.setState({
-            Session: Session, speakerValue: '', volunteerValue: '', updateFlag: false
-        });
+        this.setState({ Session: Session, speakerValue: '', volunteerValue: '', updateFlag: false});
     }
+
     render() {
         this.deleteButton = '';
         if (this.state.updateFlag) {
@@ -210,7 +213,7 @@ class SessionForm extends Component {
                 <Row>
                     <Col md='8'>
                         <Calendar events={this.state.calendarSessionList} onSelectSlot={(slotInfo) => this.selectSlot(slotInfo)}
-                            selectSession={event => this.selectSession(event)} />
+                         selectSession={event => this.selectSession(event)} eventStartDate={this.state.eventStartDate}/>
                     </Col>
                     <Col md='4'>
                         <CardLayout name="">
@@ -283,7 +286,9 @@ const mapStateToProps = (state) => {
         eventList: state.event.eventList,
         rooms: state.room.rooms,
         attendees: state.registration.attendeeList,
+        speakers : state.speaker.speakerList,
         sessions: state.session.sessions,
+        events : state.event.events
     }
 }
 
@@ -292,6 +297,7 @@ const mapDispatchToProps = dispatch => {
         getEvents: () => dispatch(actions.getEvents()),
         getAttendees: () => dispatch(actions.getAttendees()),
         getRooms: () => dispatch(actions.getRooms()),
+        getSpeakerList : () => dispatch(actions.getSpeakers()),
         createSession: (session) => dispatch(actions.createSession(session)),
         getSessions: () => dispatch(actions.getSessions()),
         deleteSession: (sessionId) => dispatch(actions.deleteSession(sessionId)),
