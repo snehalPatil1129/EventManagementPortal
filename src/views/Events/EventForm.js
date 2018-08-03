@@ -31,10 +31,10 @@ class EventForm extends Component {
             inValidDates: false,
             updateflag: false
         };
+        this.redirectFunction = this.redirectFunction.bind(this);
     }
 
     componentWillMount() {
-           
         if (this.props.match.params.id != undefined) {
             this.setState({ updateflag: true })
             let event = this.props.events.find(o => o._id === this.props.match.params.id);
@@ -74,38 +74,41 @@ class EventForm extends Component {
     }
 
     onSubmitHandler() {
-         let compRef = this;
-        let event = {
-            ...this.state.Event
-        }
-        this.setState({
-            submitted: true
-        });
+        let compRef = this;
+        let event = { ...this.state.Event }
+        this.setState({ submitted: true });
         let valiDate = moment(event["startDate"]).isBefore(event["endDate"]);
         //let validSameDate = moment(event["startDate"]).isSame(event["endDate"]);
         if (!valiDate) {
-            this.setState({
-                inValidDates: true
-            });
+            this.setState({ inValidDates: true});
         }
          if (event.eventName && valiDate && event.description) {
             this.props.createEvent(event);
-           
-             setTimeout(function() {
-               if(compRef.props.eventCreated)
-              {
-               toast.success("Event Created Successfully.", {
-                position: toast.POSITION.BOTTOM_RIGHT,
-               }); 
-                setTimeout(function() {
-                       compRef.props.history.push('/events');
-                }, 1500);
-               }  
-               }, 1000);
+             setTimeout(()=> {
+                 let  eventCreated = this.props.eventCreated;
+                 compRef.Toaster(compRef, eventCreated,'Created')},1000);
         }
     }
 
-    onUpdateHandler() {
+   redirectFunction() {
+      this.props.history.push('/events');
+  }
+
+  Toaster(compRef, successFlag, actionName) {
+        if(successFlag){
+                toast.success("Event "+ actionName + "Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+               }); 
+               setTimeout(()=> {compRef.redirectFunction()},1000);
+           }
+        else{
+            toast.error("Something went wrong", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+       }
+  }
+
+  onUpdateHandler() {
         let event = {
             ...this.state.Event
         }
@@ -130,7 +133,8 @@ class EventForm extends Component {
 
     render() {
         //const purchasedRedirect = this.props.eventCreated ?  <Link to={'/events'}/> : null;
-      
+        console.log("this.props.eventCreated", this.props.eventCreated);
+       
         if (this.state.updateflag) 
             this.buttons = <Button type="submit" size="md" color="success" onClick={this.onUpdateHandler.bind(this)} ><i className="icon-note"></i> Update</Button>
         else 
