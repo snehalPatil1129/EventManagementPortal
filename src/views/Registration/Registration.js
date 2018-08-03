@@ -7,7 +7,6 @@ import CardLayout from '../../components/CardLayout/';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import _ from 'lodash';
-
 class Registration extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +16,7 @@ class Registration extends Component {
                 briefInfo: '', profileImageURL: '', event: ''
             },
             firstNameRequired: false, lastNameRequired: false, emailRequired: false, contactRequired: false, eventRequired: false,
-            editAttendee: false  , profileList : [] ,  profileSelect : true
+            editAttendee: false  , profileList : [] ,  profileSelect : true , invalidContact : false , profileRequired : false
         }
     }
     componentWillMount () {
@@ -43,17 +42,16 @@ class Registration extends Component {
             });
         }
     }
-
     onChangeInput(event) {
         const { Registration } = { ...this.state };
         Registration[event.target.name] = event.target.value;
-        this.setState({ Registration: Registration });
+        this.setState({ Registration: Registration , firstNameRequired: false, lastNameRequired: false, emailRequired: false, contactRequired: false, eventRequired: false,
+            profileSelect : true , invalidContact : false , profileRequired : false });
     }
-
     onSubmit() {
         let attendeeCount = this.props.attendeeCount
         let attendee = { ...this.state.Registration };
-        if (attendee.firstName && attendee.lastName && attendee.email && attendee.contact && attendee.event) {
+        if (attendee.firstName && attendee.lastName && attendee.email && attendee.contact && attendee.event && attendee.contact.length == 10 && attendee.profiles.length > 0) {
             let editedAttendee = _.pick(attendee, ['firstName', 'lastName', 'email', 'contact', 'briefInfo', 'profileImageURL', 'event', 'profiles']);
             this.state.editAttendee ? this.props.editAttendeeData(attendee._id, editedAttendee) : this.props.createAttendee(attendee, attendeeCount );
             this.onReset();
@@ -65,16 +63,17 @@ class Registration extends Component {
             !attendee.email ? this.setState({ emailRequired: true }) : null;
             !attendee.contact ? this.setState({ contactRequired: true }) : null;
             !attendee.event ? this.setState({ eventRequired: true }) : null;
+            attendee.contact.length !== 10 ? this.setState({invalidContact : true}) : null;
+            attendee.profiles.length == 0 ? this.setState({ profileRequired : true}) : null;
         }
     }
-
     onReset() {
         let Registration = { ...this.state.Registration };
         Registration.firstName = ''; Registration.lastName = ''; Registration.email = ''; Registration.contact = '';
         Registration.profiles = []; Registration.briefInfo = ''; Registration.profileImageURL = ''; Registration.event = '';
-        this.setState({ Registration: Registration });
+        this.setState({ Registration: Registration , firstNameRequired: false, lastNameRequired: false, emailRequired: false, contactRequired: false, eventRequired: false,
+           profileSelect : true , invalidContact : false , profileRequired : false });
     }
-
     handleEventChange(value) {
         if (value !== null) {
             this.props.getAttendeeCountForEvent(value);
@@ -95,7 +94,6 @@ class Registration extends Component {
             this.setState({ Registration: Registration  , profileSelect : true});
         }
     }
-
     handleProfileChange(value) {
         if (value !== null) {
             let profileArray = this.state.Registration.profiles;
@@ -110,7 +108,6 @@ class Registration extends Component {
             }
         }
     }
-
     getAttendeeDetails() {
         let Registration = { ...this.state.Registration };
         Registration = this.props.attendeeData;
@@ -118,7 +115,6 @@ class Registration extends Component {
             Registration: Registration
         });
     }
-
     render() {
         const { Registration } = { ...this.state };
         const eventOptions = this.props.eventList;
@@ -215,6 +211,7 @@ class Registration extends Component {
                             disabled = {this.state.profileSelect}
                             onChange={this.handleProfileChange.bind(this)}
                         />
+                        {this.state.profileRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">*Required</div> : null}
                         {this.state.Registration.event === '' ? <div style={{ color: "red", marginTop: 0 }} className="help-block">*Please select event first !!</div> : null}
                     </Col>
                 </FormGroup >
@@ -227,13 +224,15 @@ class Registration extends Component {
                     </Col>
                     <Col md="6">
                         <div style={{ color: "red" }} className="help-block">{this.props.registrationError}</div>
+                        {
+                         this.state.invalidContact ? <div style={{ color: "red" }} className="help-block">Invalid Contact</div> : null
+                        }
                     </Col>
                 </FormGroup >
             </CardLayout>
         )
     }
 }
-
 const mapStateToProps = state => {
     return {
         registrationError: state.registration.error,
@@ -243,7 +242,6 @@ const mapStateToProps = state => {
         attendeeCount : state.attendeeCount.attendeeCount
     };
 }
-
 const mapDispatchToProps = dispatch => {
     return {
         createAttendee: (attendee,attendeeCount) => dispatch(actions.createAttendee(attendee, attendeeCount)),
@@ -254,5 +252,4 @@ const mapDispatchToProps = dispatch => {
         getProfiles : () => dispatch(actions.getProfiles())
     }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(Registration);

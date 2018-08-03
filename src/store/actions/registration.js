@@ -1,10 +1,10 @@
 import * as actionTypes from '../actions/actionTypes';
 import axios from 'axios';
 
-export const logRegistrationError = () => {
+export const logRegistrationError = (error) => {
     return {
         type: actionTypes.LOG_REGISTRATION_ERROR,
-        error: 'Oops...Something went wrong.Please try again...'
+        error: error !== undefined ?  error : 'Oops Something went wrong....'
     };
 };
 
@@ -99,7 +99,11 @@ export const createAttendee = (attendee, attendeeCount) => {
                     })
             })
             .catch((error) => {
-                dispatch(logRegistrationError());
+                if(error.response.data === 'Invalid Email'){
+                    dispatch(logRegistrationError(error.response.data));
+                }else{
+                    dispatch(logRegistrationError(error.message));                    
+                }
             })
     }
 };

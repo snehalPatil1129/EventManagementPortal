@@ -18,11 +18,15 @@ class Rooms extends Component {
                 bufferCapacity: '',
                 availableServices: []
             },
+            events : [],
             editRoom : false,
             roomNameRequired : false,
             eventRequired : false,
             capacityRequired : false
         }
+    }
+    componentWillMount (){
+        this.props.getEvents();
     }
     componentDidMount () {
         let currentroom = _.pick(this.props.currentRoom , ['roomName' ,'capacity' , 'bufferCapacity' ,'availableServices']);
@@ -40,7 +44,10 @@ class Rooms extends Component {
         const { Room } = { ...this.state };
         Room[event.target.name] = event.target.value;
         this.setState({
-            Room : Room
+            Room : Room,
+            roomNameRequired : false,
+            eventRequired : false,
+            capacityRequired : false
         })
     }
     onSubmit() {
@@ -61,12 +68,10 @@ class Rooms extends Component {
     onReset() {
         this.setState({
             Room: {
-                roomName: '',
-                event: '',
-                capacity: '',
-                bufferCapacity: '',
-                availableServices: [],
-            }
+                roomName: '', event: '', capacity: '',
+                bufferCapacity: '', availableServices: [],
+            },
+            roomNameRequired : false, eventRequired : false, capacityRequired : false
         });
     }
     handleSelectChange(value) {
@@ -190,7 +195,8 @@ const mapDispatchToProps = dispatch => {
     return {
         getRooms: () => dispatch(actions.getRooms()),
         createRoom: (room) => dispatch(actions.createRoom(room)),
-        editRoom : (id, room) => dispatch(actions.editRoom(id, room))
+        editRoom : (id, room) => dispatch(actions.editRoom(id, room)),
+        getEvents : () => dispatch(actions.getEvents())
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Rooms);
