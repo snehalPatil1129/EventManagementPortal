@@ -34,7 +34,7 @@ class ProfileForm extends Component {
             let ProfileObj  = {
               profileId : profile._id,
               profileName: profile.profileName,
-              eventValue: profile.eventId 
+              eventValue: profile.event._id 
             }
 
             this.setState({

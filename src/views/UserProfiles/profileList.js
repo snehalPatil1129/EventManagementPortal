@@ -28,8 +28,9 @@ class profileList extends Component {
         this.setState({
             eventValue: eventValue
         });
+        
         this.props.profiles.forEach(profile => {
-            if (profile.eventId == eventValue)
+            if (profile.event._id == eventValue)
                 profiles.push({ id: profile._id, profileName: profile.profileName })
         });
         this.setState({
