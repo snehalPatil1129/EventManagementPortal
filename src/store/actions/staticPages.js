@@ -48,6 +48,22 @@ export const getAboutUsInfo = () => {
             })
     }
 }
+export const getAboutUsForEvent = (id) => {
+    let aboutUs = {};
+    return dispatch => {
+        axios.get(`http://localhost:3000/api/aboutUs/eventId/${id}`)
+            .then((response) => {
+                if (response.data.length !== 0) {
+                    aboutUs = response.data[0];
+                }
+                dispatch(storeAboutUsInfo(aboutUs));
+            })
+            .catch((error) => {
+                dispatch(logStaticPageError());
+            })
+    }
+}
+
 export const createAboutUsInfo = (aboutUs) => {
     return dispatch => {
         axios.post('http://localhost:3000/api/aboutUs', aboutUs)

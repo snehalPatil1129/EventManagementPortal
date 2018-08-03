@@ -62,7 +62,8 @@ export {
     getLocationForEvent,
     getEventLocation,
     createEventLocation,
-    editEventLocation
+    editEventLocation,
+    getAboutUsForEvent
 } from './staticPages';
 
 export {
