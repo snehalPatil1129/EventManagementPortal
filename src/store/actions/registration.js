@@ -86,7 +86,7 @@ export const createAttendee = (attendee, attendeeCount) => {
         attendeeCount : attendeeCount.attendeeCount + 1,
         totalCount : attendeeCount.totalCount + 1,
         speakerCount : attendeeCount.speakerCount,
-        eventId : attendeeCount.eventId
+        event : attendeeCount.event
     }
     attendee['attendeeCount'] = attendeeCount.attendeeCount + 1;
     attendee['attendeeLabel'] = attendee.profiles[0].substring(0, 3).toUpperCase();

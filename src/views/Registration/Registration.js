@@ -33,7 +33,7 @@ class Registration extends Component {
             Attendee._id = this.props.attendeeData._id;
             let profiles = [];
             this.props.profiles.forEach(profile => {
-                if (profile.eventId == this.props.attendeeData.event._id)
+                if (profile.event._id == this.props.attendeeData.event._id)
                     profiles.push({ value: profile.profileName, label:profile.profileName })
             });
             this.setState({
@@ -82,7 +82,7 @@ class Registration extends Component {
             Registration.event = value;
             let profiles = [];
             this.props.profiles.forEach(profile => {
-                if (profile.eventId === value)
+                if (profile.event._id === value)
                     profiles.push({ value:  profile.profileName , label: profile.profileName })
             });
             this.setState({ Registration: Registration ,profileList : profiles , profileSelect : false });
