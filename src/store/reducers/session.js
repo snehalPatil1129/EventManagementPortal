@@ -2,6 +2,9 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     sessions: [],
+    sessionCreated: false,
+    sessionUpdated: false,
+    sessionDeleted : false
 }
 const sessionReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -23,13 +26,34 @@ const sessionReducer = (state = initialState, action) => {
                 sessions: state.sessions.concat(newSession),
                 sessionCreated: true
             };
-     
-
-     case actionTypes.UPDATE_SESSION_SUCCESS:
-
-        return {
-             ...state,
-        }
+            case actionTypes.CREATE_SESSION_FAIL:
+            return {
+                   ...state,
+                   sessionCreated: false,
+               };
+   
+        case actionTypes.UPDATE_SESSION_SUCCESS:
+           return {
+                ...state,
+                sessionUpdated : true
+           }
+         
+         case actionTypes.UPDATE_SESSION_FAIL:
+            return {
+                   ...state,
+                   sessionUpdated : false
+               };
+               case actionTypes.DELETE_SESSION_SUCCESS:
+               return {
+                    ...state,
+                    sessionDeleted : true
+               }
+             
+             case actionTypes.DELETE_SESSION_FAILL:
+                return {
+                       ...state,
+                       sessionDeleted : false
+                   };
     
             default:
             return state;

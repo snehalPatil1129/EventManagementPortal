@@ -6,22 +6,41 @@ import {
     Row, Col, Card, CardBody, CardHeader, CardFooter, FormGroup, Label, Button
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 class EventList extends Component {
 
     componentWillMount() {
         this.props.getEvents();
-       
     }
 
  deleteEvent(eventId) {
+     let componentRef = this;
         var x = confirm("Are you sure you want to delete?");
         if (x) {
             let compRef = this;
            this.props.deleteEvent(eventId);
+           setTimeout(()=> {
+            let  eventDeleted = this.props.eventDeleted;
+            compRef.Toaster(compRef, eventDeleted,'Deleted')},1000);
         }
         else
             return false;
     }
+
+    Toaster(compRef, successFlag, actionName) {
+        if(successFlag){
+                toast.success("Event "+ actionName + "Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+               }); 
+           }
+        else{
+            toast.error("Something went wrong", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+       }
+  }
 
     onDeleteEvent(cell, row) {
         let componentRef = this;
@@ -55,6 +74,7 @@ class EventList extends Component {
 
         return (
             <div>
+                 <ToastContainer autoClose={2000} />
                 <FormGroup row className="marginBottomZero">
                     <Col xs="6" md="3">
                         <Link to={`${this.props.match.url}/EventForm`}>
@@ -98,7 +118,8 @@ class EventList extends Component {
 const mapStateToProps = (state) => {
     return {
         events: state.event.events,
-        eventList : state.event.eventList
+        eventList : state.event.eventList,
+        eventDeleted : state.event.eventDeleted
     }
 }
 

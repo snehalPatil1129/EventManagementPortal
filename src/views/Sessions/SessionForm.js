@@ -12,6 +12,8 @@ import _ from 'lodash'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import Calendar from '../../components/Calendar/';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class SessionForm extends Component {
     constructor(props) {
@@ -131,25 +133,49 @@ class SessionForm extends Component {
         }
     }
 
+    Toaster(successFlag, actionName) {
+        if(successFlag){
+                toast.success("Session "+ actionName + "Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+               }); 
+           }
+        else{
+            toast.error("Something went wrong", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+       }
+  }
+
     onSubmitHandler() {
         let session = { ...this.state.Session }
         this.setState({ submitted: true });
-
+        let compRef = this;
         if (session.sessionName) {
             this.props.createSession(session);
+            setTimeout(()=> {
+                let  sessionCreated = this.props.sessionCreated;
+                compRef.Toaster(sessionCreated,'Created')},1000);
         }
     }
 
     onUpdateHandler() {
+        let compRef = this;
         let session = { ...this.state.Session }
         if (session.sessionName) {
             this.props.updateSession(session);
+            setTimeout(()=> {
+                let  sessionUpdated = this.props.sessionUpdated;
+                compRef.Toaster(sessionUpdated,'Updated')},1000);
         }
     }
 
     onDeleteHandler() {
+        let compRef = this;
         let session = { ...this.state.Session }
         this.props.deleteSession(session._id);
+        setTimeout(()=> {
+            let  sessionDeleted = this.props.sessionDeleted;
+            compRef.Toaster(sessionDeleted,'Deleted')},1000);
     }
 
     selectSlot(slotInfo) {
@@ -271,6 +297,7 @@ class SessionForm extends Component {
                                 </Col>
                                 <Col md="3">
                                     <Button onClick={this.resetField.bind(this)} type="reset" size="md" color="danger" > Reset</Button>
+                                    <ToastContainer autoClose={2000} />
                                 </Col>
                             </FormGroup>
                         </CardLayout>
@@ -288,7 +315,10 @@ const mapStateToProps = (state) => {
         attendees: state.registration.attendeeList,
         speakers : state.speaker.speakerList,
         sessions: state.session.sessions,
-        events : state.event.events
+        events : state.event.events,
+        sessionDeleted : state.session.sessionDeleted,
+        sessionUpdated : state.session.sessionUpdated,
+        sessionCreated : state.session.sessionCreated
     }
 }
 

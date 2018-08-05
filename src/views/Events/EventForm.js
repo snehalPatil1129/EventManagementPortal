@@ -109,12 +109,14 @@ class EventForm extends Component {
   }
 
   onUpdateHandler() {
-        let event = {
-            ...this.state.Event
-        }
+      
+        let event = { ...this.state.Event }
+        let compRef = this;
         if (event.eventName && event.description) {
             this.props.updateEvent(event);
-             this.props.history.push('/events');
+            setTimeout(()=> {
+                let  eventUpdated = this.props.eventUpdated;
+                compRef.Toaster(compRef, eventUpdated,'Updated')},1000);
         }
     }
 
@@ -132,9 +134,6 @@ class EventForm extends Component {
     }
 
     render() {
-        //const purchasedRedirect = this.props.eventCreated ?  <Link to={'/events'}/> : null;
-        console.log("this.props.eventCreated", this.props.eventCreated);
-       
         if (this.state.updateflag) 
             this.buttons = <Button type="submit" size="md" color="success" onClick={this.onUpdateHandler.bind(this)} ><i className="icon-note"></i> Update</Button>
         else 
@@ -214,7 +213,8 @@ class EventForm extends Component {
 const mapStateToProps = state => {
     return {
         events: state.event.events,
-        eventCreated : state.event.eventCreated
+        eventCreated : state.event.eventCreated,
+        eventUpdated : state.event.eventUpdated
     };
 }
 
