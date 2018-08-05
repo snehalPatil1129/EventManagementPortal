@@ -24,7 +24,7 @@ class ProfileForm extends Component {
     }
     componentWillMount(){
         this.props.getEvents();
-
+        this.props.getProfileList();
         let profileId = this.props.match.params.id;
 
             if (profileId!= undefined) {
@@ -49,6 +49,17 @@ class ProfileForm extends Component {
         ...this.state.Profile
     }
     Profile['eventValue'] = eventValue;
+    this.setState({
+      Profile : Profile
+    });
+  }
+
+  handleProfileSelectChange(value) {
+    let profileName = value;
+    let Profile = {
+        ...this.state.Profile
+    }
+    Profile['profileName'] = profileName;
     this.setState({
       Profile : Profile
     });
@@ -100,7 +111,8 @@ class ProfileForm extends Component {
 
     render() {
         const eventList = this.props.eventList;
-        const {eventValue} = this.state.Profile;
+        const profileList = this.props.profileList;
+        const {eventValue, profileName} = this.state.Profile;
         this.headerText = '';
 
         if (this.state.updateflag) {
@@ -126,13 +138,12 @@ class ProfileForm extends Component {
                 </FormGroup>
                 <FormGroup row>
                     <Col md="6">
-                        <InputElement
-                            type='text'
-                            placeholder='Profile Name'
-                            name='profileName'
-                            icon='icon-user'
-                            value={this.state.Profile.profileName}
-                            onchanged={(profile) => this.onChangeHandler(profile)} />
+                    <Select
+                    placeholder="Select Profile Name"
+                    value={profileName}
+                    options={profileList}
+                    simpleValue
+                   onChange={this.handleProfileSelectChange.bind(this)}/>
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -151,13 +162,15 @@ class ProfileForm extends Component {
 const mapStateToProps = (state) => {
     return {
       eventList : state.event.eventList,
-      profiles : state.profile.profiles
+      profiles : state.profile.profiles,
+      profileList : state.profileList.profileList
     }
 }
 
 const matchDispatchToProps = (dispatch) => {
     return {
     getEvents: () => dispatch(actions.getEvents()),
+    getProfileList: () => dispatch(actions.getProfileList()),
     createProfile: (profile) => dispatch(actions.createProfile(profile)),
     updateProfile: (profile) => dispatch(actions.updateProfile(profile)),
     }
