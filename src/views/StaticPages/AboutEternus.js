@@ -4,6 +4,8 @@ import * as actions from '../../store/actions/index';
 import { FormGroup, Col, Button } from 'reactstrap';
 import InputElement from '../../components/Input/';
 import CardLayout from '../../components/CardLayout/';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class AboutEternus extends Component {
   constructor(props) {
@@ -35,17 +37,18 @@ class AboutEternus extends Component {
   onSubmit() {
     if (this.state.aboutEternus.info) {
       let isEmpty = !Object.keys(this.props.aboutEternus).length;
-      if (isEmpty) { //post
-        let aboutEternus = _.pick(this.state.aboutEternus, ['info', 'url']);
-        this.props.createAboutEternus(aboutEternus);
-        this.onReset();
-      }
-      else { //put
-        let aboutEternus = _.pick(this.state.aboutEternus, ['info', 'url']);
-        let id = this.props.aboutEternus._id;
-        this.props.editAboutEternus(id, aboutEternus);
-        this.onReset();
-      }
+      let aboutEternus = _.pick(this.state.aboutEternus, ['info', 'url']);
+      let id;
+      !isEmpty ?  id = this.props.aboutEternus._id : null;
+      isEmpty ? this.props.createAboutEternus(aboutEternus) : this.props.editAboutEternus(id, aboutEternus);
+      
+    //   setTimeout(() => {
+    //     let createEditError = compRef.props.createEditError;
+    //     let status = '';
+    //     compRef.state.editAttendee ? status = 'Updated' : status = 'Created';
+    //     compRef.Toaster(compRef, createEditError, status)
+    // }, 1000);
+
     }
     else {
       !this.state.aboutEternus.info ? this.setState({ infoRequired: true }) : null;

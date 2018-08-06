@@ -14,10 +14,20 @@ export const storeCurrentSponsor = (currentSponsor) => {
         currentSponsor : currentSponsor
     };
 } 
-export const logSponsorsError = () => {
+export const getSponsorsError = () => {
     return {
-        type: actionTypes.LOG_SPONSOR_ERROR,
-        error : 'Oops...Something went wrong.Please try again...'
+        type: actionTypes.GET_SPONSOR_ERROR
+    };
+}
+export const creatEditSponsorsError = () => {
+    return {
+        type: actionTypes.CREATE_EDIT_SPONSOR_ERROR
+    };
+}
+
+export const deleteSponsorsError = () => {
+    return {
+        type: actionTypes.DELETE_SPONSOR_ERROR
     };
 }
 export const getSponsors = () => {
@@ -33,7 +43,7 @@ export const getSponsors = () => {
                 dispatch(storeSponsors(sponsorData, sponsorList));
             })
             .catch((error) => {
-                dispatch(logSponsorsError());
+                dispatch(getSponsorsError());
             })
     }
 };
@@ -45,7 +55,7 @@ export const createSponsor = (sponsor) => {
                 dispatch(getSponsors());
             })
             .catch((error) => {
-                dispatch(logSponsorsError());
+                dispatch(creatEditSponsorsError());
             })
     }
 };
@@ -57,7 +67,7 @@ export const editSponsor = (id ,sponsor) => {
                 dispatch(getSponsors());
             })
             .catch((error) => {
-                dispatch(logSponsorsError());
+                dispatch(creatEditSponsorsError());
             })
     }
 };
@@ -69,7 +79,7 @@ export const deleteSponsor = (id) => {
             dispatch(getSponsors());
         })
         .catch((error) => {
-            dispatch(logSponsorsError());
+            dispatch(deleteSponsorsError());
         })
     }
 }

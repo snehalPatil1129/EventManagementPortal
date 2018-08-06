@@ -60,7 +60,7 @@ class RegistrationList extends Component {
 
     Toaster(compRef, deleteAttendeeError, actionName) {
         if (!deleteAttendeeError) {
-            toast.success("Attendee " + actionName + "Successfully.", {
+            toast.success("Attendee " + actionName + " Successfully.", {
                 position: toast.POSITION.BOTTOM_RIGHT,
             });
         }

@@ -6,6 +6,8 @@ import InputElement from '../../components/Input/';
 import CardLayout from '../../components/CardLayout/';
 import Select from 'react-select';
 import _ from 'lodash';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class SponsorForm extends Component {
   constructor(props) {
@@ -65,8 +67,14 @@ class SponsorForm extends Component {
     let id = this.props.currentSponsor._id;
     if (Sponsor.name && Sponsor.category && Sponsor.event) {
       this.state.editSponsor ? this.props.editSponsor(id, Sponsor) : this.props.createSponsor(Sponsor);
-      this.onReset();
-      this.props.history.push('/sponsors');
+      let compRef = this;
+      setTimeout(() => {
+        let creatEditSponsorError = compRef.props.creatEditSponsorError;
+        let status = '';
+        compRef.state.editSponsor ? status = 'Updated' : status = 'Created';
+        compRef.Toaster(compRef, creatEditSponsorError, status)
+    }, 1000);
+     
     }
     else {
       !Sponsor.name ? this.setState({ nameRequired: true }) : null;
@@ -74,6 +82,23 @@ class SponsorForm extends Component {
       !Sponsor.event ? this.setState({ eventRequired: true }) : null;
     }
   }
+  Toaster(compRef, creatEditSponsorError, actionName) {
+    if (!creatEditSponsorError) {
+        toast.success("Sponsor " + actionName + " Successfully.", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        setTimeout(() => { compRef.redirectFunction() }, 1000);
+    }
+    else {
+        toast.error("Something went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        });
+    }
+}
+redirectFunction() {
+  this.onReset();
+  this.props.history.push('/sponsors');
+}
   onReset() {
     this.setState(prevState => ({
       Sponsor: {
@@ -174,6 +199,7 @@ class SponsorForm extends Component {
             {
               this.props.error !== "" ? <div style={{ color: "red", fontSize: 15, marginTop: 0 }} className="help-block">{this.props.error}</div> : null
             }
+            <ToastContainer autoClose={2000} />
           </Col>
         </FormGroup >
       </CardLayout>
@@ -184,7 +210,7 @@ const mapStateToProps = state => {
   return {
     eventList: state.event.eventList,
     currentSponsor: state.sponsor.currentSponsor,
-    error: state.sponsor.error,
+    creatEditSponsorError: state.sponsor.creatEditSponsorError,
     categoryOptions: state.sponsor.categoryOptions
   };
 }

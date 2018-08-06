@@ -33,21 +33,6 @@ export const logStaticPageError = () => {
 }
 
 ///about Us 
-export const getAboutUsInfo = () => {
-    let aboutUs = {};
-    return dispatch => {
-        axios.get('http://localhost:3000/api/aboutUs')
-            .then((response) => {
-                if (response.data.length !== 0) {
-                    aboutUs = response.data[0];
-                }
-                dispatch(storeAboutUsInfo(aboutUs));
-            })
-            .catch((error) => {
-                dispatch(logStaticPageError());
-            })
-    }
-}
 export const getAboutUsForEvent = (id) => {
     let aboutUs = {};
     return dispatch => {
@@ -127,21 +112,6 @@ export const editAboutEternusInfo = (id , aboutEternus) => {
 }
 
 ///HELP DESK
-export const getHelpDeskInfo = () => {
-    let helpDesk = {};
-    return dispatch => {
-        axios.get('http://localhost:3000/api/helpdesk')
-            .then((response) => {
-                if (response.data.length !== 0) {
-                    helpDesk = response.data[0];
-                }
-                dispatch(storeHelpDeskInfo(helpDesk));
-            })
-            .catch((error) => {
-                dispatch(logStaticPageError());
-            })
-    }
-}
 export const createHelpDeskInfo = (helpDesk) => {
     return dispatch => {
         axios.post('http://localhost:3000/api/helpdesk', helpDesk)
@@ -197,21 +167,7 @@ export const getLocationForEvent = (id) => {
             })
     }
 }
-export const getEventLocation = () => {
-    let eventLocation = {};
-    return dispatch => {
-        axios.get('http://localhost:3000/api/location')
-            .then((response) => {
-                if (response.data.length !== 0) {
-                    eventLocation = response.data[0];
-                }
-                dispatch(storeLocationInfo(eventLocation));
-            })
-            .catch((error) => {
-                dispatch(logStaticPageError());
-            })
-    }
-}
+
 export const createEventLocation = (eventLocation) => {
     return dispatch => {
         axios.post('http://localhost:3000/api/location', eventLocation)
