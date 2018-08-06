@@ -77,6 +77,30 @@ export const getAttendeesForEvent = (eventId) => {
     }
 };
 
+export const getAttendeesForEventAndProfile = (eventId, profileName) => {
+    let attendees = [];
+    return dispatch => {
+        axios.get(`http://localhost:3000/api/attendee/event/${eventId}`)
+            .then((response) => {
+                attendees = response.data;
+                let attendeeList = [];
+                attendees.forEach((attendee) => {
+                    attendee.profiles.forEach(profile => {
+                        if (profile == profileName) {
+                          attendeeList.push(attendee)
+                        }
+                      })
+                    attendee.event !== null ? attendee.eventName = attendee.event.eventName : null;
+                });
+                dispatch(storeAttendees(attendeeList));
+            })
+            .catch((error) => {
+                //dispatch(logRegistrationError());
+                dispatch(getAttendeeFail());
+            })
+    }
+};
+
 export const getAttendeeData = (id) => {
     return dispatch => {
         axios.get(`http://localhost:3000/api/attendee/${id}`)
