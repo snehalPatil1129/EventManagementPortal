@@ -18,8 +18,8 @@ class ProfileForm extends Component {
                 profileName: '',
                 eventValue: ''
             },
-            updateflag : false,
-            submitted : false
+            updateflag : false, eventNameRequired : false,
+            submitted : false,  profileNameRequired : false,
         }
     }
     componentWillMount(){
@@ -50,7 +50,7 @@ class ProfileForm extends Component {
     }
     Profile['eventValue'] = eventValue;
     this.setState({
-      Profile : Profile
+      Profile : Profile, eventNameRequired : false
     });
   }
 
@@ -61,38 +61,30 @@ class ProfileForm extends Component {
     }
     Profile['profileName'] = profileName;
     this.setState({
-      Profile : Profile
+      Profile : Profile, profileNameRequired : false
     });
   }
 
-    onChangeHandler(event) {
-        let Profile = {
-            ...this.state.Profile
-        };
-        Profile[event.target.name] = event.target.value;
-        this.setState({
-            Profile: Profile
-        })
-    }
-
     onSubmitHandler() {
-        let profile = {
-            ...this.state.Profile
+        let profile = {...this.state.Profile
         }
-        this.setState({
-            submitted: true
-        });
-    
+       this.validateForm();
         if (profile.profileName &&  profile.eventValue){
          this.props.createProfile(profile);
           this.props.history.push('/profiles');
         }
     }
 
+   validateForm(){
+       let profile = {...this.state.Profile} 
+       !profile.profileName ? this.setState({ profileNameRequired: true }) : null;
+       !profile.eventValue ? this.setState({ eventNameRequired: true }) : null;
+    }
+   
+
     onUpdateHandler() {
-        let profile = {
-            ...this.state.Profile
-        }
+        let profile = {...this.state.Profile }
+         this.validateForm();
           if (profile.profileName &&  profile.eventValue){
          this.props.updateProfile(profile);
           this.props.history.push('/profiles');
@@ -105,7 +97,7 @@ class ProfileForm extends Component {
             eventValue: ''
         }
         this.setState({
-            Profile: Profile
+            Profile: Profile, profileNameRequired : false, eventNameRequired : false
         });
     }
 
@@ -134,6 +126,7 @@ class ProfileForm extends Component {
                    options={eventList}
                    simpleValue
                   onChange={this.handleEventSelectChange.bind(this)}/>
+                     {this.state.eventNameRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">*Required</div> : null}<br/>
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -144,6 +137,7 @@ class ProfileForm extends Component {
                     options={profileList}
                     simpleValue
                    onChange={this.handleProfileSelectChange.bind(this)}/>
+                    {this.state.profileNameRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">*Required</div> : null}<br/>
                     </Col>
                 </FormGroup>
                 <FormGroup row>
