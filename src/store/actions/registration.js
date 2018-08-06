@@ -3,8 +3,27 @@ import axios from 'axios';
 
 export const logRegistrationError = (error) => {
     return {
-        type: actionTypes.LOG_REGISTRATION_ERROR,
+        type: actionTypes.LOG_REGISTRATION_ERROR ,
+        errorFlag : true,
         error: error !== undefined ?  error : 'Oops Something went wrong....'
+    };
+};
+
+export const creatEditAttendeeFail = () => {
+    return {
+        type: actionTypes.CREATE_EDIT_ATTENDEE_FAIL 
+    };
+};
+
+export const getAttendeeFail = () => {
+    return {
+        type: actionTypes.GET_ATTENDEE_LIST_FAIL 
+    };
+};
+
+export const deleteAttendeeFail = () => {
+    return {
+        type: actionTypes.DELETE_ATTENDEE_FAIL 
     };
 };
 
@@ -34,7 +53,8 @@ export const getAttendees = () => {
                 dispatch(storeAttendees(attendees));
             })
             .catch((error) => {
-                dispatch(logRegistrationError());
+                //dispatch(logRegistrationError());
+                dispatch(getAttendeeFail());
             })
     }
 };
@@ -51,7 +71,8 @@ export const getAttendeesForEvent = (eventId) => {
                 dispatch(storeAttendees(attendees));
             })
             .catch((error) => {
-                dispatch(logRegistrationError());
+                //dispatch(logRegistrationError());
+                dispatch(getAttendeeFail());
             })
     }
 };
@@ -75,7 +96,7 @@ export const editAttendeeData = (id, attendee) => {
                 dispatch(getAttendees());
             })
             .catch((error) => {
-                dispatch(logRegistrationError());
+                dispatch(creatEditAttendeeFail());
             })
     }
 }
@@ -100,9 +121,9 @@ export const createAttendee = (attendee, attendeeCount) => {
             })
             .catch((error) => {
                 if(error.response.data === 'Invalid Email'){
-                    dispatch(logRegistrationError(error.response.data));
+                    dispatch(creatEditAttendeeFail());
                 }else{
-                    dispatch(logRegistrationError(error.message));                    
+                    dispatch(creatEditAttendeeFail());              
                 }
             })
     }
@@ -115,7 +136,7 @@ export const deleteAttendee = (id) => {
                 dispatch(getAttendees())
             })
             .catch((error) => {
-                dispatch(logRegistrationError());
+                dispatch(deleteAttendeeFail());
             })
     }
 };

@@ -8,6 +8,9 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 class RoomsList extends Component {
     constructor(props) {
         super(props);
@@ -17,12 +20,45 @@ class RoomsList extends Component {
     }
     componentDidMount () {
         this.props.getRoomsList();
+        this.getRoomErrorToaster();
         this.props.getEvents();
     }
+    getRoomErrorToaster(){
+        let compRef = this;      
+        setTimeout(() => {
+            let getRoomError = compRef.props.getRoomError;
+            if(getRoomError) {
+                toast.error("Something went wrong", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        }, 1000);
+    }
     onDeleteRoom (cell, row) {
-        return  <Link to={this}  onClick={() => this.props.deleteRoom(row._id)}>
+        return  <Link to={this}  onClick={() => this.deleteRoom(row._id)}>
                     <i className="fa fa-trash"></i>
                 </Link>  
+    }
+    deleteRoom (id) {
+        this.props.deleteRoom(id);
+        let compRef = this;      
+        setTimeout(() => {
+            let deleteRoomError = compRef.props.deleteRoomError;
+            compRef.Toaster(compRef, deleteRoomError, 'Delete')
+        }, 1000);
+    }
+
+    Toaster(compRef, deleteRoomError, actionName) {
+        if (!deleteRoomError) {
+            toast.success("Room " + actionName + " Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+        }
+        else {
+            toast.error("Something went wrong", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+        }
     }
     onEditRoom(cell, row) {
         return (
@@ -40,12 +76,14 @@ class RoomsList extends Component {
                 event : value
             });
             this.props.getRoomsForEvent(value);
+            this.getRoomErrorToaster();
         }
         else{
             this.setState({
                 event : ''
             });
             this.props.getRoomsList();
+            this.getRoomErrorToaster();
         }
     }
     render() {
@@ -90,6 +128,9 @@ class RoomsList extends Component {
                         <TableHeaderColumn dataField='delete' dataFormat={this.onDeleteRoom.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn> 
                     </BootstrapTable>
                 </FormGroup>
+                <Col>
+                <ToastContainer autoClose={2000} />
+                </Col>
             </CardLayout>
         )
     }
@@ -97,7 +138,9 @@ class RoomsList extends Component {
 const mapStateToProps = state => {
     return {
         roomList : state.room.rooms,
-        eventList : state.event.eventList
+        eventList : state.event.eventList,
+        deleteRoomError : state.room.deleteRoomError,
+        getRoomError : state.room.getRoomError
     };
 }
 const mapDispatchToProps = dispatch => {

@@ -20,6 +20,24 @@ export const logRoomError = () => {
         error : 'Oops...Something went wrong.Please try again...'
     };
 }
+
+export const getRoomError = () => {
+    return {
+        type: actionTypes.GET_ROOMS_ERROR
+    };
+}
+
+export const createEditRoomError = () => {
+    return {
+        type: actionTypes.CREATE_EDIT_ROOM_ERROR
+    };
+}
+export const deleteRoomError = () => {
+    return {
+        type: actionTypes.DELETE_ROOM_ERROR
+    };
+}
+
 export const getRooms = () => {
     let roomData = [];  let roomList = [];
     return dispatch => {
@@ -33,7 +51,7 @@ export const getRooms = () => {
                 dispatch(storeRooms(roomData, roomList));
             })
             .catch((error) => {
-                dispatch(logRoomError());
+                dispatch(getRoomError());
             })
     }
 };
@@ -45,7 +63,7 @@ export const createRoom = (room) => {
                 dispatch(getRooms());
             })
             .catch((error) => {
-                dispatch(logRoomError());
+                dispatch(createEditRoomError());
             })
     }
 };
@@ -57,7 +75,7 @@ export const editRoom = (id ,room) => {
                 dispatch(getRooms());
             })
             .catch((error) => {
-                dispatch(logRoomError());
+                dispatch(createEditRoomError());
             })
     }
 };
@@ -69,7 +87,7 @@ export const deleteRoom = (id) => {
             dispatch(getRooms());
         })
         .catch((error) => {
-            dispatch(logRoomError());
+            dispatch(deleteRoomError());
         })
     }
 }

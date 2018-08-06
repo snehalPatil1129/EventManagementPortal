@@ -9,6 +9,8 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class RegistrationList extends Component {
     constructor(props) {
@@ -18,7 +20,16 @@ class RegistrationList extends Component {
         }
     }
     componentDidMount () {
+        let compRef = this;
         this.props.getAttendeeList();
+        setTimeout(() => {
+            let getAttendeeError = compRef.props.getAttendeeError;
+            if(getAttendeeError) {
+                toast.error("Something went wrong", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        }, 1000);
         this.props.getEvents();
         this.props.getProfiles();
     }
@@ -31,11 +42,30 @@ class RegistrationList extends Component {
     }
 
     ondeleteAttendee (cell, row) {
-        return  <Link to={this}  onClick={() =>  this.props.deleteAttendee(row._id)}>
+        return  <Link to={this}  onClick={() =>  this.deleteAttendee(row._id)}>
                     <i className="fa fa-trash"></i>
-                </Link>  
+                </Link> 
     }
-
+    deleteAttendee (id) {
+        this.props.deleteAttendee(id);
+        let compRef = this;      
+        setTimeout(() => {
+            let deleteAttendeeError = compRef.props.deleteAttendeeError;
+            compRef.Toaster(compRef, deleteAttendeeError, 'Delete')
+        }, 1000);
+    }
+    Toaster(compRef, deleteAttendeeError, actionName) {
+        if (!deleteAttendeeError) {
+            toast.success("Attendee " + actionName + "Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+        }
+        else {
+            toast.error("Something went wrong", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+        }
+    }
     onEditAttendee (cell, row) {
         return  <Link to={`${this.props.match.url}/registration/${row._id}`} onClick={() => this.props.storeAttendeeData(row) }>
                     <i className="fa fa-pencil"></i>
@@ -116,6 +146,7 @@ class RegistrationList extends Component {
                     <Col md="6">
                         <div style={{ color: "red" }} className="help-block">{this.props.registrationError}</div>
                     </Col>
+                    <ToastContainer autoClose={2000} />
                 </FormGroup>
             </CardLayout>
         )
@@ -126,7 +157,9 @@ const mapStateToProps = state => {
     return {
         registrationError: state.registration.error,
         attendeeList : state.registration.attendeeList,
-        eventList :  state.event.eventList
+        eventList :  state.event.eventList,
+        getAttendeeError : state.registration.getAttendeeError,
+        deleteAttendeeError : state.registration.deleteAttendeeError,
     };
 }
 
