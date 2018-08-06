@@ -102,6 +102,7 @@ class EventList extends Component {
                                         <TableHeaderColumn dataField='_id' headerAlign='left' isKey hidden>ID</TableHeaderColumn>
                                         <TableHeaderColumn dataField='eventName' headerAlign='left' width='200' dataSort csvHeader='eventName'>Event Name</TableHeaderColumn>
                                         <TableHeaderColumn dataField='description' headerAlign='left' width='250' csvHeader='description'>Description</TableHeaderColumn>
+                                        <TableHeaderColumn dataField='venue' headerAlign='left' width='250' csvHeader='venue'>Venue</TableHeaderColumn>
                                         <TableHeaderColumn dataField='delete' dataFormat={this.onDeleteEvent.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>
                                         <TableHeaderColumn dataField='edit' dataFormat={this.onEditEvent.bind(this)} headerAlign='left' width='30' export={false}></TableHeaderColumn>
                                     </BootstrapTable>
