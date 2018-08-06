@@ -26,7 +26,8 @@ export {
     editAttendeeData,
     storeAttendeeData,
     deleteAttendee,
-    getAttendeesForEvent
+    getAttendeesForEvent,
+    getAttendeesForEventAndProfile
 } from './registration';
 
 export {
