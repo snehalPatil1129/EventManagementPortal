@@ -27,9 +27,9 @@ class EventForm extends Component {
                 startDate: moment(),
                 endDate: moment()
             },
-            submitted: false,
-            inValidDates: false,
-            updateflag: false
+            submitted: false, inValidDates: false, updateflag: false, endDateRequired : false,
+            eventNameRequired: false, venueRequired : false, startDateRequired : false,
+            descriptionRequired: false
         };
         this.redirectFunction = this.redirectFunction.bind(this);
     }
@@ -52,14 +52,15 @@ class EventForm extends Component {
             })
         }
     }
+
     changeFunction(date, type) {
         let Event = {
             ...this.state.Event,
         }
         Event[type] = date;
         this.setState({
-            Event: Event,
-            inValidDates: false
+            Event: Event, startDateRequired : false, 
+            inValidDates: false, endDateRequired : false
         })
     }
 
@@ -68,21 +69,31 @@ class EventForm extends Component {
             ...this.state.Event
         };
         eventDetailArray[event.target.name] = event.target.value;
-        this.setState({
-            Event: eventDetailArray
+        this.setState({ Event: eventDetailArray,eventNameRequired: false, 
+                       venueRequired : false, descriptionRequired: false,
         })
+    }
+    
+    validateForm(){
+        let event = { ...this.state.Event }
+         let valiDate = moment(event["startDate"]).isBefore(event["endDate"]);
+         let validSameDate = moment(event["startDate"]).isSame(event["endDate"]);
+
+            !event.eventName ? this.setState({eventNameRequired: true }) : null;
+            !event.startDate ? this.setState({ startDateRequired: true }) : null;
+            !event.endDate ? this.setState({ endDateRequired: true }) : null;
+            !event.venue ? this.setState({ venueRequired: true }) : null;
+            !event.description ? this.setState({ descriptionRequired: true }) : null;
+            !valiDate ||validSameDate ? this.setState({inValidDates : true}) : null;
     }
 
     onSubmitHandler() {
         let compRef = this;
         let event = { ...this.state.Event }
         this.setState({ submitted: true });
-        let valiDate = moment(event["startDate"]).isBefore(event["endDate"]);
-        //let validSameDate = moment(event["startDate"]).isSame(event["endDate"]);
-        if (!valiDate) {
-            this.setState({ inValidDates: true});
-        }
-         if (event.eventName && valiDate && event.description) {
+        this.validateForm();
+      
+         if (event.eventName && !this.state.inValidDates && event.venue && event.startDate && event.endDate && event.description ) {
             this.props.createEvent(event);
              setTimeout(()=> {
                  let  eventCreated = this.props.eventCreated;
@@ -109,10 +120,10 @@ class EventForm extends Component {
   }
 
   onUpdateHandler() {
-      
         let event = { ...this.state.Event }
         let compRef = this;
-        if (event.eventName && event.description) {
+         validateForm();
+        if (event.eventName && !this.state.inValidDates && event.venue && event.startDate && event.endDate&& event.description) {
             this.props.updateEvent(event);
             setTimeout(()=> {
                 let  eventUpdated = this.props.eventUpdated;
@@ -121,15 +132,11 @@ class EventForm extends Component {
     }
 
     resetField() {
-        let Event = {
-            eventName: "",
-            description: "",
-            venue: "",
-            startDate: moment(),
-            endDate: moment()
-        }
+        let Event = {eventName: "", description: "", venue: "",
+                    startDate: moment(), endDate: moment() }
         this.setState({
-            Event: Event
+            Event: Event, endDateRequired : false, eventNameRequired: false, 
+            venueRequired : false, startDateRequired : false, inValidDates: false, descriptionRequired : false
         });
     }
 
@@ -149,6 +156,7 @@ class EventForm extends Component {
                             name='eventName'
                             icon='icon-user'
                             value={this.state.Event.eventName}
+                            required={this.state.eventNameRequired}
                             onchanged={(event) => this.onChangeHandler(event)} />
                     </Col>
                     <Col md="6">
@@ -161,6 +169,7 @@ class EventForm extends Component {
                                 onChange={(event) => this.changeFunction(event, "startDate")}
                                 placeholderText="Select start date" />
                         </InputGroup>
+                        {this.state.startDateRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">startDate is Required</div> : null}
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -174,6 +183,7 @@ class EventForm extends Component {
                                 onChange={(event) => this.changeFunction(event, "endDate")}
                                 placeholderText="Select start date" />
                         </InputGroup>
+                        {this.state.endDateRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">endDate is Required</div> : null}
                     </Col>
                     <Col md="6">
                         <InputElement
@@ -182,6 +192,7 @@ class EventForm extends Component {
                             name='description'
                             icon='icon-phone'
                             value={this.state.Event.description}
+                            required={this.state.descriptionRequired}
                             onchanged={(event) => this.onChangeHandler(event)} />
                     </Col>
                 </FormGroup>
@@ -193,6 +204,7 @@ class EventForm extends Component {
                             name='venue'
                             icon='icon-phone'
                             value={this.state.Event.venue}
+                            required={this.state.venueRequired}
                             onchanged={(event) => this.onChangeHandler(event)} />
                     </Col>
                 </FormGroup >
@@ -203,6 +215,9 @@ class EventForm extends Component {
                     <Col md="3">
                         <Button onClick={this.resetField.bind(this)} type="reset" size="md" color="danger" > Reset</Button>
                           <ToastContainer autoClose={2000} />
+                    </Col>
+                     <Col md="3">
+                       {this.state.inValidDates ? <div style={{ color: "red", marginTop: 0 }} className="help-block">please enter valid start Date and end Date </div> : null}
                     </Col>
                 </FormGroup>
             </CardLayout>
