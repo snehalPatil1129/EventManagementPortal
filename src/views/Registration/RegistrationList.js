@@ -16,12 +16,14 @@ class RegistrationList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-           event : ''
+           event : '',
+           profile : ''
         }
     }
     componentDidMount () {
         let compRef = this;
         this.props.getAttendeeList();
+        this.props.getProfiles();
         setTimeout(() => {
             let getAttendeeError = compRef.props.getAttendeeError;
             if(getAttendeeError) {
@@ -46,6 +48,7 @@ class RegistrationList extends Component {
                     <i className="fa fa-trash"></i>
                 </Link> 
     }
+
     deleteAttendee (id) {
         this.props.deleteAttendee(id);
         let compRef = this;      
@@ -54,6 +57,7 @@ class RegistrationList extends Component {
             compRef.Toaster(compRef, deleteAttendeeError, 'Delete')
         }, 1000);
     }
+
     Toaster(compRef, deleteAttendeeError, actionName) {
         if (!deleteAttendeeError) {
             toast.success("Attendee " + actionName + "Successfully.", {
@@ -66,6 +70,7 @@ class RegistrationList extends Component {
             });
         }
     }
+
     onEditAttendee (cell, row) {
         return  <Link to={`${this.props.match.url}/registration/${row._id}`} onClick={() => this.props.storeAttendeeData(row) }>
                     <i className="fa fa-pencil"></i>
@@ -81,13 +86,31 @@ class RegistrationList extends Component {
            users.push({userInfo :attendee})}
          })
       })
-        attendeeCardMethod.generateQRcodeBulk(users);
+        attendeeCardMethod.generateQRcodeBulk(users, this.state.eventName, this.state.profile);
     }
 
     handleEventChange (value) {
+
         value !== null ? ( this.setState({ event : value}) , this.props.getAttendeesForEvent(value)) 
         : (this.setState ({ event : ''}) ,  this.props.getAttendeeList());
+          let profileList = [], eventName;
+            this.props.profiles.forEach(profile => {
+                if (profile.event._id === value)
+                    profileList.push({ value: profile.profileName, label: profile.profileName })
+            });
+
+         this.props.eventList.forEach(event =>{
+           if(event.value == value)
+             eventName = event.label
+         })
+            this.setState({profileList, eventName});
     }
+
+    handleProfileChange (value) {
+       this.setState({profile:value})
+        this.props.getAttendeesForEventAndProfile(this.state.event, value);
+    }
+
     render() {
           const options = {
             sizePerPageList: [{
@@ -118,6 +141,8 @@ class RegistrationList extends Component {
                             Print QR Code For All
                         </Button>
                     </Col>
+                 </FormGroup> &nbsp;&nbsp;
+                   <FormGroup row>
                     <Col md="4">
                         <Select 
                             name= "Event"
@@ -126,6 +151,16 @@ class RegistrationList extends Component {
                             value = {this.state.event}
                             simpleValue
                             onChange = {this.handleEventChange.bind(this)}
+                            />
+                    </Col>
+                     <Col md="4">
+                        <Select 
+                            name= "Profile"
+                            placeholder =  "Select Profile"
+                            options = {this.state.profileList}
+                            value = {this.state.profile}
+                            simpleValue
+                            onChange = {this.handleProfileChange.bind(this)}
                             />
                     </Col>
                 </FormGroup>
@@ -160,6 +195,7 @@ const mapStateToProps = state => {
         eventList :  state.event.eventList,
         getAttendeeError : state.registration.getAttendeeError,
         deleteAttendeeError : state.registration.deleteAttendeeError,
+        profiles: state.profile.profiles
     };
 }
 
@@ -170,6 +206,7 @@ const mapDispatchToProps = dispatch => {
         deleteAttendee : (id) => dispatch(actions.deleteAttendee(id)),
         getEvents : () => dispatch(actions.getEvents()),
         getAttendeesForEvent : (eventId) => dispatch(actions.getAttendeesForEvent(eventId)),
+        getAttendeesForEventAndProfile : (eventId, profileName) => dispatch(actions.getAttendeesForEventAndProfile(eventId, profileName)),
         getProfiles : () => dispatch(actions.getProfiles())
     }
 }
