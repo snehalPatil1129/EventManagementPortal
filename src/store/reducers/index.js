@@ -11,6 +11,8 @@ import  profileReducer from './userProfile';
 import  attendanceReducer from './attendance';
 import  staticPageReducer from './staticPages';
 import  sponsorReducer from './sponsor';
+import  profileListReducer from './profileList';
+
 
 const rootReducer = combineReducers({
   event : eventReducer,
@@ -24,7 +26,8 @@ const rootReducer = combineReducers({
   profile : profileReducer,
   attendance : attendanceReducer,
   staticPages : staticPageReducer,
-  sponsor : sponsorReducer
+  sponsor : sponsorReducer,
+  profileList : profileListReducer
 });
 
 export default rootReducer;

@@ -94,3 +94,10 @@ export {
 export{
  getAttendeeCountForEvent
 } from './attendeeCount'
+
+
+export{
+    getProfileList
+   } from './profileList'
+   
+

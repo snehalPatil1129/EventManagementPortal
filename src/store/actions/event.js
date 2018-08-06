@@ -115,7 +115,7 @@ export const deleteEvent = (eventId)=>{
      axios.delete(`http://localhost:3000/api/event/${id}`)
             .then((response) => {
             dispatch(getEvents())
-            // dispatch(deleteEventSuccess(response.data._id))
+            dispatch(deleteEventSuccess(response.data._id))
             })
             .catch((error) => {
               dispatch(deleteEventFail(error))
