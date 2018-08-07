@@ -1,4 +1,4 @@
-export { loginUser, logoutUser } from "./auth";
+export { loginUser, logoutUser ,forgetPassword } from "./auth";
 
 export { getEvents, createEvent, updateEvent, deleteEvent } from "./event";
 

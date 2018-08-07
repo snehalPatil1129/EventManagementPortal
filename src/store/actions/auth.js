@@ -17,6 +17,12 @@ export const loginError = () => {
     type: actionTypes.LOGIN_ERROR
   };
 };
+export const forgetPasswordMsg = msg => {
+  return {
+    type: actionTypes.FORGET_PASSWORD,
+    forgetPasswordMsg: msg
+  };
+};
 export const loginUser = user => {
   return dispatch => {
     axios
@@ -28,6 +34,22 @@ export const loginUser = user => {
       })
       .catch(error => {
         dispatch(loginError());
+      });
+  };
+};
+export const forgetPassword = email => {
+  return dispatch => {
+    axios
+      .post(`${AppConfig.serverURL}/api/authenticate/forgotPassword/${email}`)
+      .then(response => {
+        if (response.data) {
+          dispatch(
+            forgetPasswordMsg("Please check your mail for new password")
+          );
+        }
+      })
+      .catch(error => {
+        dispatch(forgetPasswordMsg(error.response.data));
       });
   };
 };

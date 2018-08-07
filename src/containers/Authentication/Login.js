@@ -28,7 +28,7 @@ class Login extends Component {
       let compRef = this;
       setTimeout(() => {
         let loginError = compRef.props.loginError;
-        compRef.Toaster(compRef, loginError);
+        compRef.Toaster(compRef, loginError, "Login ");
       }, 1000);
     } else {
       toast.error("Please Enter Valid Email/Password...", {
@@ -39,7 +39,7 @@ class Login extends Component {
   Toaster(compRef, loginError, actionName) {
     if (!loginError) {
       localStorage.setItem("user", this.state.user.email);
-      toast.success("Login Successfull...", {
+      toast.success(actionName + " Successfull...", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
       setTimeout(() => {
@@ -53,6 +53,26 @@ class Login extends Component {
   }
   redirectFunction() {
     this.props.history.push("/");
+  }
+  onForgetPassword() {
+    let user = { ...this.state.user };
+    if (user.email) {
+      this.props.forgetPassword(user.email);
+      let compRef = this;
+      setTimeout(() => {
+        let forgetPasswordMsg = compRef.props.forgetPasswordMsg;
+        compRef.forgetPasswordToast(forgetPasswordMsg);
+      }, 1000);
+    } else {
+      toast.error("Please Enter Valid Email...", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
+    }
+  }
+  forgetPasswordToast(forgetPasswordMsg) {
+    toast.success("Message..." + forgetPasswordMsg + "", {
+      position: toast.POSITION.BOTTOM_RIGHT
+    });
   }
   render() {
     return (
@@ -90,7 +110,9 @@ class Login extends Component {
             </Button>
           </Col>
           <Col md="6">
-            <Button color="link">Forgot password?</Button>
+            <Button color="link" onClick={this.onForgetPassword.bind(this)}>
+              Forgot password?
+            </Button>
             <ToastContainer autoClose={2000} />
           </Col>
         </FormGroup>
@@ -100,12 +122,14 @@ class Login extends Component {
 }
 const mapStateToProps = state => {
   return {
-    loginError: state.auth.loginError
+    loginError: state.auth.loginError,
+    forgetPasswordMsg: state.auth.forgetPasswordMsg
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    loginUser: user => dispatch(actions.loginUser(user))
+    loginUser: user => dispatch(actions.loginUser(user)),
+    forgetPassword: email => dispatch(actions.forgetPassword(email))
   };
 };
 export default connect(

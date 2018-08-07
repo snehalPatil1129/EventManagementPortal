@@ -2,7 +2,8 @@ import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
   email: "",
-  loginError: false
+  loginError: false,
+  forgetPasswordMsg: ""
 };
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -10,17 +11,25 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         email: action.email,
-        loginError: false
+        loginError: false,
+        forgetPasswordMsg: ""
       };
     case actionTypes.LOGOUT_USER:
       return {
         ...state,
-        email: ""
+        email: "",
+        forgetPasswordMsg: ""
       };
     case actionTypes.LOGIN_ERROR:
       return {
         ...state,
-        loginError: true
+        loginError: true,
+        forgetPasswordMsg: ""
+      };
+    case actionTypes.FORGET_PASSWORD:
+      return {
+        ...state,
+        forgetPasswordMsg: action.forgetPasswordMsg
       };
     default:
       return state;

@@ -7,6 +7,9 @@ import CardLayout from "../../components/CardLayout/";
 import Select from "react-select";
 import Geocode from "react-geocode";
 import _ from "lodash";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 class EventLocation extends Component {
   constructor(props) {
     super(props);
@@ -57,6 +60,15 @@ class EventLocation extends Component {
         eventLocation: eventLocation
       });
       this.props.getEventAddress(value);
+      let compRef = this;
+      setTimeout(() => {
+        let getLocationError = compRef.props.getLocationError;
+        if (getLocationError) {
+          toast.error("Something went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT
+          });
+        }
+      }, 1000);
     }
   }
   getCordinates() {
@@ -96,16 +108,18 @@ class EventLocation extends Component {
         "latitudeDelta",
         "longitudeDelta"
       ]);
-      if (isEmpty) {
-        //post
-        this.props.createEventLocation(eventLocation);
-        this.onReset();
-      } else {
-        //put
-        let id = this.props.eventLocation._id;
-        this.props.editEventLocation(id, eventLocation);
-        this.onReset();
-      }
+      let id;
+      !isEmpty ? (id = this.props.eventLocation._id) : null;
+      isEmpty
+        ? this.props.createEventLocation(eventLocation)
+        : this.props.editEventLocation(id, eventLocation);
+      let compRef = this;
+      setTimeout(() => {
+        let creatEditHelpDeskError = compRef.props.creatEditHelpDeskError;
+        let status = "";
+        !isEmpty ? (status = "Updated") : (status = "Created");
+        compRef.Toaster(compRef, creatEditHelpDeskError, status);
+      }, 1000);
     } else {
       !eventLocation.event ? this.setState({ eventRequired: true }) : null;
       !eventLocation.address
@@ -114,6 +128,21 @@ class EventLocation extends Component {
       !eventLocation.latitude || !eventLocation.longitude
         ? this.setState({ cordinateError: "Please Submit Again" })
         : null;
+    }
+  }
+  Toaster(compRef, createEditError, actionName) {
+    if (!createEditError) {
+      this.onReset();
+      toast.success(
+        "Event Location Information " + actionName + " Successfully.",
+        {
+          position: toast.POSITION.BOTTOM_RIGHT
+        }
+      );
+    } else {
+      toast.error("Something went wrong", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
     }
   }
   onReset() {
@@ -182,14 +211,10 @@ class EventLocation extends Component {
           <Col md="6">
             {
               <div style={{ color: "red" }} className="help-block">
-                {this.props.error}
-              </div>
-            }
-            {
-              <div style={{ color: "red" }} className="help-block">
                 {this.state.cordinateError}
               </div>
             }
+            <ToastContainer autoClose={2000} />
           </Col>
         </FormGroup>
       </CardLayout>
@@ -200,7 +225,8 @@ const mapStateToProps = state => {
   return {
     eventList: state.event.eventList,
     eventLocation: state.staticPages.eventLocation,
-    error: state.staticPages.error
+    getLocationError: state.staticPages.getLocationError,
+    creatEditLocationError: state.staticPages.creatEditLocationError
   };
 };
 const mapDispatchToProps = dispatch => {

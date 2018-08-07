@@ -26,6 +26,7 @@ export const GET_SPEAKER_DATA = "GET_SPEAKER_DATA";
 export const LOGIN_USER = "LOGIN_USER";
 export const LOGOUT_USER = "LOGOUT_USER";
 export const LOGIN_ERROR = "LOGIN_ERROR";
+export const FORGET_PASSWORD = "FORGET_PASSWORD";
 
 //EVENTS
 export const GET_EVENTS_SUCCESS = "GET_EVENTS_SUCCESS";
