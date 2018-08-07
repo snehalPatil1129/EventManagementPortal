@@ -5,7 +5,8 @@ import { Col, Button, FormGroup } from "reactstrap";
 import Select from "react-select";
 import "react-select/dist/react-select.css";
 import * as actions from "../../store/actions/index";
-import _ from "lodash";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class ProfileForm extends Component {
   constructor(props) {
@@ -25,21 +26,21 @@ class ProfileForm extends Component {
   componentDidMount() {
     this.props.getEvents();
     this.props.getProfileList();
-    let profileId = this.props.match.params.id;
 
-    if (profileId !== undefined) {
+    if (this.props.match.params.id !== undefined) {
+      let profileId = this.props.match.params.id;
       this.setState({ updateflag: true });
-      let profile = this.props.profiles.find(o => o._id === profileId);
-
-      let ProfileObj = {
-        profileId: profile._id,
-        profileName: profile.profileName,
-        eventValue: profile.event._id
-      };
-
-      this.setState({
-        Profile: ProfileObj
-      });
+      if (this.props.profiles.length !== 0) {
+        let profile = this.props.profiles.find(o => o._id === profileId);
+        let ProfileObj = {
+          profileId: profile._id,
+          profileName: profile.profileName,
+          eventValue: profile.event._id
+        };
+        this.setState({
+          Profile: ProfileObj
+        });
+      }
     }
   }
 
@@ -67,14 +68,35 @@ class ProfileForm extends Component {
     });
   }
 
+  redirectFunction() {
+    this.props.history.push("/profiles");
+  }
+
+  Toaster(compRef, successFlag, actionName) {
+    if (successFlag) {
+      toast.success("Profile " + actionName + " Successfully.", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
+      setTimeout(() => {
+        compRef.redirectFunction();
+      }, 1000);
+    } else {
+      toast.error("Something went wrong", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
+    }
+  }
+
   onSubmitHandler() {
-    let profile = {
-      ...this.state.Profile
-    };
+    let profile = { ...this.state.Profile };
+    let compRef = this;
     this.validateForm();
     if (profile.profileName && profile.eventValue) {
       this.props.createProfile(profile);
-      this.props.history.push("/profiles");
+      setTimeout(() => {
+        let profileCreated = this.props.profileCreated;
+        compRef.Toaster(compRef, profileCreated, "Created");
+      }, 1000);
     }
   }
 
@@ -86,10 +108,14 @@ class ProfileForm extends Component {
 
   onUpdateHandler() {
     let profile = { ...this.state.Profile };
+    let compRef = this;
     this.validateForm();
     if (profile.profileName && profile.eventValue) {
       this.props.updateProfile(profile);
-      this.props.history.push("/profiles");
+      setTimeout(() => {
+        let profileUpdated = this.props.profileUpdated;
+        compRef.Toaster(compRef, profileUpdated, "Updated");
+      }, 1000);
     }
   }
 
@@ -193,6 +219,7 @@ class ProfileForm extends Component {
               {" "}
               Reset
             </Button>
+            <ToastContainer autoClose={2000} />
           </Col>
         </FormGroup>
       </CardLayout>
@@ -204,7 +231,9 @@ const mapStateToProps = state => {
   return {
     eventList: state.event.eventList,
     profiles: state.profile.profiles,
-    profileList: state.profileList.profileList
+    profileList: state.profileList.profileList,
+    profileCreated: state.profile.profileCreated,
+    profileUpdated: state.profile.profileUpdated
   };
 };
 
