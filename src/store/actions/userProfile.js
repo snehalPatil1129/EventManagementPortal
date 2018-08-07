@@ -10,6 +10,49 @@ export const getProfilesSuccess = (profiles, profileList) => {
   };
 };
 
+export const createProfileSuccess = (profile, profileId) => {
+  return {
+    type: actionTypes.CREATE_PROFILE_SUCCESS,
+    profile: profile,
+    profileId: profileId
+  };
+};
+
+export const createProfileFail = error => {
+  return {
+    type: actionTypes.CREATE_PROFILE_FAIL,
+    error: error
+  };
+};
+
+export const updateProfileSuccess = profile => {
+  return {
+    type: actionTypes.UPDATE_PROFILE_SUCCESS,
+    profile: profile
+  };
+};
+
+export const updateProfileFail = error => {
+  return {
+    type: actionTypes.UPDATE_PROFILE_FAIL,
+    error: error
+  };
+};
+
+export const deleteProfileFail = error => {
+  return {
+    type: actionTypes.DELETTE_PROFILE_FAIL,
+    error: error
+  };
+};
+
+export const deleteProfileSuccess = profileId => {
+  return {
+    type: actionTypes.DELETE_PROFILE_SUCCESS,
+    profileId: profileId
+  };
+};
+
 export const getProfiles = () => {
   let profileList = [];
   return dispatch => {
@@ -36,10 +79,10 @@ export const createProfile = profile => {
     axios
       .post(`${AppConfig.serverURL}/api/userProfile`, profileObj)
       .then(response => {
-        //dispatch(createProfileSuccess(response.data._id, eventObj))
+        dispatch(createProfileSuccess(profileObj, response.data._id));
       })
       .catch(error => {
-        // dispatch(createProfileFail(error))
+        dispatch(createProfileFail(error));
       });
   };
 };
@@ -54,9 +97,11 @@ export const updateProfile = profile => {
   return dispatch => {
     axios
       .put(`${AppConfig.serverURL}/api/userProfile/${id}`, profileObj)
-      .then(response => {})
+      .then(response => {
+        updateProfileSuccess(response.data);
+      })
       .catch(error => {
-        //  dispatch(updateProfileFail(error))
+        dispatch(updateProfileFail(error));
       });
   };
 };
@@ -65,13 +110,13 @@ export const deleteProfile = profileId => {
   let id = profileId;
   return dispatch => {
     axios
-      .delete(`http://localhost:3000/api/userProfile/${id}`)
+      .delete(`${AppConfig.serverURL}/api/userProfile/${id}`)
       .then(response => {
         dispatch(getProfiles());
-        // dispatch(deleteProfileSuccess(response.data._id))
+        dispatch(deleteProfileSuccess(response.data._id));
       })
       .catch(error => {
-        //dispatch(deleteProfileFail(error))
+        dispatch(deleteProfileFail(error));
       });
   };
 };
