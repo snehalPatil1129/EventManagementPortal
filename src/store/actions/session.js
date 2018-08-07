@@ -1,117 +1,147 @@
-import * as actionTypes from '../actions/actionTypes';
-import axios from 'axios';
+import * as actionTypes from "../actions/actionTypes";
+import axios from "axios";
+import _ from "lodash";
+import AppConfig from "../../constants/AppConfig";
 
 export const getSessionsSuccess = (sessions, sessionList) => {
-    return {
-        type: actionTypes.GET_SESSIONS_SUCCESS,
-        sessions : sessions,
-        sessionList : sessionList
-    };
+  return {
+    type: actionTypes.GET_SESSIONS_SUCCESS,
+    sessions: sessions,
+    sessionList: sessionList
+  };
 };
 
-export const createSessionSuccess = (sessionId, session)=>{
-  return{
-      type : actionTypes.CREATE_SESSION_SUCCESS,
-      sessionId : sessionId,
-      session : session
-  }
-}
+export const createSessionSuccess = (sessionId, session) => {
+  return {
+    type: actionTypes.CREATE_SESSION_SUCCESS,
+    sessionId: sessionId,
+    session: session
+  };
+};
 
-export const createSessionFail = (error)=>{
-    return{
-        type : actionTypes.CREATE_SESSION_FAIL,
-        error : error
-    }
-  }
+export const createSessionFail = error => {
+  return {
+    type: actionTypes.CREATE_SESSION_FAIL,
+    error: error
+  };
+};
 
-export const updateSessionSuccess = (sessionId, session)=>{
-  return{
-      type : actionTypes.UPDATE_SESSION_SUCCESS,
-      sessionId : sessionId,
-      session : session
-  }
-}
+export const updateSessionSuccess = (sessionId, session) => {
+  return {
+    type: actionTypes.UPDATE_SESSION_SUCCESS,
+    sessionId: sessionId,
+    session: session
+  };
+};
 
-export const updateSessionFail = (error)=>{
-    return{
-        type : actionTypes.UPDATE_SESSION_FAIL,
-        error : error
-    }
-  }
+export const updateSessionFail = error => {
+  return {
+    type: actionTypes.UPDATE_SESSION_FAIL,
+    error: error
+  };
+};
 
-  export const deleteSessionFail = (error)=>{
-    return{
-        type : actionTypes.DELETTE_SESSION_FAIL,
-        error : error
-    }
-  }
-  
-  export const deleteSessionSuccess = (sessionId)=>{
-    return{
-        type : actionTypes.DELETE_SESSION_SUCCESS,
-        sessionId : sessionId,
-    }
-  }
+export const deleteSessionFail = error => {
+  return {
+    type: actionTypes.DELETTE_SESSION_FAIL,
+    error: error
+  };
+};
+
+export const deleteSessionSuccess = sessionId => {
+  return {
+    type: actionTypes.DELETE_SESSION_SUCCESS,
+    sessionId: sessionId
+  };
+};
 export const getSessions = () => {
-    return dispatch => {
-        axios.get('http://localhost:3000/api/session')
-            .then((response) => {
-        let sessionList = [], i;
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/session`)
+      .then(response => {
+        let sessionList = [];
         let sessions = response.data;
-       
+
         sessions.forEach(session => {
-            sessionList.push({ label: session.sessionName, value: session._id })
-         })
+          sessionList.push({ label: session.sessionName, value: session._id });
+        });
 
         dispatch(getSessionsSuccess(response.data, sessionList));
-            })
-            .catch((error) => {
-                 dispatch(getSessionsFail(error));
-            })
-    }
+      })
+      .catch(error => {
+        dispatch(getSessionsFail(error));
+      });
+  };
 };
 
-export const createSession = (session)=>{
-     let sessionObj  = _.pick(session , ['sessionName','event' ,'speakers','volunteers' ,'room','description','sessionType',
-                                          'sessionCapacity','startTime','endTime','isBreak', 'isRegistrationRequired']);
- 
-     return dispatch => {
-        axios.post('http://localhost:3000/api/session',sessionObj)
-            .then((response) => {
-            dispatch(createSessionSuccess(response.data._id, response.data))
-            })
-            .catch((error) => {
-              dispatch(createSessionFail(error))
-            })
-    }
-}
+export const createSession = session => {
+  let sessionObj = _.pick(session, [
+    "sessionName",
+    "event",
+    "speakers",
+    "volunteers",
+    "room",
+    "description",
+    "sessionType",
+    "sessionCapacity",
+    "startTime",
+    "endTime",
+    "isBreak",
+    "isRegistrationRequired"
+  ]);
 
-export const updateSession = (session)=>{
-     let id = session._id;
-     let sessionObj  = _.pick(session , ['sessionName','event' ,'speakers','volunteers' ,'room','description','sessionType',
-                                          'sessionCapacity','startTime','endTime','isBreak', 'isRegistrationRequired']);
- 
-    return dispatch => {
-     axios.put(`http://localhost:3000/api/session/${id}`, sessionObj)
-            .then((response) => {
-            dispatch(updateSessionSuccess(response.data._id, session))
-            })
-            .catch((error) => {
-            dispatch(updateSessionFail(error))
-            })
-    }
-}
+  return dispatch => {
+    axios
+      .post(`${AppConfig.serverURL}/api/session`, sessionObj)
+      .then(response => {
+        dispatch(createSessionSuccess(response.data._id, response.data));
+      })
+      .catch(error => {
+        dispatch(createSessionFail(error));
+      });
+  };
+};
 
-export const deleteSession = (sessionId)=>{
-     let id = sessionId;
-    return dispatch => {
-     axios.delete(`http://localhost:3000/api/session/${id}`)
-            .then((response) => {
-            dispatch(getSessions())
-            dispatch(deleteSessionSuccess(response.data._id))
-            })
-            .catch((error) => {
-              dispatch(deleteSessionFail(error))
-            })
-    }
-}
+export const updateSession = session => {
+  let id = session._id;
+  let sessionObj = _.pick(session, [
+    "sessionName",
+    "event",
+    "speakers",
+    "volunteers",
+    "room",
+    "description",
+    "sessionType",
+    "sessionCapacity",
+    "startTime",
+    "endTime",
+    "isBreak",
+    "isRegistrationRequired"
+  ]);
+
+  return dispatch => {
+    axios
+      .put(`${AppConfig.serverURL}/api/session/${id}`, sessionObj)
+      .then(response => {
+        dispatch(updateSessionSuccess(response.data._id, session));
+      })
+      .catch(error => {
+        dispatch(updateSessionFail(error));
+      });
+  };
+};
+
+export const deleteSession = sessionId => {
+  let id = sessionId;
+  return dispatch => {
+    axios
+      .delete(`${AppConfig.serverURL}/api/session/${id}`)
+      .then(response => {
+        dispatch(getSessions());
+        dispatch(deleteSessionSuccess(response.data._id));
+      })
+      .catch(error => {
+        dispatch(deleteSessionFail(error));
+      });
+  };
+};

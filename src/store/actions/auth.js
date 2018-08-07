@@ -1,31 +1,33 @@
-import * as actionTypes from '../actions/actionTypes';
-import axios from 'axios';
-
-export const storeUser = (userData) => {
-    return {
-        type: actionTypes.LOGIN_USER,
-        email : userData.email
-    };
+import * as actionTypes from "../actions/actionTypes";
+import axios from "axios";
+import AppConfig from "../../constants/AppConfig";
+export const storeUser = userData => {
+  return {
+    type: actionTypes.LOGIN_USER,
+    email: userData.email
+  };
 };
 export const logoutUser = () => {
-    return {
-        type : actionTypes.LOGOUT_USER
-    }
-}
-export const loginUser = (user) => {
-    return dispatch => {
-        axios.post('http://localhost:3000/api/authenticate',user)
-            .then((response) => {
-                console.log(response);
-                if(response.data){
-                    dispatch(storeUser(user));
-                }
-            })
-            .catch((error) => {
-                console.log("errror" , error);
-            })
-    }
+  return {
+    type: actionTypes.LOGOUT_USER
+  };
 };
-
-
-
+export const loginError = () => {
+  return {
+    type: actionTypes.LOGIN_ERROR
+  };
+};
+export const loginUser = user => {
+  return dispatch => {
+    axios
+      .post(`${AppConfig.serverURL}/api/authenticate`, user)
+      .then(response => {
+        if (response.data) {
+          dispatch(storeUser(user));
+        }
+      })
+      .catch(error => {
+        dispatch(loginError());
+      });
+  };
+};

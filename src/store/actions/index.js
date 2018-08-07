@@ -1,104 +1,87 @@
-export {
-    loginUser,
-    logoutUser
-} from './auth';
+export { loginUser, logoutUser } from "./auth";
+
+export { getEvents, createEvent, updateEvent, deleteEvent } from "./event";
 
 export {
-    getEvents,
-    createEvent,
-    updateEvent,
-    deleteEvent,
-} from './event';
+  getRooms,
+  createRoom,
+  storeCurrentRoom,
+  editRoom,
+  deleteRoom,
+  getRoomsForEvent
+} from "./room";
 
 export {
-    getRooms,
-    createRoom,
-    storeCurrentRoom,
-    editRoom,
-    deleteRoom,
-    getRoomsForEvent
-} from './room';
+  createAttendee,
+  getAttendees,
+  getAttendeeData,
+  editAttendeeData,
+  storeAttendeeData,
+  deleteAttendee,
+  getAttendeesForEvent,
+  getAttendeesForEventAndProfile
+} from "./registration";
 
 export {
-    createAttendee,
-    getAttendees,
-    getAttendeeData,
-    editAttendeeData,
-    storeAttendeeData,
-    deleteAttendee,
-    getAttendeesForEvent,
-    getAttendeesForEventAndProfile
-} from './registration';
+  getSessionsOfEvent,
+  createForm,
+  getForms,
+  storeCurrentForm,
+  editForm,
+  deleteForm
+} from "./questionForms";
 
 export {
-   getSessionsOfEvent,
-   createForm,
-   getForms,
-   storeCurrentForm,
-   editForm,
-   deleteForm
-} from './questionForms';
+  getProfiles,
+  createProfile,
+  deleteProfile,
+  updateProfile
+} from "./userProfile";
+
+export { getAttendanceList } from "./attendance";
 
 export {
-    getProfiles,
-    createProfile,
-    deleteProfile,
-    updateProfile
-} from './userProfile';
+  getAboutUsInfo,
+  createAboutUsInfo,
+  editAboutUsInfo,
+  getAboutEternusInfo,
+  createAboutEternusInfo,
+  editAboutEternusInfo,
+  getHelpDeskForEvent,
+  createHelpDeskInfo,
+  editHelpDeskInfo,
+  getLocationForEvent,
+  getEventLocation,
+  createEventLocation,
+  editEventLocation,
+  getAboutUsForEvent
+} from "./staticPages";
 
 export {
-    getAttendanceList
-} from './attendance';
+  createSession,
+  getSessions,
+  deleteSession,
+  updateSession
+} from "./session";
 
 export {
-    getAboutUsInfo,
-    createAboutUsInfo,
-    editAboutUsInfo,
-    getAboutEternusInfo,
-    createAboutEternusInfo,
-    editAboutEternusInfo,
-    getHelpDeskForEvent,
-    createHelpDeskInfo,
-    editHelpDeskInfo ,
-    getLocationForEvent,
-    getEventLocation,
-    createEventLocation,
-    editEventLocation,
-    getAboutUsForEvent
-} from './staticPages';
-
+  createSpeaker,
+  getSpeakers,
+  getSpeakerData,
+  editSpeakerData,
+  storeSpeakerData,
+  deleteSpeaker,
+  getSpeakersForEvent
+} from "./speaker";
 export {
-    createSession,
-    getSessions,
-    deleteSession,
-    updateSession
-} from './session';
-   
-export {
-    createSpeaker,
-    getSpeakers,
-    getSpeakerData,
-    editSpeakerData,
-    storeSpeakerData,
-    deleteSpeaker,
-    getSpeakersForEvent
-} from './speaker';
-export {
-    getSponsors,
-    createSponsor,
-    editSponsor,
-    deleteSponsor,
-    storeCurrentSponsor,
-    getSponsorsForEvent
-} from './sponsor';
+  getSponsors,
+  createSponsor,
+  editSponsor,
+  deleteSponsor,
+  storeCurrentSponsor,
+  getSponsorsForEvent
+} from "./sponsor";
 
-export{
- getAttendeeCountForEvent
-} from './attendeeCount'
+export { getAttendeeCountForEvent } from "./attendeeCount";
 
-
-export{
-    getProfileList
-   } from './profileList'
-   
-
+export { getProfileList } from "./profileList";
