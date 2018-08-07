@@ -32,7 +32,7 @@ class Dashboard extends Component {
           );
           index % 2 === 0 ? (ColorCode = "#8bc3d7") : (ColorCode = "#808587");
           return (
-            <Row className="justify-content-left">
+            <Row key={index} className="justify-content-left">
               <Col xs="12">
                 <Card className="mx-6" style={{ backgroundColor: ColorCode }}>
                   <CardHeader>
