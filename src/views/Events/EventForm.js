@@ -37,21 +37,23 @@ class EventForm extends Component {
   componentDidMount() {
     if (this.props.match.params.id !== undefined) {
       this.setState({ updateflag: true });
-      let event = this.props.events.find(
-        o => o._id === this.props.match.params.id
-      );
-      let Event = {
-        id: event._id,
-        eventName: event.eventName,
-        venue: event.venue,
-        description: event.description,
-        startDate: moment(event.startDate),
-        endDate: moment(event.endDate)
-      };
+      if (this.props.events.length !== 0) {
+        let event = this.props.events.find(
+          o => o._id === this.props.match.params.id
+        );
+        let Event = {
+          id: event._id,
+          eventName: event.eventName,
+          venue: event.venue,
+          description: event.description,
+          startDate: moment(event.startDate),
+          endDate: moment(event.endDate)
+        };
 
-      this.setState({
-        Event: Event
-      });
+        this.setState({
+          Event: Event
+        });
+      }
     }
   }
 
@@ -138,6 +140,7 @@ class EventForm extends Component {
   onUpdateHandler() {
     let event = { ...this.state.Event };
     let compRef = this;
+    this.validateForm();
     if (
       event.eventName &&
       !this.state.inValidDates &&
@@ -289,7 +292,6 @@ class EventForm extends Component {
               size="md"
               color="danger"
             >
-              {" "}
               Reset
             </Button>
             <ToastContainer autoClose={2000} />
