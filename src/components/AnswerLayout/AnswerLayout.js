@@ -32,7 +32,7 @@ const AnswerLayout = props => {
         <Col xs="12" md="9">
           {props.options.map((opt, id) => {
             return (
-              <FormGroup check inline>
+              <FormGroup key={id} check inline>
                 <Label check>
                   <Input type="checkbox" />
                 </Label>
@@ -63,7 +63,7 @@ const AnswerLayout = props => {
         <Col xs="12" md="9">
           {props.options.map((opt, id) => {
             return (
-              <FormGroup check inline>
+              <FormGroup key={id} check inline>
                 <Input
                   className="form-check-input"
                   type="radio"
@@ -96,4 +96,3 @@ const AnswerLayout = props => {
   }
 };
 export default AnswerLayout;
-

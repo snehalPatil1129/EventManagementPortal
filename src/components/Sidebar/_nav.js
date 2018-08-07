@@ -11,22 +11,17 @@ export default {
       icon: "icon-calendar"
     },
     {
+      name: "Rooms",
+      url: "/roomsList",
+      icon: "icon-home"
+    },
+    {
       name: "Sessions",
       url: "/sessions",
       icon: "icon-calendar"
     },
     {
-      name: "Rooms List",
-      url: "/roomsList",
-      icon: "icon-home"
-    },
-    {
-      name: "Attendance",
-      url: "/attendance",
-      icon: "icon-user"
-    },
-    {
-      name: "Attendee List",
+      name: "Attendees",
       url: "/registrationList",
       icon: "icon-user"
     },
@@ -36,14 +31,20 @@ export default {
       icon: "icon-microphone"
     },
     {
+      name: "Attendance",
+      url: "/attendance",
+      icon: "icon-user"
+    },
+
+    {
+      name: "Sponsors",
+      url: "/sponsors",
+      icon: "icon-user"
+    },
+    {
       name: "Dynamic Forms",
       url: "/dynamicForms",
       icon: "icon-question"
-    },
-    {
-      name: "User Profiles",
-      url: "/profiles",
-      icon: "icon-user"
     },
     {
       name: "Reports ",
@@ -93,11 +94,6 @@ export default {
           icon: "icon-note"
         }
       ]
-    },
-    {
-      name: "Sponsors",
-      url: "/sponsors",
-      icon: "icon-user"
     },
     {
       name: "Logout",

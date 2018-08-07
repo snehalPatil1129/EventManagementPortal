@@ -71,7 +71,7 @@ class QuestionForms extends Component {
   onDisplayNewQuestion() {
     formLayout = this.state.formData.map((que, id) => {
       return (
-        <div>
+        <div key={id}>
           <QuestionLayout
             name={id}
             onchanged={event => this.onInputQuestion(event)}

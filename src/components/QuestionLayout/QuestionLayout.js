@@ -37,7 +37,7 @@ const QuestionLayout = props => (
     </Col>
     <Col md="3">
       <Select
-        name={props.name}
+        name={toString(props.name)}
         placeholder="Select Input Type"
         options={options}
         value={props.selectValue}

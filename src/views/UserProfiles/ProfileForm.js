@@ -245,7 +245,6 @@ const matchDispatchToProps = dispatch => {
     updateProfile: profile => dispatch(actions.updateProfile(profile))
   };
 };
-
 export default connect(
   mapStateToProps,
   matchDispatchToProps

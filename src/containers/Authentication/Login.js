@@ -38,6 +38,7 @@ class Login extends Component {
   }
   Toaster(compRef, loginError, actionName) {
     if (!loginError) {
+      localStorage.setItem("user", this.state.user.email);
       toast.success("Login Successfull...", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -52,7 +53,6 @@ class Login extends Component {
   }
   redirectFunction() {
     this.props.history.push("/");
-    localStorage.setItem("user", this.state.user.email);
   }
   render() {
     return (

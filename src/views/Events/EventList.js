@@ -48,7 +48,7 @@ class EventList extends Component {
     let componentRef = this;
     return (
       <Link to={this} onClick={() => componentRef.deleteEvent(row._id)}>
-        <i class="fa fa-trash" />
+        <i className="fa fa-trash" />
       </Link>
     );
   }
