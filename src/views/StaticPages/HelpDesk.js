@@ -131,7 +131,7 @@ class HelpDesk extends Component {
             <InputElement
               icon="icon-phone"
               type="number"
-              placeholder="Technical Support Contact"
+              placeholder="Event Support Contact"
               name="eventSupportContact"
               required ={this.state.eventContactRequired}
               value={helpDesk.eventSupportContact}

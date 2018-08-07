@@ -5,6 +5,8 @@ const initialState = {
     eventList : [],
     loading: false,
     eventCreated: false,
+    eventUpdated: false,
+    eventDeleted : false,
     errorMessage : '',
     error : false
 }
@@ -37,23 +39,30 @@ const eventReducer = (state = initialState, action) => {
          return {
                 ...state,
                 eventCreated: false,
-                error : true,
-                errorMessage : action.error,
             };
 
      case actionTypes.UPDATE_EVENT_SUCCESS:
-
         return {
              ...state,
+             eventUpdated : true
         }
       
       case actionTypes.UPDATE_EVENT_FAIL:
          return {
                 ...state,
-                eventCreated: false,
-                error : true,
-                errorMessage : action.error,
+                eventUpdated : false
             };
+            case actionTypes.DELETE_EVENT_SUCCESS:
+            return {
+                 ...state,
+                 eventDeleted : true
+            }
+          
+          case actionTypes.DELETE_EVENT_FAILL:
+             return {
+                    ...state,
+                    eventDeleted : false
+                };
             default:
             return state;
     }

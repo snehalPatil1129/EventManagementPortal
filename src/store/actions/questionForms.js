@@ -13,12 +13,22 @@ export const storeForms = (forms) => {
         forms : forms
     };
 };
- export const logFormError = (error) => {
+export const getFormsError = () => {
      return {
-        type : actionTypes.LOG_FORM_ERROR,
-        error : error
+        type : actionTypes.GET_FORMS_ERROR
      };
  }
+ export const creatEditFormError = () => {
+    return {
+       type : actionTypes.CREATE_EDIT_FORM_ERROR
+    };
+}
+
+export const deleteFormError = () => {
+    return {
+       type : actionTypes.DELETE_FORM_ERROR
+    };
+}
 
 export const storeCurrentForm = (formData) => {
     return {
@@ -38,7 +48,7 @@ export const getSessionsOfEvent = (id) => {
                 dispatch(storeSessionsOfEvent(sessionList));
             })
             .catch((error) => {
-                dispatch(logFormError(error.message));
+                dispatch(getFormsError(error.message));
             })
     }
 };
@@ -49,7 +59,7 @@ export const createForm = (formObject) => {
                 dispatch(getForms());
             })
             .catch((error) => {
-                dispatch(logFormError(error.message));
+                dispatch(creatEditFormError());
             })
     }
 };
@@ -61,7 +71,7 @@ export const editForm = (id,formObject) => {
                 dispatch(getForms());
             })
             .catch((error) => {
-                dispatch(logFormError(error.message));
+                dispatch(creatEditFormError());
             })
     }
 };
@@ -73,7 +83,7 @@ export const deleteForm = (id) => {
                     dispatch(getForms());
             })
             .catch((error) => {
-                dispatch(logFormError(error.message));
+                dispatch(deleteFormError());
             })
     }
 };
@@ -84,18 +94,14 @@ export const getForms = () => {
         axios.get(`http://localhost:3000/api/questionForms`)
             .then((response) => {
                 formData = response.data;
-                formData.forEach((form) =>{
-                    if(form.event !== null){
-                        form.eventName = form.event.eventName;
-                    }
-                    if(form.session !== null){
-                        form.sessionName = form.session.session;                        
-                    }
+                formData.forEach((form) => {
+                    form.event !== null ? form.eventName = form.event.eventName : null;
+                    form.session !== null ? form.sessionName = form.session.session : null;
                 });
                 dispatch(storeForms(formData));
             })
             .catch((error) => {
-                dispatch(logFormError(error.message));
+                dispatch(getFormsError());
             })
     }
 };

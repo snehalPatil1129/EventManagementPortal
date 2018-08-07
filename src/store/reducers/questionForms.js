@@ -9,7 +9,10 @@ const initialState = {
     ],
     forms: [],
     formData: [],
-    error : ""
+    error : "",
+    getFormError : false,
+    creatEditFormError : false,
+    deleteFormError : false,
 }
 const formReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -17,24 +20,48 @@ const formReducer = (state = initialState, action) => {
             return {
                 ...state,
                 sessions: action.sessions,
-                error: ""
+                error: "",
+                getFormError : false,
+                creatEditFormError : false,
+                deleteFormError : false,
             };
         case actionTypes.STORE_FORMS:
             return {
                 ...state,
                 forms: action.forms,
-                error: ""
+                error: "",
+                getFormError : false,
+                creatEditFormError : false,
+                deleteFormError : false,
             };
         case actionTypes.STORE_CURRENT_FORM:
             return {
                 ...state,
                 formData: action.formData,
-                error: ""
+                error: "",
+                getFormError : false,
+                creatEditFormError : false,
+                deleteFormError : false,
             };
         case actionTypes.LOG_FORM_ERROR:
             return {
                 ...state,
                 error: action.error
+            };
+            case actionTypes.GET_FORMS_ERROR:
+            return {
+                ...state,
+                getFormError : true
+            };
+            case actionTypes.CREATE_EDIT_FORM_ERROR:
+            return {
+                ...state,
+                creatEditFormError : true
+            };
+            case actionTypes.DELETE_FORM_ERROR:
+            return {
+                ...state,
+                deleteFormError : true
             };
         default:
             return state;

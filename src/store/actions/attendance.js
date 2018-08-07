@@ -24,7 +24,7 @@ export const getAttendanceList = () => {
                 attendance.forEach((fItem) => {
                     fItem.event !== null ? fItem.eventName = fItem.event.eventName : fItem.eventName = '';
                     fItem.session !== null ?  fItem.sessionName = fItem.session.sessionName : fItem.sessionName ='';
-                    fItem.attendeeName = fItem.attendee.firstName +' '+ fItem.attendee.lastName;
+                    fItem.attendee !== null ? fItem.attendeeName = fItem.attendee.firstName +' '+ fItem.attendee.lastName : fItem.attendeeName ='';
                 });
                 dispatch(storeAttendance(attendance));
             })

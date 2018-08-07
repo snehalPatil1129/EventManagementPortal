@@ -8,6 +8,8 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class SponsorsList extends Component {
     constructor(props) {
@@ -18,12 +20,41 @@ class SponsorsList extends Component {
     }
     componentDidMount() {
         this.props.getSponsors();
+        let compRef = this;
+        setTimeout(() => {
+            let getSponsorError = compRef.props.getSponsorError;
+            if(getSponsorError) {
+                toast.error("Something went wrong", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        }, 1000);
         this.props.getEvents();
     }
     onDeleteSponsor(cell, row) {
-        return <Link to={this} onClick={() => this.props.deleteSponsor(row._id)}>
+        return <Link to={this} onClick={() => this.deleteSponsor(row._id)}>
             <i className="fa fa-trash"></i>
         </Link>
+    }
+    deleteSponsor (id) {
+        this.props.deleteSponsor(id);
+        let compRef = this;      
+        setTimeout(() => {
+            let deleteSponsorError = compRef.props.deleteSponsorError;
+            compRef.Toaster(compRef, deleteSponsorError, 'Delete')
+        }, 1000);
+    }
+    Toaster(compRef, deleteSponsorError, actionName) {
+        if (!deleteSponsorError) {
+            toast.success("Sponsor " + actionName + " Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+        }
+        else {
+            toast.error("Something went wrong", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+        }
     }
     onEditSponsor(cell, row) {
         return <Link to={`${this.props.match.url}/sponsorForm/${row._id}`} onClick={() => this.props.storeCurrentSponsor(row)}>
@@ -80,6 +111,7 @@ class SponsorsList extends Component {
                 <FormGroup row>
                     <Col md="6">
                         <div style={{ color: "red" }} className="help-block">{this.props.error}</div>
+                        <ToastContainer autoClose={2000} />
                     </Col>
                 </FormGroup>
             </CardLayout>
@@ -90,7 +122,8 @@ const mapStateToProps = state => {
     return {
         sponsorsList: state.sponsor.sponsors,
         eventList: state.event.eventList,
-        error: state.sponsor.error
+        deleteSponsorError: state.sponsor.deleteSponsorError,
+        getSponsorError: state.sponsor.getSponsorError
     };
 }
 const mapDispatchToProps = dispatch => {

@@ -17,11 +17,6 @@ class Dashboard extends Component {
   componentWillMount() {
     this.props.getEvents();
   }
-  // componentDidMount() {
-  //   this.props.events.length === 0 ? toast.error("No Events Found", {
-  //     position: toast.POSITION.BOTTOM_RIGHT,
-  //   }) : null;
-  // }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.events !== this.props.events) {
       this.setState({
@@ -37,7 +32,6 @@ class Dashboard extends Component {
             event.startDate = moment(event.startDate).format('hh:mm on DD-MM-YYYY');
             var ColorCode = '#808587';
             index % 2 == 0 ? ColorCode = '#8bc3d7' : ColorCode = '#808587';
-            //var ColorCode = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
             return (
               <Row className="justify-content-left">
                 <Col xs="12" >

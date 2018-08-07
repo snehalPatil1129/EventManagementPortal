@@ -28,7 +28,7 @@ export const getProfiles = () => {
 export const createProfile = (profile) => {
     let profileObj = {
         profileName: profile.profileName,
-        eventId: profile.eventValue
+        event: profile.eventValue
     }
     return dispatch => {
         axios.post('http://localhost:3000/api/userProfile', profileObj)
@@ -46,7 +46,7 @@ export const updateProfile = (profile) => {
 
     let profileObj = {
         profileName: profile.profileName,
-        eventId: profile.eventValue
+        event: profile.eventValue
     }
     return dispatch => {
         axios.put(`http://localhost:3000/api/userProfile/${id}`, profileObj)

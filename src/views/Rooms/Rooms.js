@@ -6,6 +6,8 @@ import InputElement from '../../components/Input/';
 import CardLayout from '../../components/CardLayout/';
 import Select from 'react-select';
 import _ from 'lodash';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class Rooms extends Component {
     constructor(props) {
@@ -18,11 +20,15 @@ class Rooms extends Component {
                 bufferCapacity: '',
                 availableServices: []
             },
+            events : [],
             editRoom : false,
             roomNameRequired : false,
             eventRequired : false,
             capacityRequired : false
         }
+    }
+    componentWillMount (){
+        this.props.getEvents();
     }
     componentDidMount () {
         let currentroom = _.pick(this.props.currentRoom , ['roomName' ,'capacity' , 'bufferCapacity' ,'availableServices']);
@@ -40,7 +46,10 @@ class Rooms extends Component {
         const { Room } = { ...this.state };
         Room[event.target.name] = event.target.value;
         this.setState({
-            Room : Room
+            Room : Room,
+            roomNameRequired : false,
+            eventRequired : false,
+            capacityRequired : false
         })
     }
     onSubmit() {
@@ -48,25 +57,44 @@ class Rooms extends Component {
         let id = this.props.currentRoom._id;
         if (Room.roomName && Room.capacity && Room.event) {
             this.state.editRoom ? this.props.editRoom(id , Room) : this.props.createRoom(Room);
-            this.onReset();
-            this.props.history.push('/roomsList');
+            let compRef = this;
+            setTimeout(() => {
+                let creatEditRoomError= compRef.props.creatEditRoomError;
+                let status = '';
+                compRef.state.editRoom ? status = 'Updated' : status = 'Created';
+                compRef.Toaster(compRef, creatEditRoomError, status)
+            }, 1000);
         }
         else {
             !Room.roomName ? this.setState({roomNameRequired : true}) : null;
             !Room.capacity ? this.setState({capacityRequired : true}) : null;
             !Room.event ? this.setState({eventRequired : true}) : null; 
-            //alert("please fill all the fields...");
         }
+    }
+    Toaster(compRef, createEditError, actionName) {
+        if (!createEditError) {
+            toast.success("Room " + actionName + " Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+            setTimeout(() => { compRef.redirectFunction() }, 1000);
+        }
+        else {
+            toast.error("Something went wrong", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+        }
+    }
+    redirectFunction() {
+        this.onReset();
+        this.props.history.push('/roomsList');
     }
     onReset() {
         this.setState({
             Room: {
-                roomName: '',
-                event: '',
-                capacity: '',
-                bufferCapacity: '',
-                availableServices: [],
-            }
+                roomName: '', event: '', capacity: '',
+                bufferCapacity: '', availableServices: [],
+            },
+            roomNameRequired : false, eventRequired : false, capacityRequired : false
         });
     }
     handleSelectChange(value) {
@@ -93,11 +121,11 @@ class Rooms extends Component {
     render() {
         const { Room } = this.state;
         const options = [
-            { label: 'Hi', value: 'Hi' },
-            { label: 'Hello', value: 'Hello' },
-            { label: 'Bye', value: 'Bye' },
-            { label: 'Hi', value: 'Hi' },{ label: 'Hi', value: 'Hi' },
-            { label: 'Hi', value: 'Hi' },
+            { label: 'Auditorium ', value: 'Auditorium ' },
+            { label: 'Projector', value: 'Projector' },
+            { label: 'AV', value: 'AV' },
+            { label: 'Speakers', value: 'Speakers' },
+            { label: 'Mike', value: 'Mike' },
         ];
         const eventOptions = this.props.eventList;
         return (
@@ -167,11 +195,7 @@ class Rooms extends Component {
                     </Col>
                     <Col  md="3">
                         <Button type="button" size="md" color="danger" style={{marginLeft : -160}} onClick={() => this.onReset()} >Reset</Button>
-                    </Col>
-                    <Col md="6">
-                        {
-                            this.props.roomError !== "" ? <div style={{color: "red" , fontSize : 15 , marginTop : 0}} className="help-block">{this.props.roomError}</div> : null 
-                        }
+                        <ToastContainer autoClose={2000} />
                     </Col>
                 </FormGroup >
             </CardLayout>
@@ -183,14 +207,15 @@ const mapStateToProps = state => {
         rooms: state.room.rooms,
         eventList : state.event.eventList,
         currentRoom : state.room.currentRoom,
-        roomError : state.room.error
+        creatEditRoomError : state.room.creatEditRoomError
     };
 }
 const mapDispatchToProps = dispatch => {
     return {
         getRooms: () => dispatch(actions.getRooms()),
         createRoom: (room) => dispatch(actions.createRoom(room)),
-        editRoom : (id, room) => dispatch(actions.editRoom(id, room))
+        editRoom : (id, room) => dispatch(actions.editRoom(id, room)),
+        getEvents : () => dispatch(actions.getEvents())
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Rooms);

@@ -29,7 +29,7 @@ export const getSpeakers = () => {
             .then((response) => {
                 speakers = response.data;
                 speakers.forEach((speaker) => {
-                    speaker.eventName = speaker.event.eventName;
+                    speaker.event !== null ? speaker.eventName = speaker.event.eventName : null;
                 });
                 dispatch(storeSpeakers(speakers));
             })
@@ -46,7 +46,7 @@ export const getSpeakersForEvent = (eventId) => {
             .then((response) => {
                 speakers = response.data;
                 speakers.forEach((speaker) => {
-                    speaker.eventName = speaker.event.eventName;
+                    speaker.event !== null ? speaker.eventName = speaker.event.eventName : null;
                 });
                 dispatch(storeSpeakers(speakers));
             })
@@ -80,11 +80,23 @@ export const editSpeakerData = (id , speaker) => {
     }
 }
 
-export const createSpeaker = (speaker) => {
+export const createSpeaker = (speaker, attendeeCount) => {
+     let id = attendeeCount._id;
+      let attendeeCountObj = {
+        attendeeCount : attendeeCount.attendeeCount,
+        totalCount : attendeeCount.totalCount + 1,
+        speakerCount : attendeeCount.speakerCount + 1,
+        event : attendeeCount.event
+    }
+    speaker['attendeeCount'] = attendeeCount.speakerCount + 1;
+    speaker['attendeeLabel'] = 'SPE';
     return dispatch => {
         axios.post('http://localhost:3000/api/speaker', speaker )
             .then((response) => {
-                dispatch(getSpeakers());
+                   axios.put(`http://localhost:3000/api/attendeeCount/${id}`, attendeeCountObj)
+                    .then((response) => {
+                        dispatch(getSpeakers());
+                    })
             })
             .catch((error) => {
                 dispatch(logRegistrationError());

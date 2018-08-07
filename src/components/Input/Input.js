@@ -12,6 +12,7 @@ const InputElement = (props) => (
             type={props.type} 
             placeholder={props.placeholder} 
             name={props.name} 
+            maxLength={props.maxLength}
             onChange ={props.onchanged} 
             value ={props.value} />
         {props.required ? <div style={{color: "red"}} className="help-block">*Required</div> : null}

@@ -18,13 +18,13 @@ class ProfileForm extends Component {
                 profileName: '',
                 eventValue: ''
             },
-            updateflag : false,
-            submitted : false
+            updateflag : false, eventNameRequired : false,
+            submitted : false,  profileNameRequired : false,
         }
     }
     componentWillMount(){
         this.props.getEvents();
-
+        this.props.getProfileList();
         let profileId = this.props.match.params.id;
 
             if (profileId!= undefined) {
@@ -34,7 +34,7 @@ class ProfileForm extends Component {
             let ProfileObj  = {
               profileId : profile._id,
               profileName: profile.profileName,
-              eventValue: profile.eventId 
+              eventValue: profile.event._id 
             }
 
             this.setState({
@@ -50,38 +50,41 @@ class ProfileForm extends Component {
     }
     Profile['eventValue'] = eventValue;
     this.setState({
-      Profile : Profile
+      Profile : Profile, eventNameRequired : false
     });
   }
 
-    onChangeHandler(event) {
-        let Profile = {
-            ...this.state.Profile
-        };
-        Profile[event.target.name] = event.target.value;
-        this.setState({
-            Profile: Profile
-        })
+  handleProfileSelectChange(value) {
+    let profileName = value;
+    let Profile = {
+        ...this.state.Profile
     }
+    Profile['profileName'] = profileName;
+    this.setState({
+      Profile : Profile, profileNameRequired : false
+    });
+  }
 
     onSubmitHandler() {
-        let profile = {
-            ...this.state.Profile
+        let profile = {...this.state.Profile
         }
-        this.setState({
-            submitted: true
-        });
-    
+       this.validateForm();
         if (profile.profileName &&  profile.eventValue){
          this.props.createProfile(profile);
           this.props.history.push('/profiles');
         }
     }
 
+   validateForm(){
+       let profile = {...this.state.Profile} 
+       !profile.profileName ? this.setState({ profileNameRequired: true }) : null;
+       !profile.eventValue ? this.setState({ eventNameRequired: true }) : null;
+    }
+   
+
     onUpdateHandler() {
-        let profile = {
-            ...this.state.Profile
-        }
+        let profile = {...this.state.Profile }
+         this.validateForm();
           if (profile.profileName &&  profile.eventValue){
          this.props.updateProfile(profile);
           this.props.history.push('/profiles');
@@ -94,13 +97,14 @@ class ProfileForm extends Component {
             eventValue: ''
         }
         this.setState({
-            Profile: Profile
+            Profile: Profile, profileNameRequired : false, eventNameRequired : false
         });
     }
 
     render() {
         const eventList = this.props.eventList;
-        const {eventValue} = this.state.Profile;
+        const profileList = this.props.profileList;
+        const {eventValue, profileName} = this.state.Profile;
         this.headerText = '';
 
         if (this.state.updateflag) {
@@ -122,17 +126,18 @@ class ProfileForm extends Component {
                    options={eventList}
                    simpleValue
                   onChange={this.handleEventSelectChange.bind(this)}/>
+                     {this.state.eventNameRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">*Required</div> : null}<br/>
                     </Col>
                 </FormGroup>
                 <FormGroup row>
                     <Col md="6">
-                        <InputElement
-                            type='text'
-                            placeholder='Profile Name'
-                            name='profileName'
-                            icon='icon-user'
-                            value={this.state.Profile.profileName}
-                            onchanged={(profile) => this.onChangeHandler(profile)} />
+                    <Select
+                    placeholder="Select Profile Name"
+                    value={profileName}
+                    options={profileList}
+                    simpleValue
+                   onChange={this.handleProfileSelectChange.bind(this)}/>
+                    {this.state.profileNameRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">*Required</div> : null}<br/>
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -151,13 +156,15 @@ class ProfileForm extends Component {
 const mapStateToProps = (state) => {
     return {
       eventList : state.event.eventList,
-      profiles : state.profile.profiles
+      profiles : state.profile.profiles,
+      profileList : state.profileList.profileList
     }
 }
 
 const matchDispatchToProps = (dispatch) => {
     return {
     getEvents: () => dispatch(actions.getEvents()),
+    getProfileList: () => dispatch(actions.getProfileList()),
     createProfile: (profile) => dispatch(actions.createProfile(profile)),
     updateProfile: (profile) => dispatch(actions.updateProfile(profile)),
     }

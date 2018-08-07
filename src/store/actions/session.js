@@ -17,14 +17,41 @@ export const createSessionSuccess = (sessionId, session)=>{
   }
 }
 
-export const updateSessionSuccess = (eventId, event)=>{
+export const createSessionFail = (error)=>{
+    return{
+        type : actionTypes.CREATE_SESSION_FAIL,
+        error : error
+    }
+  }
+
+export const updateSessionSuccess = (sessionId, session)=>{
   return{
-      type : actionTypes.UPDATE_EVENT_SUCCESS,
-      eventId : eventId,
-      event : event
+      type : actionTypes.UPDATE_SESSION_SUCCESS,
+      sessionId : sessionId,
+      session : session
   }
 }
 
+export const updateSessionFail = (error)=>{
+    return{
+        type : actionTypes.UPDATE_SESSION_FAIL,
+        error : error
+    }
+  }
+
+  export const deleteSessionFail = (error)=>{
+    return{
+        type : actionTypes.DELETTE_SESSION_FAIL,
+        error : error
+    }
+  }
+  
+  export const deleteSessionSuccess = (sessionId)=>{
+    return{
+        type : actionTypes.DELETE_SESSION_SUCCESS,
+        sessionId : sessionId,
+    }
+  }
 export const getSessions = () => {
     return dispatch => {
         axios.get('http://localhost:3000/api/session')
@@ -39,7 +66,7 @@ export const getSessions = () => {
         dispatch(getSessionsSuccess(response.data, sessionList));
             })
             .catch((error) => {
-                 //dispatch(getSessionsFail(error));
+                 dispatch(getSessionsFail(error));
             })
     }
 };
@@ -54,7 +81,7 @@ export const createSession = (session)=>{
             dispatch(createSessionSuccess(response.data._id, response.data))
             })
             .catch((error) => {
-             // dispatch(createSessionFail(error))
+              dispatch(createSessionFail(error))
             })
     }
 }
@@ -67,10 +94,10 @@ export const updateSession = (session)=>{
     return dispatch => {
      axios.put(`http://localhost:3000/api/session/${id}`, sessionObj)
             .then((response) => {
-            // dispatch(updateSessionSuccess(response.data._id, session))
+            dispatch(updateSessionSuccess(response.data._id, session))
             })
             .catch((error) => {
-              //dispatch(updateSessionFail(error))
+            dispatch(updateSessionFail(error))
             })
     }
 }
@@ -81,7 +108,7 @@ export const deleteSession = (sessionId)=>{
      axios.delete(`http://localhost:3000/api/session/${id}`)
             .then((response) => {
             dispatch(getSessions())
-            // dispatch(deleteSessionSuccess(response.data._id))
+            dispatch(deleteSessionSuccess(response.data._id))
             })
             .catch((error) => {
               dispatch(deleteSessionFail(error))

@@ -15,7 +15,8 @@ export {
     createRoom,
     storeCurrentRoom,
     editRoom,
-    deleteRoom
+    deleteRoom,
+    getRoomsForEvent
 } from './room';
 
 export {
@@ -25,7 +26,8 @@ export {
     editAttendeeData,
     storeAttendeeData,
     deleteAttendee,
-    getAttendeesForEvent
+    getAttendeesForEvent,
+    getAttendeesForEventAndProfile
 } from './registration';
 
 export {
@@ -61,7 +63,8 @@ export {
     getLocationForEvent,
     getEventLocation,
     createEventLocation,
-    editEventLocation
+    editEventLocation,
+    getAboutUsForEvent
 } from './staticPages';
 
 export {
@@ -92,3 +95,10 @@ export {
 export{
  getAttendeeCountForEvent
 } from './attendeeCount'
+
+
+export{
+    getProfileList
+   } from './profileList'
+   
+

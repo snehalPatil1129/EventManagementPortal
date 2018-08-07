@@ -4,7 +4,9 @@ const initialState = {
     sponsors: [],
     sponsorsList: [],
     currentSponsor: {},
-    error: '',
+    getSponsorError : false,
+    creatEditSponsorError : false,
+    deleteSponsorError : false,
     categoryOptions: [
         { label: 'Gold Sponsor', value: 'Gold Sponsor' },
         { label: 'Associate Sponsor', value: 'Associate Sponsor' },
@@ -25,19 +27,34 @@ const sponsorReducer = (state = initialState, action) => {
                 ...state,
                 sponsors: action.sponsors,
                 sponsorsList: action.sponsorsList,
-                error: ''
+                getSponsorError : false,
+                creatEditSponsorError : false,
+                deleteSponsorError : false,
             };
         case actionTypes.STORE_CURRENT_SPONSOR:
             return {
                 ...state,
                 currentSponsor: action.currentSponsor,
-                error: ''
+                getSponsorError : false,
+                creatEditSponsorError : false,
+                deleteSponsorError : false,
             };
-        case actionTypes.LOG_SPONSOR_ERROR:
+        case actionTypes.GET_SPONSOR_ERROR:
             return {
                 ...state,
-                error: action.error
+                getSponsorError : true
             };
+        case actionTypes.CREATE_EDIT_SPONSOR_ERROR:
+            return {
+                ...state,
+                creatEditSponsorError : true
+            };
+        case actionTypes.DELETE_SPONSOR_ERROR:
+            return {
+                ...state,
+                deleteSponsorError : true
+            };
+
         default:
             return state;
     }

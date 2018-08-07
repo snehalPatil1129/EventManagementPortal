@@ -83,7 +83,7 @@ export const createEvent = (event)=>{
     return dispatch => {
         axios.post('http://localhost:3000/api/event',eventObj)
             .then((response) => {
-              let attendeeCountObj = {attendeeCount:0, speakerCount:0, totalCount: 0, eventId : response.data._id}
+              let attendeeCountObj = {attendeeCount:0, speakerCount:0, totalCount: 0, event : response.data._id}
              axios.post('http://localhost:3000/api/attendeeCount',attendeeCountObj)
              .then((response) => {   
                    dispatch(createEventSuccess(response.data._id, eventObj)); 
@@ -115,7 +115,7 @@ export const deleteEvent = (eventId)=>{
      axios.delete(`http://localhost:3000/api/event/${id}`)
             .then((response) => {
             dispatch(getEvents())
-            // dispatch(deleteEventSuccess(response.data._id))
+            dispatch(deleteEventSuccess(response.data._id))
             })
             .catch((error) => {
               dispatch(deleteEventFail(error))

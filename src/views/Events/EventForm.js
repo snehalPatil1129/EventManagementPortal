@@ -12,6 +12,7 @@ import {
     Card, CardBody, Button, Label, FormGroup, Container
 } from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Route, Redirect, Link } from 'react-router-dom';
 
 class EventForm extends Component {
@@ -26,10 +27,11 @@ class EventForm extends Component {
                 startDate: moment(),
                 endDate: moment()
             },
-            submitted: false,
-            inValidDates: false,
-            updateflag: false
+            submitted: false, inValidDates: false, updateflag: false, endDateRequired : false,
+            eventNameRequired: false, venueRequired : false, startDateRequired : false,
+            descriptionRequired: false
         };
+        this.redirectFunction = this.redirectFunction.bind(this);
     }
 
     componentWillMount() {
@@ -50,14 +52,15 @@ class EventForm extends Component {
             })
         }
     }
+
     changeFunction(date, type) {
         let Event = {
             ...this.state.Event,
         }
         Event[type] = date;
         this.setState({
-            Event: Event,
-            inValidDates: false
+            Event: Event, startDateRequired : false, 
+            inValidDates: false, endDateRequired : false
         })
     }
 
@@ -66,62 +69,82 @@ class EventForm extends Component {
             ...this.state.Event
         };
         eventDetailArray[event.target.name] = event.target.value;
-        this.setState({
-            Event: eventDetailArray
+        this.setState({ Event: eventDetailArray,eventNameRequired: false, 
+                       venueRequired : false, descriptionRequired: false,
         })
+    }
+    
+    validateForm(){
+        let event = { ...this.state.Event }
+         let valiDate = moment(event["startDate"]).isBefore(event["endDate"]);
+         let validSameDate = moment(event["startDate"]).isSame(event["endDate"]);
+
+            !event.eventName ? this.setState({eventNameRequired: true }) : null;
+            !event.startDate ? this.setState({ startDateRequired: true }) : null;
+            !event.endDate ? this.setState({ endDateRequired: true }) : null;
+            !event.venue ? this.setState({ venueRequired: true }) : null;
+            !event.description ? this.setState({ descriptionRequired: true }) : null;
+            !valiDate ||validSameDate ? this.setState({inValidDates : true}) : null;
     }
 
     onSubmitHandler() {
-        let event = {
-            ...this.state.Event
-        }
-        this.setState({
-            submitted: true
-        });
-        let valiDate = moment(event["startDate"]).isBefore(event["endDate"]);
-        //let validSameDate = moment(event["startDate"]).isSame(event["endDate"]);
-        if (!valiDate) {
-            this.setState({
-                inValidDates: true
-            });
-        }
-        if (event.eventName && valiDate && event.description) {
+        let compRef = this;
+        let event = { ...this.state.Event }
+        this.setState({ submitted: true });
+        this.validateForm();
+      
+         if (event.eventName && !this.state.inValidDates && event.venue && event.startDate && event.endDate && event.description ) {
             this.props.createEvent(event);
-             this.props.history.push('/events');
+             setTimeout(()=> {
+                 let  eventCreated = this.props.eventCreated;
+                 compRef.Toaster(compRef, eventCreated,'Created')},1000);
         }
-
     }
 
-    onUpdateHandler() {
-        let event = {
-            ...this.state.Event
-        }
-        if (event.eventName && event.description) {
+   redirectFunction() {
+      this.props.history.push('/events');
+  }
+
+  Toaster(compRef, successFlag, actionName) {
+        if(successFlag){
+                toast.success("Event "+ actionName + "Successfully.", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+               }); 
+               setTimeout(()=> {compRef.redirectFunction()},1000);
+           }
+        else{
+            toast.error("Something went wrong", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+       }
+  }
+
+  onUpdateHandler() {
+        let event = { ...this.state.Event }
+        let compRef = this;
+         validateForm();
+        if (event.eventName && !this.state.inValidDates && event.venue && event.startDate && event.endDate&& event.description) {
             this.props.updateEvent(event);
-             this.props.history.push('/events');
+            setTimeout(()=> {
+                let  eventUpdated = this.props.eventUpdated;
+                compRef.Toaster(compRef, eventUpdated,'Updated')},1000);
         }
     }
 
     resetField() {
-        let Event = {
-            eventName: "",
-            description: "",
-            venue: "",
-            startDate: moment(),
-            endDate: moment()
-        }
+        let Event = {eventName: "", description: "", venue: "",
+                    startDate: moment(), endDate: moment() }
         this.setState({
-            Event: Event
+            Event: Event, endDateRequired : false, eventNameRequired: false, 
+            venueRequired : false, startDateRequired : false, inValidDates: false, descriptionRequired : false
         });
     }
 
     render() {
-        //const purchasedRedirect = this.props.eventCreated ?  <Link to={'/events'}/> : null;
-      
         if (this.state.updateflag) 
             this.buttons = <Button type="submit" size="md" color="success" onClick={this.onUpdateHandler.bind(this)} ><i className="icon-note"></i> Update</Button>
         else 
-            this.buttons = <Button type="submit" size="md" color="success" onClick={this.onSubmitHandler.bind(this)} ><i className="icon-note"></i> Register</Button>
+            this.buttons = <Button type="submit" size="md" color="success" onClick={this.onSubmitHandler.bind(this)} ><i className="icon-note"></i> Submit</Button>
         
         return (
             <CardLayout name="Event">
@@ -133,6 +156,7 @@ class EventForm extends Component {
                             name='eventName'
                             icon='icon-user'
                             value={this.state.Event.eventName}
+                            required={this.state.eventNameRequired}
                             onchanged={(event) => this.onChangeHandler(event)} />
                     </Col>
                     <Col md="6">
@@ -145,6 +169,7 @@ class EventForm extends Component {
                                 onChange={(event) => this.changeFunction(event, "startDate")}
                                 placeholderText="Select start date" />
                         </InputGroup>
+                        {this.state.startDateRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">startDate is Required</div> : null}
                     </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -158,6 +183,7 @@ class EventForm extends Component {
                                 onChange={(event) => this.changeFunction(event, "endDate")}
                                 placeholderText="Select start date" />
                         </InputGroup>
+                        {this.state.endDateRequired ? <div style={{ color: "red", marginTop: 0 }} className="help-block">endDate is Required</div> : null}
                     </Col>
                     <Col md="6">
                         <InputElement
@@ -166,6 +192,7 @@ class EventForm extends Component {
                             name='description'
                             icon='icon-phone'
                             value={this.state.Event.description}
+                            required={this.state.descriptionRequired}
                             onchanged={(event) => this.onChangeHandler(event)} />
                     </Col>
                 </FormGroup>
@@ -177,6 +204,7 @@ class EventForm extends Component {
                             name='venue'
                             icon='icon-phone'
                             value={this.state.Event.venue}
+                            required={this.state.venueRequired}
                             onchanged={(event) => this.onChangeHandler(event)} />
                     </Col>
                 </FormGroup >
@@ -186,6 +214,10 @@ class EventForm extends Component {
                     </Col>
                     <Col md="3">
                         <Button onClick={this.resetField.bind(this)} type="reset" size="md" color="danger" > Reset</Button>
+                          <ToastContainer autoClose={2000} />
+                    </Col>
+                     <Col md="3">
+                       {this.state.inValidDates ? <div style={{ color: "red", marginTop: 0 }} className="help-block">please enter valid start Date and end Date </div> : null}
                     </Col>
                 </FormGroup>
             </CardLayout>
@@ -195,7 +227,9 @@ class EventForm extends Component {
 
 const mapStateToProps = state => {
     return {
-        events: state.event.events
+        events: state.event.events,
+        eventCreated : state.event.eventCreated,
+        eventUpdated : state.event.eventUpdated
     };
 }
 
