@@ -1,39 +1,45 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import * as actions from '../../store/actions/index';
-import { FormGroup, Col, Button } from 'reactstrap';
-import InputElement from '../../components/Input/';
-import CardLayout from '../../components/CardLayout/';
-import _ from 'lodash';
-import Select from 'react-select';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
+import { FormGroup, Col, Button } from "reactstrap";
+import InputElement from "../../components/Input/";
+import CardLayout from "../../components/CardLayout/";
+import _ from "lodash";
+import Select from "react-select";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 class AboutUs extends Component {
   constructor(props) {
     super(props);
     this.state = {
       aboutUs: {
-        info: '', url: '' ,event : ''
+        info: "",
+        url: "",
+        event: ""
       },
-      infoRequired : false, eventRequired : false
-    }
+      infoRequired: false,
+      eventRequired: false
+    };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.props.getEvents();
-   // this.props.getAboutUs();
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.aboutUs !== this.props.aboutUs) {
       let isEmpty = !Object.keys(this.props.aboutUs).length;
-      if(!isEmpty){
+      if (!isEmpty) {
         this.setState({
           aboutUs: this.props.aboutUs
-        })
-      }else{
+        });
+      } else {
         this.setState(prevState => ({
           aboutUs: {
             ...prevState.aboutUs,
-            info: '', url: ''
+            info: "",
+            url: ""
           }
-        }))
+        }));
       }
     }
   }
@@ -41,54 +47,80 @@ class AboutUs extends Component {
     let aboutUs = { ...this.state.aboutUs };
     aboutUs[event.target.name] = event.target.value;
     this.setState({
-      aboutUs: aboutUs, infoRequired: false, eventRequired : false
+      aboutUs: aboutUs,
+      infoRequired: false,
+      eventRequired: false
     });
   }
-  handleEventChange (value) {
+  handleEventChange(value) {
     if (value !== null) {
       let aboutUs = { ...this.state.aboutUs };
       aboutUs.event = value;
       this.setState({
-        aboutUs: aboutUs, infoRequired: false, eventRequired : false
+        aboutUs: aboutUs,
+        infoRequired: false,
+        eventRequired: false
       });
       this.props.getAboutUsForEvent(value);
-    }
-    else {
+      let compRef = this;
+      setTimeout(() => {
+        let getAboutUsError = compRef.props.getAboutUsError;
+        if (getAboutUsError) {
+          toast.error("Something went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT
+          });
+        }
+      }, 1000);
+    } else {
       this.onReset();
     }
   }
   onSubmit() {
-    if(this.state.aboutUs.info && this.state.aboutUs.event ){
+    if (this.state.aboutUs.info && this.state.aboutUs.event) {
       let isEmpty = !Object.keys(this.props.aboutUs).length;
-      if (isEmpty) { //post
-        let aboutUs = _.pick(this.state.aboutUs , ['info' , 'url' ,'event']);
-        this.props.createAboutUs(aboutUs);
-        this.onReset();
-      }
-      else { //put
-        let aboutUs = _.pick(this.state.aboutUs , ['info' , 'url','event']);
-        let id = this.props.aboutUs._id;
-        this.props.editAboutUs(id, aboutUs);
-        this.onReset();
-      }
-    }else{
+      let aboutUs = _.pick(this.state.aboutUs, ["info", "url", "event"]);
+      let id;
+      !isEmpty ? (id = this.props.aboutUs._id) : null;
+      isEmpty
+        ? this.props.createAboutUs(aboutUs)
+        : this.props.editAboutUs(id, aboutUs);
+      let compRef = this;
+      setTimeout(() => {
+        let creatEditAboutUsError = compRef.props.creatEditAboutUsError;
+        let status = "";
+        !isEmpty ? (status = "Updated") : (status = "Created");
+        compRef.Toaster(compRef, creatEditAboutUsError, status);
+      }, 1000);
+    } else {
       !this.state.aboutUs.info ? this.setState({ infoRequired: true }) : null;
       !this.state.aboutUs.event ? this.setState({ eventRequired: true }) : null;
+    }
+  }
+  Toaster(compRef, createEditError, actionName) {
+    if (!createEditError) {
+      toast.success("About Us Information " + actionName + " Successfully.", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
+    } else {
+      toast.error("Something went wrong", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
     }
   }
   onReset() {
     this.setState(prevState => ({
       aboutUs: {
         ...prevState.aboutUs,
-        info: '',
-        url: '',
-        event : ''
+        info: "",
+        url: "",
+        event: ""
       },
-      infoRequired: false, eventRequired : false
-    }))
+      infoRequired: false,
+      eventRequired: false
+    }));
   }
   render() {
-    const { info, url ,event } = { ...this.state.aboutUs }
+    const { info, url, event } = { ...this.state.aboutUs };
     return (
       <CardLayout name="About Us">
         <FormGroup row>
@@ -100,9 +132,14 @@ class AboutUs extends Component {
               simpleValue
               onChange={this.handleEventChange.bind(this)}
             />
-            {
-              this.state.eventRequired ? <div style={{ color: "red", marginTop: -1 }} className="help-block">*Required</div> : null
-            }
+            {this.state.eventRequired ? (
+              <div
+                style={{ color: "red", marginTop: -1 }}
+                className="help-block"
+              >
+                *Required
+              </div>
+            ) : null}
           </Col>
         </FormGroup>
         <FormGroup row>
@@ -113,8 +150,8 @@ class AboutUs extends Component {
               placeholder="Information about Us..."
               name="info"
               value={info}
-              required= {this.state.infoRequired}
-              onchanged={(event) => this.onChangeInput(event)}
+              required={this.state.infoRequired}
+              onchanged={event => this.onChangeInput(event)}
             />
           </Col>
           <Col md="6">
@@ -124,39 +161,59 @@ class AboutUs extends Component {
               placeholder="Link to our website"
               name="url"
               value={url}
-              onchanged={(event) => this.onChangeInput(event)}
+              onchanged={event => this.onChangeInput(event)}
             />
           </Col>
         </FormGroup>
         <FormGroup row>
           <Col xs="12" md="3">
-            <Button type="button" size="md" color="success" onClick={() => this.onSubmit()} >Submit</Button>
+            <Button
+              type="button"
+              size="md"
+              color="success"
+              onClick={() => this.onSubmit()}
+            >
+              Submit
+            </Button>
           </Col>
           <Col md="3">
-            <Button type="button" size="md" color="danger" onClick={() => this.onReset()} style={{ marginLeft: -160 }} >Reset</Button>
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              onClick={() => this.onReset()}
+              style={{ marginLeft: -160 }}
+            >
+              Reset
+            </Button>
           </Col>
           <Col md="6">
-            <div style={{ color: "red" }} className="help-block">{this.props.error}</div>
+            <ToastContainer autoClose={2000} />
           </Col>
-        </FormGroup >
+        </FormGroup>
       </CardLayout>
-    )
+    );
   }
 }
 const mapStateToProps = state => {
   return {
     aboutUs: state.staticPages.aboutUs,
-    error : state.staticPages.error,
-    eventList : state.event.eventList,
+    getAboutUsError: state.staticPages.getAboutUsError,
+    creatEditAboutUsError: state.staticPages.creatEditAboutUsError,
+    eventList: state.event.eventList
   };
-}
+};
 const mapDispatchToProps = dispatch => {
   return {
-    getEvents : () => dispatch(actions.getEvents()),
+    getEvents: () => dispatch(actions.getEvents()),
     getAboutUs: () => dispatch(actions.getAboutUsInfo()),
-    createAboutUs : (aboutUs) => dispatch(actions.createAboutUsInfo(aboutUs)),
-    editAboutUs : (id , aboutUs) => dispatch(actions.editAboutUsInfo(id, aboutUs)),
-    getAboutUsForEvent : (eventId) =>  dispatch(actions.getAboutUsForEvent(eventId)),
+    createAboutUs: aboutUs => dispatch(actions.createAboutUsInfo(aboutUs)),
+    editAboutUs: (id, aboutUs) =>
+      dispatch(actions.editAboutUsInfo(id, aboutUs)),
+    getAboutUsForEvent: eventId => dispatch(actions.getAboutUsForEvent(eventId))
   };
-}
-export default connect(mapStateToProps, mapDispatchToProps)(AboutUs);
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AboutUs);
