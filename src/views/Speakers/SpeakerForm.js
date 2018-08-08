@@ -7,6 +7,8 @@ import CardLayout from "../../components/CardLayout/";
 import Select from "react-select";
 import "react-select/dist/react-select.css";
 import _ from "lodash";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class SpeakerForm extends Component {
   constructor(props) {
@@ -41,7 +43,6 @@ class SpeakerForm extends Component {
         "profileImageURL"
       ]);
       Speaker.event = this.props.speakerData.event._id;
-
       Speaker._id = this.props.speakerData._id;
 
       this.setState({
@@ -54,6 +55,25 @@ class SpeakerForm extends Component {
     const { Speaker } = { ...this.state };
     Speaker[event.target.name] = event.target.value;
     this.setState({ Speaker: Speaker });
+  }
+
+  Toaster(compRef, successFlag, actionName) {
+    if (successFlag) {
+      toast.success("Speaker " + actionName + " Successfully.", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
+      setTimeout(() => {
+        compRef.redirectFunction();
+      }, 1000);
+    } else {
+      toast.error("Something went wrong", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
+    }
+  }
+
+  redirectFunction() {
+    this.props.history.push("/speakers");
   }
 
   onSubmit() {
@@ -77,10 +97,8 @@ class SpeakerForm extends Component {
         "event"
       ]);
       this.state.editSpeaker
-        ? this.props.editSpeakerData(speaker._id, editedSpeaker)
-        : this.props.createSpeaker(speaker, attendeeCount);
-      this.onReset();
-      this.props.history.push("/speakers");
+        ? this.updateSpeaker(speaker._id, editedSpeaker)
+        : this.createSpeaker(speaker, attendeeCount);
     } else {
       !speaker.firstName ? this.setState({ firstNameRequired: true }) : null;
       !speaker.lastName ? this.setState({ lastNameRequired: true }) : null;
@@ -90,6 +108,23 @@ class SpeakerForm extends Component {
     }
   }
 
+  updateSpeaker(id, editedSpeaker) {
+    let compRef = this;
+    this.props.editSpeakerData(id, editedSpeaker);
+    setTimeout(() => {
+      let speakerUpdated = this.props.speakerUpdated;
+      compRef.Toaster(compRef, speakerUpdated, "Updated");
+    }, 1000);
+  }
+
+  createSpeaker(speaker, attendeeCount) {
+    let compRef = this;
+    this.props.createSpeaker(speaker, attendeeCount);
+    setTimeout(() => {
+      let speakerCreated = this.props.speakerCreated;
+      compRef.Toaster(compRef, speakerCreated, "Created");
+    }, 1000);
+  }
   onReset() {
     let Speaker = { ...this.state.Speaker };
     Speaker.firstName = "";
@@ -240,6 +275,7 @@ class SpeakerForm extends Component {
             </Button>
           </Col>
           <Col md="6">
+            <ToastContainer autoClose={2000} />
             <div style={{ color: "red" }} className="help-block">
               {this.props.speakerError}
             </div>
@@ -254,7 +290,9 @@ const mapStateToProps = state => {
     speakerError: state.speaker.error,
     speakerData: state.speaker.speakerData,
     eventList: state.event.eventList,
-    attendeeCount: state.attendeeCount.attendeeCount
+    attendeeCount: state.attendeeCount.attendeeCount,
+    speakerCreated: state.speaker.speakerCreated,
+    speakerUpdated: state.speaker.speakerUpdated
   };
 };
 const mapDispatchToProps = dispatch => {

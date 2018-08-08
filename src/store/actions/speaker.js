@@ -2,6 +2,43 @@ import * as actionTypes from "../actions/actionTypes";
 import axios from "axios";
 import AppConfig from "../../constants/AppConfig";
 
+export const createSpeakerSuccess = () => {
+  return {
+    type: actionTypes.CREATE_SPEAKER_SUCCESS
+  };
+};
+
+export const createSpeakerFail = () => {
+  return {
+    type: actionTypes.CREATE_SPEAKER_FAIL
+  };
+};
+
+export const updateSpeakerFail = error => {
+  return {
+    type: actionTypes.UPDATE_SPEAKER_FAIL,
+    error: error
+  };
+};
+
+export const updateSpeakerSuccess = () => {
+  return {
+    type: actionTypes.UPDATE_SPEAKER_SUCCESS
+  };
+};
+export const deleteSpeakerFail = error => {
+  return {
+    type: actionTypes.DELETTE_SPEAKER_FAIL,
+    error: error
+  };
+};
+
+export const deleteSpeakerSuccess = () => {
+  return {
+    type: actionTypes.DELETE_SPEAKER_SUCCESS
+  };
+};
+
 export const logRegistrationError = () => {
   return {
     type: actionTypes.LOG_REGISTRATION_ERROR,
@@ -82,9 +119,11 @@ export const editSpeakerData = (id, speaker) => {
       .put(`${AppConfig.serverURL}/api/speaker/${id}`, speaker)
       .then(response => {
         dispatch(getSpeakers());
+        dispatch(updateSpeakerSuccess());
       })
       .catch(error => {
         dispatch(logRegistrationError());
+        dispatch(updateSpeakerFail());
       });
   };
 };
@@ -110,10 +149,12 @@ export const createSpeaker = (speaker, attendeeCount) => {
           )
           .then(response => {
             dispatch(getSpeakers());
+            dispatch(createSpeakerSuccess());
           });
       })
       .catch(error => {
-        dispatch(logRegistrationError());
+        dispatch(createSpeakerFail());
+        //dispatch(logRegistrationError());
       });
   };
 };
@@ -124,9 +165,11 @@ export const deleteSpeaker = id => {
       .delete(`${AppConfig.serverURL}/api/speaker/${id}`)
       .then(response => {
         dispatch(getSpeakers());
+        dispatch(deleteSpeakerSuccess());
       })
       .catch(error => {
         dispatch(logRegistrationError());
+        dispatch(deleteSpeakerFail());
       });
   };
 };
