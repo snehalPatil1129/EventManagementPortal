@@ -9,7 +9,7 @@ import "react-select/dist/react-select.css";
 import _ from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class Registration extends Component {
   constructor(props) {
     super(props);
@@ -37,24 +37,52 @@ class Registration extends Component {
   componentDidMount() {
     this.props.getEvents();
     this.props.getProfileList();
-
-    let isEmpty = !Object.keys(this.props.attendeeData).length;
-    if (this.props.match.params.id !== undefined && !isEmpty) {
-      let Attendee = _.pick(this.props.attendeeData, [
-        "firstName",
-        "lastName",
-        "email",
-        "contact",
-        "briefInfo",
-        "profileImageURL"
-      ]);
-      Attendee.event = this.props.attendeeData.event._id;
-      Attendee.profiles = this.props.attendeeData.profiles;
-      Attendee._id = this.props.attendeeData._id;
-      this.setState({
-        Registration: Attendee,
-        editAttendee: true
-      });
+    if (this.props.match.params.id !== undefined) {
+      let empty = !Object.keys(this.props.attendeeData).length;
+      if (!empty) {
+        let Attendee = _.pick(this.props.attendeeData, [
+          "firstName",
+          "lastName",
+          "email",
+          "contact",
+          "briefInfo",
+          "profileImageURL"
+        ]);
+        Attendee.event = this.props.attendeeData.event._id;
+        Attendee.profiles = this.props.attendeeData.profiles;
+        Attendee._id = this.props.attendeeData._id;
+        this.setState({
+          Registration: Attendee,
+          editAttendee: true
+        });
+      } else {
+        this.setState({ loading: true });
+        this.props.getAttendeeById(this.props.match.params.id);
+        let compRef = this;
+        setTimeout(function() {
+          let Attendee = _.pick(compRef.props.attendeeData, [
+            "firstName",
+            "lastName",
+            "email",
+            "contact",
+            "briefInfo",
+            "profileImageURL",
+            "event",
+            "profiles",
+            "_id"
+          ]);
+          let Empty = !Object.keys(Attendee).length;
+          if (Empty) {
+            compRef.props.history.push("/sponsors");
+          } else {
+            compRef.setState({
+              Registration: Attendee,
+              editAttendee: true,
+              loading: false
+            });
+          }
+        }, 1000);
+      }
     }
   }
   onChangeInput(event) {
@@ -97,6 +125,7 @@ class Registration extends Component {
       this.state.editAttendee
         ? this.props.editAttendeeData(attendee._id, editedAttendee)
         : this.props.createAttendee(attendee, attendeeCount);
+      this.setState({ loading: true });
       setTimeout(() => {
         let createEditError = compRef.props.createEditError;
         let status = "";
@@ -120,15 +149,16 @@ class Registration extends Component {
     }
   }
   onReset() {
-    let Registration = { ...this.state.Registration };
-    Registration.firstName = "";
-    Registration.lastName = "";
-    Registration.email = "";
-    Registration.contact = "";
-    Registration.profiles = [];
-    Registration.briefInfo = "";
-    Registration.profileImageURL = "";
-    Registration.event = "";
+    let Registration = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      contact: "",
+      profiles: [],
+      briefInfo: "",
+      profileImageURL: "",
+      event: ""
+    };
     this.setState({
       Registration: Registration,
       firstNameRequired: false,
@@ -142,6 +172,7 @@ class Registration extends Component {
   }
   Toaster(compRef, createEditError, actionName) {
     if (!createEditError) {
+      compRef.onReset();
       toast.success("Attendee " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -155,7 +186,7 @@ class Registration extends Component {
     }
   }
   redirectFunction() {
-    this.onReset();
+    this.setState({ loading: false });
     this.props.history.push("/registrationList");
   }
   handleEventChange(value) {
@@ -197,7 +228,9 @@ class Registration extends Component {
   render() {
     const { Registration } = { ...this.state };
     const eventOptions = this.props.eventList;
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Registration">
         <FormGroup row>
           <Col xs="12" md="6">
@@ -309,14 +342,25 @@ class Registration extends Component {
         </FormGroup>
         <FormGroup row>
           <Col xs="12" md="3">
-            <Button
-              type="button"
-              size="md"
-              color="success"
-              onClick={() => this.onSubmit()}
-            >
-              Submit
-            </Button>
+            {this.state.editAttendee ? (
+              <Button
+                type="button"
+                size="md"
+                color="success"
+                onClick={() => this.onSubmit()}
+              >
+                Update
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                size="md"
+                color="success"
+                onClick={() => this.onSubmit()}
+              >
+                Submit
+              </Button>
+            )}
           </Col>
           <Col md="3">
             <Button
@@ -355,7 +399,8 @@ const mapDispatchToProps = dispatch => {
     editAttendeeData: (id, attendee) =>
       dispatch(actions.editAttendeeData(id, attendee)),
     getEvents: () => dispatch(actions.getEvents()),
-    getProfileList: () => dispatch(actions.getProfileList())
+    getProfileList: () => dispatch(actions.getProfileList()),
+    getAttendeeById: id => dispatch(actions.getAttendeeById(id))
   };
 };
 export default connect(

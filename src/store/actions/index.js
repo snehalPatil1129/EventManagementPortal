@@ -15,7 +15,7 @@ export {
 export {
   createAttendee,
   getAttendees,
-  getAttendeeData,
+  getAttendeeById,
   editAttendeeData,
   storeAttendeeData,
   deleteAttendee,
@@ -29,7 +29,8 @@ export {
   getForms,
   storeCurrentForm,
   editForm,
-  deleteForm
+  deleteForm,
+  getFormById
 } from "./questionForms";
 
 export {

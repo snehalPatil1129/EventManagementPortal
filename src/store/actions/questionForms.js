@@ -118,3 +118,18 @@ export const getForms = () => {
       });
   };
 };
+
+export const getFormById = id => {
+  let formData = [];
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/questionForms/${id}`)
+      .then(response => {
+        formData = response.data;
+        dispatch(storeCurrentForm(formData));
+      })
+      .catch(error => {
+        dispatch(getFormsError());
+      });
+  };
+};

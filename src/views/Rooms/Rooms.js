@@ -205,11 +205,13 @@ class Rooms extends Component {
         <FormGroup row>
           <Col xs="12" md="6">
             <InputElement
+              className="inputNumber"
               icon="icon-pie-chart"
               type="number"
               placeholder="Capacity"
               name="capacity"
               value={Room.capacity}
+              maxLength="10"
               required={this.state.capacityRequired}
               onchanged={event => this.onChangeInput(event)}
             />

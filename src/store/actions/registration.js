@@ -108,7 +108,7 @@ export const getAttendeesForEventAndProfile = (eventId, profileName) => {
   };
 };
 
-export const getAttendeeData = id => {
+export const getAttendeeById = id => {
   return dispatch => {
     axios
       .get(`${AppConfig.serverURL}/api/attendee/${id}`)

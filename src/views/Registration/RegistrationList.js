@@ -266,7 +266,9 @@ class RegistrationList extends Component {
               headerAlign="left"
               width="30"
               export={false}
-            />
+            >
+              Print
+            </TableHeaderColumn>
           </BootstrapTable>
         </FormGroup>
         <FormGroup row>

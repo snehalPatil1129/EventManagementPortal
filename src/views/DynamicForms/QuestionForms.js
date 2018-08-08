@@ -10,6 +10,7 @@ import * as actions from "../../store/actions/index";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import _ from "lodash";
+import Loader from "../../components/Loader/Loader";
 let formLayout;
 class QuestionForms extends Component {
   constructor(props) {
@@ -23,29 +24,62 @@ class QuestionForms extends Component {
       formTypeRequired: false,
       eventRequired: false,
       sessionRequired: false,
-      invalidForm: false
+      invalidForm: false,
+      loading: false
     };
   }
   componentDidMount() {
     this.props.getEvents();
-    let isEmpty = this.props.currentFormData.length === 0;
-    if (this.props.match.params.id !== undefined && !isEmpty) {
-      let form = this.props.currentFormData;
-      if (form.formType === "Home Questions") {
-        this.setState({
-          event: form.event._id,
-          formType: form.formType,
-          formData: form.formData,
-          editForm: true
-        });
+    if (this.props.match.params.id !== undefined) {
+      let empty = this.props.currentFormData.length === 0;
+      if (!empty) {
+        let form = this.props.currentFormData;
+        if (form.formType === "Home Questions") {
+          this.setState({
+            event: form.event._id,
+            formType: form.formType,
+            formData: form.formData,
+            editForm: true
+          });
+        } else {
+          this.setState({
+            event: form.event._id,
+            session: form.session._id,
+            formType: form.formType,
+            formData: form.formData,
+            editForm: true
+          });
+        }
       } else {
-        this.setState({
-          event: form.event._id,
-          session: form.session._id,
-          formType: form.formType,
-          formData: form.formData,
-          editForm: true
-        });
+        this.setState({ loading: true });
+        this.props.getFormById(this.props.match.params.id);
+        let compRef = this;
+        setTimeout(function() {
+          let empty = compRef.props.currentFormData.length === 0;
+          if (empty) {
+            compRef.props.history.push("/dynamicForms");
+          } else {
+            let form = compRef.props.currentFormData;
+            if (form.formType === "Home Questions") {
+              compRef.setState({
+                event: form.event,
+                formType: form.formType,
+                formData: form.formData,
+                editForm: true,
+                loading: false
+              });
+            } else {
+              compRef.setState({
+                event: form.event,
+                session: form.session,
+                formType: form.formType,
+                formData: form.formData,
+                editForm: true,
+                loading: false
+              });
+            }
+          }
+        }, 1000);
       }
     }
   }
@@ -91,7 +125,8 @@ class QuestionForms extends Component {
     let Question = [...this.state.formData];
     Question.push(newQuestion);
     this.setState({
-      formData: Question
+      formData: Question,
+      invalidForm: false
     });
   }
   displayAnswerField(que, id) {
@@ -209,6 +244,7 @@ class QuestionForms extends Component {
         ? this.props.editForm(id, formObject)
         : this.props.createForm(formObject);
       let compRef = this;
+      this.setState({ loading: true });
       setTimeout(() => {
         let creatEditFormError = compRef.props.creatEditFormError;
         let status = "";
@@ -226,6 +262,7 @@ class QuestionForms extends Component {
         ? this.props.editForm(id, formObject)
         : this.props.createForm(formObject);
       let compRef = this;
+      this.setState({ loading: true });
       setTimeout(() => {
         let creatEditFormError = compRef.props.creatEditFormError;
         let status = "";
@@ -249,6 +286,7 @@ class QuestionForms extends Component {
   }
   Toaster(compRef, creatEditFormError, actionName) {
     if (!creatEditFormError) {
+      compRef.resetForm();
       toast.success("Question Form " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -262,27 +300,27 @@ class QuestionForms extends Component {
     }
   }
   redirectFunction() {
-    this.resetForm();
+    this.setState({ loading: false });
     this.props.history.push("/dynamicForms");
   }
 
   resetForm() {
-    if (this.props.formError === "") {
-      this.setState({
-        event: "",
-        session: "",
-        formType: "",
-        formData: [],
-        editForm: false
-      });
-    }
+    this.setState({
+      event: "",
+      session: "",
+      formType: "",
+      formData: [],
+      editForm: false
+    });
   }
   render() {
     const { event, session, formType } = this.state;
     const eventOptions = this.props.events;
     const sessionOptions = this.props.sessions;
     const formOptions = this.props.formTypes;
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Question Forms">
         <FormGroup row>
           <Col xs="12" md="4">
@@ -365,14 +403,25 @@ class QuestionForms extends Component {
         </FormGroup>
         <FormGroup row>
           <Col md="3">
-            <Button
-              type="button"
-              size="md"
-              color="success"
-              onClick={() => this.onSubmitForm()}
-            >
-              Create Form
-            </Button>
+            {this.state.editForm ? (
+              <Button
+                type="button"
+                size="md"
+                color="success"
+                onClick={() => this.onSubmitForm()}
+              >
+                Update Form
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                size="md"
+                color="success"
+                onClick={() => this.onSubmitForm()}
+              >
+                Create Form
+              </Button>
+            )}
           </Col>
           <Col md="3">
             <Button
@@ -405,7 +454,8 @@ const mapDispatchToProps = dispatch => {
     getEvents: () => dispatch(actions.getEvents()),
     getSessions: id => dispatch(actions.getSessionsOfEvent(id)),
     createForm: formObject => dispatch(actions.createForm(formObject)),
-    editForm: (id, formObject) => dispatch(actions.editForm(id, formObject))
+    editForm: (id, formObject) => dispatch(actions.editForm(id, formObject)),
+    getFormById: id => dispatch(actions.getFormById(id))
   };
 };
 export default connect(
