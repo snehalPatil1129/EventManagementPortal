@@ -51,6 +51,20 @@ export const getSponsors = () => {
       });
   };
 };
+export const getSponsorById = id => {
+  let sponsorData = [];
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/sponsor/${id}`)
+      .then(response => {
+        sponsorData = response.data;
+        dispatch(storeCurrentSponsor(sponsorData));
+      })
+      .catch(error => {
+        dispatch(getSponsorsError());
+      });
+  };
+};
 export const createSponsor = sponsor => {
   return dispatch => {
     axios

@@ -37,7 +37,7 @@ class RegistrationList extends Component {
   onPrintAttendeeQRCode(cell, row) {
     return (
       <Link to={this} onClick={() => attendeeCardMethod.onGenerateQRcode(row)}>
-        <i className="fa fa-print" />
+        <i className="fa fa-print" title="Print" />
       </Link>
     );
   }
@@ -45,7 +45,7 @@ class RegistrationList extends Component {
   ondeleteAttendee(cell, row) {
     return (
       <Link to={this} onClick={() => this.deleteAttendee(row._id)}>
-        <i className="fa fa-trash" />
+        <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
@@ -77,7 +77,7 @@ class RegistrationList extends Component {
         to={`${this.props.match.url}/registration/${row._id}`}
         onClick={() => this.props.storeAttendeeData(row)}
       >
-        <i className="fa fa-pencil" />
+        <i className="fa fa-pencil" title="Edit" />
       </Link>
     );
   }

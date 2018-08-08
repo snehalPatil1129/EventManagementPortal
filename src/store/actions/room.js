@@ -60,6 +60,21 @@ export const getRooms = () => {
       });
   };
 };
+
+export const getRoomById = id => {
+  let roomData = [];
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/room/${id}`)
+      .then(response => {
+        roomData = response.data;
+        dispatch(storeCurrentRoom(roomData));
+      })
+      .catch(error => {
+        dispatch(getRoomError());
+      });
+  };
+};
 export const createRoom = room => {
   return dispatch => {
     axios

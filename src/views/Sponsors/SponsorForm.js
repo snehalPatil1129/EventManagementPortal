@@ -8,7 +8,7 @@ import Select from "react-select";
 import _ from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class SponsorForm extends Component {
   constructor(props) {
     super(props);
@@ -24,27 +24,56 @@ class SponsorForm extends Component {
       editSponsor: false,
       nameRequired: false,
       eventRequired: false,
-      categoryRequired: false
+      categoryRequired: false,
+      loading: false
     };
   }
   componentDidMount() {
     this.props.getEvents();
-    let currentSponsor = _.pick(this.props.currentSponsor, [
-      "name",
-      "eventName",
-      "category",
-      "websiteURL",
-      "imageURL",
-      "description"
-    ]);
-    let notEmpty = !Object.keys(currentSponsor).length;
-    if (!notEmpty) {
-      currentSponsor.event = this.props.currentSponsor.event._id;
-      this.setState({
-        ...this.state.Sponsor,
-        Sponsor: currentSponsor,
-        editSponsor: true
-      });
+    if (this.props.match.params.id !== undefined) {
+      let currentSponsor = _.pick(this.props.currentSponsor, [
+        "name",
+        "eventName",
+        "category",
+        "websiteURL",
+        "imageURL",
+        "description"
+      ]);
+      let Empty = !Object.keys(currentSponsor).length;
+      if (!Empty) {
+        currentSponsor.event = this.props.currentSponsor.event._id;
+        this.setState({
+          ...this.state.Sponsor,
+          Sponsor: currentSponsor,
+          editSponsor: true
+        });
+      } else {
+        this.setState({ loading: true });
+        this.props.getSponsorById(this.props.match.params.id);
+        let compRef = this;
+        setTimeout(function() {
+          let currentSponsor = _.pick(compRef.props.currentSponsor, [
+            "name",
+            "eventName",
+            "category",
+            "websiteURL",
+            "imageURL",
+            "description"
+          ]);
+          let Empty = !Object.keys(currentSponsor).length;
+          if (Empty) {
+            compRef.props.history.push("/sponsors");
+          } else {
+            currentSponsor.event = compRef.props.currentSponsor.event;
+            compRef.setState({
+              ...compRef.state.Sponsor,
+              Sponsor: currentSponsor,
+              editSponsor: true,
+              loading: false
+            });
+          }
+        }, 1000);
+      }
     }
   }
   onChangeInput(event) {
@@ -55,7 +84,6 @@ class SponsorForm extends Component {
       nameRequired: false
     });
   }
-
   handleEventChange(value) {
     if (value !== null) {
       let Sponsor = { ...this.state.Sponsor };
@@ -85,6 +113,7 @@ class SponsorForm extends Component {
         ? this.props.editSponsor(id, Sponsor)
         : this.props.createSponsor(Sponsor);
       let compRef = this;
+      this.setState({ loading: true });
       setTimeout(() => {
         let creatEditSponsorError = compRef.props.creatEditSponsorError;
         let status = "";
@@ -99,6 +128,7 @@ class SponsorForm extends Component {
   }
   Toaster(compRef, creatEditSponsorError, actionName) {
     if (!creatEditSponsorError) {
+      compRef.onReset();
       toast.success("Sponsor " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -112,7 +142,7 @@ class SponsorForm extends Component {
     }
   }
   redirectFunction() {
-    this.onReset();
+    this.setState({ loading: false });
     this.props.history.push("/sponsors");
   }
   onReset() {
@@ -136,7 +166,9 @@ class SponsorForm extends Component {
     const { Sponsor } = this.state;
     const eventOptions = this.props.eventList;
     const categoryOptions = this.props.categoryOptions;
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Sponsor">
         <FormGroup row>
           <Col xs="12" md="6">
@@ -221,14 +253,25 @@ class SponsorForm extends Component {
         </FormGroup>
         <FormGroup row>
           <Col xs="12" md="3">
-            <Button
-              type="button"
-              size="md"
-              color="success"
-              onClick={() => this.onSubmit()}
-            >
-              Submit
-            </Button>
+            {this.state.editSponsor ? (
+              <Button
+                type="button"
+                size="md"
+                color="success"
+                onClick={() => this.onSubmit()}
+              >
+                Update
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                size="md"
+                color="success"
+                onClick={() => this.onSubmit()}
+              >
+                Submit
+              </Button>
+            )}
           </Col>
           <Col md="3">
             <Button
@@ -242,14 +285,6 @@ class SponsorForm extends Component {
             </Button>
           </Col>
           <Col md="6">
-            {this.props.error !== "" ? (
-              <div
-                style={{ color: "red", fontSize: 15, marginTop: 0 }}
-                className="help-block"
-              >
-                {this.props.error}
-              </div>
-            ) : null}
             <ToastContainer autoClose={2000} />
           </Col>
         </FormGroup>
@@ -270,7 +305,8 @@ const mapDispatchToProps = dispatch => {
     getSponsors: () => dispatch(actions.getSponsors()),
     createSponsor: room => dispatch(actions.createSponsor(room)),
     editSponsor: (id, room) => dispatch(actions.editSponsor(id, room)),
-    getEvents: () => dispatch(actions.getEvents())
+    getEvents: () => dispatch(actions.getEvents()),
+    getSponsorById: id => dispatch(actions.getSponsorById(id))
   };
 };
 export default connect(

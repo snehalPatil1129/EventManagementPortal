@@ -37,7 +37,7 @@ class RoomsList extends Component {
   onDeleteRoom(cell, row) {
     return (
       <Link to={this} onClick={() => this.deleteRoom(row._id)}>
-        <i className="fa fa-trash" />
+        <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
@@ -67,7 +67,7 @@ class RoomsList extends Component {
         to={`${this.props.match.url}/rooms/${row._id}`}
         onClick={() => this.getRoomToEdit(row)}
       >
-        <i className="fa fa-pencil" />
+        <i className="fa fa-pencil" title="Edit" />
       </Link>
     );
   }

@@ -34,7 +34,7 @@ class SponsorsList extends Component {
   onDeleteSponsor(cell, row) {
     return (
       <Link to={this} onClick={() => this.deleteSponsor(row._id)}>
-        <i className="fa fa-trash" />
+        <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
@@ -63,7 +63,7 @@ class SponsorsList extends Component {
         to={`${this.props.match.url}/sponsorForm/${row._id}`}
         onClick={() => this.props.storeCurrentSponsor(row)}
       >
-        <i className="fa fa-pencil" />
+        <i className="fa fa-pencil" title="Edit" />
       </Link>
     );
   }

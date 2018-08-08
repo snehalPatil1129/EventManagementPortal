@@ -24,7 +24,7 @@ class SpeakerList extends Component {
   ondeleteSpeaker(cell, row) {
     return (
       <Link to={this} onClick={() => this.props.deleteSpeaker(row._id)}>
-        <i className="fa fa-trash" />
+        <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
@@ -34,7 +34,7 @@ class SpeakerList extends Component {
         to={`${this.props.match.url}/speakerForm/${row._id}`}
         onClick={() => this.props.storeSpeakerData(row)}
       >
-        <i className="fa fa-pencil" />
+        <i className="fa fa-pencil" title="Edit" />
       </Link>
     );
   }

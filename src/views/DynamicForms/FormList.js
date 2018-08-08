@@ -25,7 +25,7 @@ class FormList extends Component {
   ondeleteForm(cell, row) {
     return (
       <Link to={this} onClick={() => this.deleteForm(row._id)}>
-        <i className="fa fa-trash" />
+        <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
@@ -54,7 +54,7 @@ class FormList extends Component {
         to={`${this.props.match.url}/questionForms/${row._id}`}
         onClick={() => this.props.storeCurrentForm(row)}
       >
-        <i className="fa fa-pencil" />
+        <i className="fa fa-pencil" title="Edit" />
       </Link>
     );
   }
@@ -64,7 +64,7 @@ class FormList extends Component {
         to={`${this.props.match.url}/renderForm/${row._id}`}
         onClick={() => this.props.storeCurrentForm(row)}
       >
-        <i className="fa fa-eye" />
+        <i className="fa fa-eye" title="View" />
       </Link>
     );
   }

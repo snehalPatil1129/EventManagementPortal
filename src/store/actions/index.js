@@ -1,4 +1,4 @@
-export { loginUser, logoutUser ,forgetPassword } from "./auth";
+export { loginUser, logoutUser, forgetPassword } from "./auth";
 
 export { getEvents, createEvent, updateEvent, deleteEvent } from "./event";
 
@@ -8,7 +8,8 @@ export {
   storeCurrentRoom,
   editRoom,
   deleteRoom,
-  getRoomsForEvent
+  getRoomsForEvent,
+  getRoomById
 } from "./room";
 
 export {
@@ -79,7 +80,8 @@ export {
   editSponsor,
   deleteSponsor,
   storeCurrentSponsor,
-  getSponsorsForEvent
+  getSponsorsForEvent,
+  getSponsorById
 } from "./sponsor";
 
 export { getAttendeeCountForEvent } from "./attendeeCount";

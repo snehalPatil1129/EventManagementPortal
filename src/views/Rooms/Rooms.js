@@ -8,7 +8,7 @@ import Select from "react-select";
 import _ from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class Rooms extends Component {
   constructor(props) {
     super(props);
@@ -24,25 +24,52 @@ class Rooms extends Component {
       editRoom: false,
       roomNameRequired: false,
       eventRequired: false,
-      capacityRequired: false
+      capacityRequired: false,
+      loading: false
     };
   }
   componentDidMount() {
     this.props.getEvents();
-    let currentroom = _.pick(this.props.currentRoom, [
-      "roomName",
-      "capacity",
-      "bufferCapacity",
-      "availableServices"
-    ]);
-    let notEmpty = !Object.keys(currentroom).length;
-    if (!notEmpty) {
-      currentroom.event = this.props.currentRoom.event._id;
-      this.setState({
-        ...this.state.Room,
-        Room: currentroom,
-        editRoom: true
-      });
+    if (this.props.match.params.id !== undefined) {
+      let currentroom = _.pick(this.props.currentRoom, [
+        "roomName",
+        "capacity",
+        "bufferCapacity",
+        "availableServices"
+      ]);
+      let Empty = !Object.keys(currentroom).length;
+      if (!Empty) {
+        currentroom.event = this.props.currentRoom.event._id;
+        this.setState({
+          ...this.state.Room,
+          Room: currentroom,
+          editRoom: true
+        });
+      } else {
+        this.setState({ loading: true });
+        this.props.getRoomById(this.props.match.params.id);
+        let compRef = this;
+        setTimeout(function() {
+          let currentroom = _.pick(compRef.props.currentRoom, [
+            "roomName",
+            "capacity",
+            "bufferCapacity",
+            "availableServices"
+          ]);
+          let Empty = !Object.keys(currentroom).length;
+          if (Empty) {
+            compRef.props.history.push("/roomsList");
+          } else {
+            currentroom.event = compRef.props.currentRoom.event._id;
+            compRef.setState({
+              ...compRef.state.Room,
+              Room: currentroom,
+              editRoom: true,
+              loading: false
+            });
+          }
+        }, 1000);
+      }
     }
   }
   onChangeInput(event) {
@@ -63,6 +90,7 @@ class Rooms extends Component {
         ? this.props.editRoom(id, Room)
         : this.props.createRoom(Room);
       let compRef = this;
+      this.setState({ loading: true });
       setTimeout(() => {
         let creatEditRoomError = compRef.props.creatEditRoomError;
         let status = "";
@@ -77,6 +105,7 @@ class Rooms extends Component {
   }
   Toaster(compRef, createEditError, actionName) {
     if (!createEditError) {
+      compRef.onReset();
       toast.success("Room " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -84,13 +113,14 @@ class Rooms extends Component {
         compRef.redirectFunction();
       }, 1000);
     } else {
+      compRef.setState({ loading: false });
       toast.error("Something went wrong", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
     }
   }
   redirectFunction() {
-    this.onReset();
+    this.setState({ loading: false });
     this.props.history.push("/roomsList");
   }
   onReset() {
@@ -138,7 +168,9 @@ class Rooms extends Component {
       { label: "Mike", value: "Mike" }
     ];
     const eventOptions = this.props.eventList;
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Room">
         <FormGroup row>
           <Col xs="12" md="6">
@@ -239,7 +271,8 @@ const mapStateToProps = state => {
     rooms: state.room.rooms,
     eventList: state.event.eventList,
     currentRoom: state.room.currentRoom,
-    creatEditRoomError: state.room.creatEditRoomError
+    creatEditRoomError: state.room.creatEditRoomError,
+    getRoomError: state.room.getRoomError
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -247,7 +280,8 @@ const mapDispatchToProps = dispatch => {
     getRooms: () => dispatch(actions.getRooms()),
     createRoom: room => dispatch(actions.createRoom(room)),
     editRoom: (id, room) => dispatch(actions.editRoom(id, room)),
-    getEvents: () => dispatch(actions.getEvents())
+    getEvents: () => dispatch(actions.getEvents()),
+    getRoomById: id => dispatch(actions.getRoomById(id))
   };
 };
 export default connect(
