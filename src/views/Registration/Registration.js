@@ -30,15 +30,14 @@ class Registration extends Component {
       contactRequired: false,
       eventRequired: false,
       editAttendee: false,
-      profileList: [],
-      profileSelect: true,
       invalidContact: false,
       profileRequired: false
     };
   }
   componentDidMount() {
     this.props.getEvents();
-    this.props.getProfiles();
+    this.props.getProfileList();
+
     let isEmpty = !Object.keys(this.props.attendeeData).length;
     if (this.props.match.params.id !== undefined && !isEmpty) {
       let Attendee = _.pick(this.props.attendeeData, [
@@ -52,18 +51,9 @@ class Registration extends Component {
       Attendee.event = this.props.attendeeData.event._id;
       Attendee.profiles = this.props.attendeeData.profiles;
       Attendee._id = this.props.attendeeData._id;
-      let profiles = [];
-      this.props.profiles.forEach(profile => {
-        if (profile.event._id === this.props.attendeeData.event._id)
-          profiles.push({
-            value: profile.profileName,
-            label: profile.profileName
-          });
-      });
       this.setState({
         Registration: Attendee,
-        editAttendee: true,
-        profileList: profiles
+        editAttendee: true
       });
     }
   }
@@ -77,7 +67,6 @@ class Registration extends Component {
       emailRequired: false,
       contactRequired: false,
       eventRequired: false,
-      profileSelect: true,
       invalidContact: false,
       profileRequired: false
     });
@@ -147,7 +136,6 @@ class Registration extends Component {
       emailRequired: false,
       contactRequired: false,
       eventRequired: false,
-      profileSelect: true,
       invalidContact: false,
       profileRequired: false
     });
@@ -175,25 +163,14 @@ class Registration extends Component {
       this.props.getAttendeeCountForEvent(value);
       let Registration = { ...this.state.Registration };
       Registration.event = value;
-      let profiles = [];
-      this.props.profiles.forEach(profile => {
-        if (profile.event._id === value)
-          profiles.push({
-            value: profile.profileName,
-            label: profile.profileName
-          });
-      });
       this.setState({
-        Registration: Registration,
-        profileList: profiles,
-        profileSelect: false
+        Registration: Registration
       });
     } else {
       let Registration = { ...this.state.Registration };
       Registration.event = "";
       Registration.profiles = [];
-      Registration.profileSelect = true;
-      this.setState({ Registration: Registration, profileSelect: true });
+      this.setState({ Registration: Registration });
     }
   }
   handleProfileChange(value) {
@@ -316,9 +293,8 @@ class Registration extends Component {
               multi
               placeholder="Select Profiles"
               value={Registration.profiles}
-              options={this.state.profileList}
+              options={this.props.profileList}
               simpleValue
-              disabled={this.state.profileSelect}
               onChange={this.handleProfileChange.bind(this)}
             />
             {this.state.profileRequired ? (
@@ -327,14 +303,6 @@ class Registration extends Component {
                 className="help-block"
               >
                 *Required
-              </div>
-            ) : null}
-            {this.state.Registration.event === "" ? (
-              <div
-                style={{ color: "red", marginTop: 0 }}
-                className="help-block"
-              >
-                *Please select event first !!
               </div>
             ) : null}
           </Col>
@@ -372,9 +340,9 @@ const mapStateToProps = state => {
     registrationError: state.registration.error,
     attendeeData: state.registration.attendeeData,
     eventList: state.event.eventList,
-    profiles: state.profile.profiles,
     attendeeCount: state.attendeeCount.attendeeCount,
-    createEditError: state.registration.createEditError
+    createEditError: state.registration.createEditError,
+    profileList: state.profileList.profileList
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -387,7 +355,7 @@ const mapDispatchToProps = dispatch => {
     editAttendeeData: (id, attendee) =>
       dispatch(actions.editAttendeeData(id, attendee)),
     getEvents: () => dispatch(actions.getEvents()),
-    getProfiles: () => dispatch(actions.getProfiles())
+    getProfileList: () => dispatch(actions.getProfileList())
   };
 };
 export default connect(

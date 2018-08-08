@@ -23,7 +23,7 @@ class RegistrationList extends Component {
   componentDidMount() {
     let compRef = this;
     this.props.getAttendeeList();
-    this.props.getProfiles();
+    this.props.getProfileList();
     setTimeout(() => {
       let getAttendeeError = compRef.props.getAttendeeError;
       if (getAttendeeError) {
@@ -33,7 +33,6 @@ class RegistrationList extends Component {
       }
     }, 1000);
     this.props.getEvents();
-    this.props.getProfiles();
   }
   onPrintAttendeeQRCode(cell, row) {
     return (
@@ -108,22 +107,14 @@ class RegistrationList extends Component {
       this.setState({ event: "" });
       this.props.getAttendeeList();
     }
-    let profileList = [];
-    let eventName = "";
-    this.props.profiles.forEach(profile => {
-      if (profile.event._id === value)
-        profileList.push({
-          value: profile.profileName,
-          label: profile.profileName
-        });
-    });
 
+    let eventName = "";
     this.props.eventList.forEach(event => {
       if (event.value === value) {
         eventName = event.label;
       }
     });
-    this.setState({ profileList, eventName });
+    this.setState({ eventName });
   }
 
   handleProfileChange(value) {
@@ -200,7 +191,7 @@ class RegistrationList extends Component {
             <Select
               name="Profile"
               placeholder="Select Profile"
-              options={this.state.profileList}
+              options={this.props.profileList}
               value={this.state.profile}
               simpleValue
               onChange={this.handleProfileChange.bind(this)}
@@ -298,7 +289,7 @@ const mapStateToProps = state => {
     eventList: state.event.eventList,
     getAttendeeError: state.registration.getAttendeeError,
     deleteAttendeeError: state.registration.deleteAttendeeError,
-    profiles: state.profile.profiles
+    profileList: state.profileList.profileList
   };
 };
 
@@ -313,7 +304,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(actions.getAttendeesForEvent(eventId)),
     getAttendeesForEventAndProfile: (eventId, profileName) =>
       dispatch(actions.getAttendeesForEventAndProfile(eventId, profileName)),
-    getProfiles: () => dispatch(actions.getProfiles())
+    getProfileList: () => dispatch(actions.getProfileList())
   };
 };
 
