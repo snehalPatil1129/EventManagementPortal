@@ -21,9 +21,9 @@ export const getProfileList = () => {
       .get(`${AppConfig.serverURL}/api/profileList`)
       .then(response => {
         let ProfileList = [];
-        let profiles = response.data;
-        profiles.forEach(profile => {
-          ProfileList.push({ label: profile.profile, value: profile.profile });
+        let dataList = response.data[0].profiles;
+        dataList.forEach(data => {
+          ProfileList.push({ label: data, value: data });
         });
         dispatch(getProfileListsSuccess(ProfileList));
       })

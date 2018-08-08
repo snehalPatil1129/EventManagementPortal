@@ -18,7 +18,7 @@ const InputElement = props => (
     />
     {props.required ? (
       <div style={{ color: "red" }} className="help-block">
-        *Required
+        {props.placeholder} is Required
       </div>
     ) : null}
   </InputGroup>

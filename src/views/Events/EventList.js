@@ -28,7 +28,7 @@ class EventList extends Component {
       setTimeout(() => {
         let eventDeleted = this.props.eventDeleted;
         compRef.Toaster(compRef, eventDeleted, "Deleted");
-      }, 1000);
+      }, 2000);
     } else return false;
   }
 

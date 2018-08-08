@@ -28,8 +28,7 @@ class EventForm extends Component {
       endDateRequired: false,
       eventNameRequired: false,
       venueRequired: false,
-      startDateRequired: false,
-      descriptionRequired: false
+      startDateRequired: false
     };
     this.redirectFunction = this.redirectFunction.bind(this);
   }
@@ -78,37 +77,38 @@ class EventForm extends Component {
     this.setState({
       Event: eventDetailArray,
       eventNameRequired: false,
-      venueRequired: false,
-      descriptionRequired: false
+      venueRequired: false
     });
   }
 
   validateForm() {
     let event = { ...this.state.Event };
-    let valiDate = moment(event["startDate"]).isBefore(event["endDate"]);
-    let validSameDate = moment(event["startDate"]).isSame(event["endDate"]);
-
+    let startDate = new Date(event["startDate"]).setHours(0, 0, 0, 0);
+    let endDate = new Date(event["endDate"]).setHours(0, 0, 0, 0);
     !event.eventName ? this.setState({ eventNameRequired: true }) : null;
     !event.startDate ? this.setState({ startDateRequired: true }) : null;
     !event.endDate ? this.setState({ endDateRequired: true }) : null;
     !event.venue ? this.setState({ venueRequired: true }) : null;
-    !event.description ? this.setState({ descriptionRequired: true }) : null;
-    !valiDate || validSameDate ? this.setState({ inValidDates: true }) : null;
+    endDate < startDate ? this.setState({ inValidDates: true }) : null;
   }
 
   onSubmitHandler() {
     let compRef = this;
-    let event = { ...this.state.Event };
-    this.setState({ submitted: true });
     this.validateForm();
+    setTimeout(() => {
+      compRef.createEvent();
+    }, 1000);
+  }
 
+  createEvent() {
+    let event = { ...this.state.Event };
+    let compRef = this;
     if (
       event.eventName &&
       !this.state.inValidDates &&
       event.venue &&
       event.startDate &&
-      event.endDate &&
-      event.description
+      event.endDate
     ) {
       this.props.createEvent(event);
       setTimeout(() => {
@@ -117,14 +117,13 @@ class EventForm extends Component {
       }, 1000);
     }
   }
-
   redirectFunction() {
     this.props.history.push("/events");
   }
 
   Toaster(compRef, successFlag, actionName) {
     if (successFlag) {
-      toast.success("Event " + actionName + "Successfully.", {
+      toast.success("Event " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
       setTimeout(() => {
@@ -138,16 +137,22 @@ class EventForm extends Component {
   }
 
   onUpdateHandler() {
-    let event = { ...this.state.Event };
     let compRef = this;
     this.validateForm();
+    setTimeout(() => {
+      compRef.updateEvent();
+    }, 1000);
+  }
+
+  updateEvent() {
+    let event = { ...this.state.Event };
+    let compRef = this;
     if (
       event.eventName &&
       !this.state.inValidDates &&
       event.venue &&
       event.startDate &&
-      event.endDate &&
-      event.description
+      event.endDate
     ) {
       this.props.updateEvent(event);
       setTimeout(() => {
@@ -156,7 +161,6 @@ class EventForm extends Component {
       }, 1000);
     }
   }
-
   resetField() {
     let Event = {
       eventName: "",
@@ -171,8 +175,7 @@ class EventForm extends Component {
       eventNameRequired: false,
       venueRequired: false,
       startDateRequired: false,
-      inValidDates: false,
-      descriptionRequired: false
+      inValidDates: false
     });
   }
 
@@ -208,7 +211,7 @@ class EventForm extends Component {
               type="text"
               placeholder="Event Name"
               name="eventName"
-              icon="icon-user"
+              icon="icon-home"
               value={this.state.Event.eventName}
               required={this.state.eventNameRequired}
               onchanged={event => this.onChangeHandler(event)}
@@ -217,7 +220,7 @@ class EventForm extends Component {
           <Col md="6">
             <InputGroup className="mb-3">
               <InputGroupText>
-                <i className="icon-user" />
+                <i className="icon-calendar" />
               </InputGroupText>
               <DatePicker
                 selected={this.state.Event.startDate}
@@ -239,7 +242,7 @@ class EventForm extends Component {
           <Col xs="12" md="6">
             <InputGroup className="mb-3">
               <InputGroupText>
-                <i className="icon-user" />
+                <i className="icon-calendar" />
               </InputGroupText>
               <DatePicker
                 selected={this.state.Event.endDate}
@@ -261,9 +264,8 @@ class EventForm extends Component {
               type="text"
               placeholder="Description"
               name="description"
-              icon="icon-phone"
+              icon="icon-note"
               value={this.state.Event.description}
-              required={this.state.descriptionRequired}
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
@@ -274,7 +276,7 @@ class EventForm extends Component {
               type="text"
               placeholder="Venue"
               name="venue"
-              icon="icon-phone"
+              icon="icon-home"
               value={this.state.Event.venue}
               required={this.state.venueRequired}
               onchanged={event => this.onChangeHandler(event)}
@@ -302,7 +304,7 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                please enter valid start Date and end Date{" "}
+                please enter valid start Date and end Date
               </div>
             ) : null}
           </Col>
