@@ -1,31 +1,67 @@
-import * as actionTypes from '../actions/actionTypes';
+import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
-    error: '',
-    speakerList: [],
-    speakerData : {}
-}
+  error: "",
+  speakerList: [],
+  speakerData: {},
+  speakerCreated: false,
+  speakerUpdated: false,
+  speakerDeleted: false
+};
 const speakerReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case actionTypes.GET_SPEAKER_LIST:
-            return {
-                ...state,
-                speakerList: action.speakerList,
-                error: '',
-            };
-        case actionTypes.GET_SPEAKER_DATA:
-            return {
-                ...state,
-                speakerData: action.speakerData,
-                error: '',
-            };
-        case actionTypes.LOG_REGISTRATION_ERROR:
-            return {
-                ...state,
-                error: action.error,
-            };
-        default:
-            return state;
-    }
-}
+  switch (action.type) {
+    case actionTypes.GET_SPEAKER_LIST:
+      return {
+        ...state,
+        speakerList: action.speakerList,
+        error: ""
+      };
+    case actionTypes.GET_SPEAKER_DATA:
+      return {
+        ...state,
+        speakerData: action.speakerData,
+        error: ""
+      };
+    case actionTypes.LOG_REGISTRATION_ERROR:
+      return {
+        ...state,
+        error: action.error
+      };
+
+    case actionTypes.CREATE_SPEAKER_SUCCESS:
+      return {
+        ...state,
+        speakerCreated: true
+      };
+    case actionTypes.CREATE_SPEAKER_FAIL:
+      return {
+        ...state,
+        speakerCreated: false
+      };
+    case actionTypes.UPDATE_SPEAKER_SUCCESS:
+      return {
+        ...state,
+        speakerUpdated: true
+      };
+
+    case actionTypes.UPDATE_SPEAKER_FAIL:
+      return {
+        ...state,
+        speakerUpdated: false
+      };
+    case actionTypes.DELETE_SPEAKER_SUCCESS:
+      return {
+        ...state,
+        speakerDeleted: true
+      };
+
+    case actionTypes.DELETE_SPEAKER_FAILL:
+      return {
+        ...state,
+        speakerDeleted: false
+      };
+    default:
+      return state;
+  }
+};
 export default speakerReducer;

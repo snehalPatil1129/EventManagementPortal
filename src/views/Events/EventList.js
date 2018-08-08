@@ -14,27 +14,42 @@ import {
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from "../../components/Modal/ModalCart";
 
 class EventList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deleteFlag: false,
+      eventId: ""
+    };
+  }
   componentDidMount() {
     this.props.getEvents();
   }
 
-  deleteEvent(eventId) {
-    var x = confirm("Are you sure you want to delete?");
-    if (x) {
-      let compRef = this;
-      this.props.deleteEvent(eventId);
-      setTimeout(() => {
-        let eventDeleted = this.props.eventDeleted;
-        compRef.Toaster(compRef, eventDeleted, "Deleted");
-      }, 2000);
-    } else return false;
+  deleteConfirm(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      eventId: id
+    });
+  }
+
+  deleteEvent() {
+    let eventId = this.state.eventId;
+    let compRef = this;
+    this.props.deleteEvent(eventId);
+    this.setState({ deleteFlag: false });
+    setTimeout(() => {
+      let eventDeleted = this.props.eventDeleted;
+      compRef.Toaster(compRef, eventDeleted, "Deleted");
+    }, 1000);
   }
 
   Toaster(compRef, successFlag, actionName) {
     if (successFlag) {
-      toast.success("Event " + actionName + "Successfully.", {
+      toast.success("Event " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
     } else {
@@ -47,8 +62,8 @@ class EventList extends Component {
   onDeleteEvent(cell, row) {
     let componentRef = this;
     return (
-      <Link to={this} onClick={() => componentRef.deleteEvent(row._id)}>
-        <i className="fa fa-trash" title="Delete" />
+      <Link to={this} onClick={() => componentRef.deleteConfirm(row._id)}>
+        <i className="fa fa-trash" />
       </Link>
     );
   }
@@ -168,6 +183,11 @@ class EventList extends Component {
                       export={false}
                     />
                   </BootstrapTable>
+                  <Modal
+                    openFlag={this.state.deleteFlag}
+                    toggleFunction={this.deleteConfirm.bind(this)}
+                    confirmFunction={this.deleteEvent.bind(this)}
+                  />
                 </CardBody>
               </Card>
             </Col>

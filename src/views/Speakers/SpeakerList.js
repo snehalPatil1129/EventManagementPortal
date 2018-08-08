@@ -9,6 +9,8 @@ import "react-select/dist/react-select.css";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import * as attendeeCardMethod from "../../components/AttendeeCard/";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class SpeakerList extends Component {
   constructor(props) {
@@ -21,13 +23,23 @@ class SpeakerList extends Component {
     this.props.getSpeakerList();
     this.props.getEvents();
   }
+
+  deleteSpeaker(id) {
+    let compRef = this;
+    this.props.deleteSpeaker(id);
+    setTimeout(() => {
+      let speakerDeleted = this.props.speakerDeleted;
+      compRef.Toaster(compRef, speakerDeleted, "Deleted");
+    }, 2000);
+  }
   ondeleteSpeaker(cell, row) {
     return (
-      <Link to={this} onClick={() => this.props.deleteSpeaker(row._id)}>
-        <i className="fa fa-trash" title="Delete" />
+      <Link to={this} onClick={() => this.deleteSpeaker(row._id)}>
+        <i className="fa fa-trash" />
       </Link>
     );
   }
+
   onEditSpeaker(cell, row) {
     return (
       <Link
@@ -45,6 +57,18 @@ class SpeakerList extends Component {
     } else {
       this.setState({ event: "" });
       this.props.getSpeakerList();
+    }
+  }
+
+  Toaster(compRef, successFlag, actionName) {
+    if (successFlag) {
+      toast.success("Speaker " + actionName + " Successfully.", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
+    } else {
+      toast.error("Something went wrong", {
+        position: toast.POSITION.BOTTOM_RIGHT
+      });
     }
   }
 
@@ -205,6 +229,7 @@ class SpeakerList extends Component {
         </FormGroup>
         <FormGroup row>
           <Col md="6">
+            <ToastContainer autoClose={2000} />
             <div style={{ color: "red" }} className="help-block">
               {this.props.speakerError}
             </div>
@@ -219,7 +244,8 @@ const mapStateToProps = state => {
   return {
     speakerError: state.speaker.error,
     speakerList: state.speaker.speakerList,
-    eventList: state.event.eventList
+    eventList: state.event.eventListm,
+    speakerDeleted: state.speaker.speakerDeleted
   };
 };
 

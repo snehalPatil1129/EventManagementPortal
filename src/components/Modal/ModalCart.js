@@ -1,28 +1,28 @@
 import React from "react";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 
 const ModalCart = props => {
   return (
     <div>
       <Modal
-        isOpen={this.state.deletePopupFlag}
-        toggle={this.deleteConfirmPopup}
-        className={"modal-lg " + this.props.className}
+        isOpen={props.openFlag}
+        toggle={props.toggleFunction}
+        className={"modal-lg " + props.className}
       >
-        <ModalHeader toggle={this.deleteConfirmPopup}>Confirm</ModalHeader>
+        <ModalHeader toggle={props.toggleFunction}>Confirm</ModalHeader>
         <ModalBody>
           <div>
             <span>
-              {" "}
               Are you sure you want to permanently delete this session ?
             </span>
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="success" onClick={this.deleteEvent}>
+          <Button color="success" onClick={props.confirmFunction}>
             Confirm
           </Button>
           &nbsp;
-          <Button color="danger" onClick={this.deleteConfirmPopup}>
+          <Button color="danger" onClick={props.toggleFunction}>
             Cancel
           </Button>
         </ModalFooter>
