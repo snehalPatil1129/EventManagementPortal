@@ -9,7 +9,7 @@ import CardLayout from "../../components/CardLayout/";
 import { InputGroup, InputGroupText, Col, Button, FormGroup } from "reactstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class EventForm extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +28,8 @@ class EventForm extends Component {
       endDateRequired: false,
       eventNameRequired: false,
       venueRequired: false,
-      startDateRequired: false
+      startDateRequired: false,
+      loading: false
     };
     this.redirectFunction = this.redirectFunction.bind(this);
   }
@@ -40,20 +41,36 @@ class EventForm extends Component {
         let event = this.props.events.find(
           o => o._id === this.props.match.params.id
         );
-        let Event = {
-          id: event._id,
-          eventName: event.eventName,
-          venue: event.venue,
-          description: event.description,
-          startDate: moment(event.startDate),
-          endDate: moment(event.endDate)
-        };
-
-        this.setState({
-          Event: Event
-        });
+        this.setCurrentEvent(event);
+      }else {
+        this.setState({ loading: true });
+        this.props.getEventById(this.props.match.params.id);
+        let compRef = this;
+        setTimeout(function() {
+          if(Object.keys(compRef.props.currentEvent).length){
+            compRef.setCurrentEvent(compRef.props.currentEvent);
+          }
+          else{
+            compRef.props.history.push("/events");
+          }
+        }, 1000);
       }
     }
+  }
+
+  setCurrentEvent(currentEvent){
+    let Event = {
+      id: currentEvent._id,
+      eventName: currentEvent.eventName,
+      venue: currentEvent.venue,
+      description:currentEvent.description,
+      startDate: moment(currentEvent.startDate),
+      endDate: moment(currentEvent.endDate)
+    };
+    this.setState({
+      Event: Event,
+      loading: false
+    });
   }
 
   changeFunction(date, type) {
@@ -110,11 +127,12 @@ class EventForm extends Component {
       event.startDate &&
       event.endDate
     ) {
+      this.setState({ loading: true });
       this.props.createEvent(event);
       setTimeout(() => {
         let eventCreated = this.props.eventCreated;
         compRef.Toaster(compRef, eventCreated, "Created");
-      }, 1000);
+      }, 1500);
     }
   }
   redirectFunction() {
@@ -122,6 +140,7 @@ class EventForm extends Component {
   }
 
   Toaster(compRef, successFlag, actionName) {
+    this.setState({ loading: false });
     if (successFlag) {
       toast.success("Event " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
@@ -130,6 +149,7 @@ class EventForm extends Component {
         compRef.redirectFunction();
       }, 1000);
     } else {
+      compRef.setState({ loading: false });
       toast.error("Something went wrong", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -139,6 +159,7 @@ class EventForm extends Component {
   onUpdateHandler() {
     let compRef = this;
     this.validateForm();
+    this.setState({ loading: true });
     setTimeout(() => {
       compRef.updateEvent();
     }, 1000);
@@ -158,7 +179,7 @@ class EventForm extends Component {
       setTimeout(() => {
         let eventUpdated = this.props.eventUpdated;
         compRef.Toaster(compRef, eventUpdated, "Updated");
-      }, 1000);
+      }, 1500);
     }
   }
   resetField() {
@@ -203,7 +224,9 @@ class EventForm extends Component {
         </Button>
       );
 
-    return (
+      return this.state.loading ? (
+        <Loader loading={this.state.loading} />
+      ) : (
       <CardLayout name="Event">
         <FormGroup row>
           <Col xs="12" md="6">
@@ -296,7 +319,7 @@ class EventForm extends Component {
             >
               Reset
             </Button>
-            <ToastContainer autoClose={2000} />
+            <ToastContainer autoClose={3000} />
           </Col>
           <Col md="3">
             {this.state.inValidDates ? (
@@ -310,6 +333,7 @@ class EventForm extends Component {
           </Col>
         </FormGroup>
       </CardLayout>
+      
     );
   }
 }
@@ -318,14 +342,16 @@ const mapStateToProps = state => {
   return {
     events: state.event.events,
     eventCreated: state.event.eventCreated,
-    eventUpdated: state.event.eventUpdated
+    eventUpdated: state.event.eventUpdated,
+    currentEvent: state.event.currentEvent
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     createEvent: event => dispatch(actions.createEvent(event)),
-    updateEvent: event => dispatch(actions.updateEvent(event))
+    updateEvent: event => dispatch(actions.updateEvent(event)),
+    getEventById: id => dispatch(actions.getEventById(id))
   };
 };
 

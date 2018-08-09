@@ -61,6 +61,13 @@ export const createEventFail = error => {
   };
 };
 
+export const storeCurrentEvent = currentEvent => {
+  return {
+    type: actionTypes.STORE_CURRENT_EVENT,
+    currentEvent: currentEvent
+  };
+};
+
 export const getEvents = () => {
   return dispatch => {
     axios
@@ -76,6 +83,21 @@ export const getEvents = () => {
       })
       .catch(error => {
         dispatch(getEventsFail(error));
+      });
+  };
+};
+
+export const getEventById = id => {
+  let EventData = [];
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/Event/${id}`)
+      .then(response => {
+        EventData = response.data;
+        dispatch(storeCurrentEvent(EventData));
+      })
+      .catch(error => {
+        //dispatch(getRoomError());
       });
   };
 };

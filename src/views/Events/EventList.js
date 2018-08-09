@@ -15,17 +15,22 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "../../components/Modal/ModalCart";
-
+import Loader from "../../components/Loader/Loader";
 class EventList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       deleteFlag: false,
-      eventId: ""
+      eventId: "",
+      loading : true
     };
   }
   componentDidMount() {
+    let compRef = this;
     this.props.getEvents();
+    setTimeout(function() {
+      compRef.setState({ loading: false });
+    }, 1000);
   }
 
   deleteConfirm(id) {
@@ -39,6 +44,7 @@ class EventList extends Component {
   deleteEvent() {
     let eventId = this.state.eventId;
     let compRef = this;
+    this.setState({loading: true})
     this.props.deleteEvent(eventId);
     this.setState({ deleteFlag: false });
     setTimeout(() => {
@@ -48,6 +54,7 @@ class EventList extends Component {
   }
 
   Toaster(compRef, successFlag, actionName) {
+    this.setState({loading:false})
     if (successFlag) {
       toast.success("Event " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
@@ -101,7 +108,9 @@ class EventList extends Component {
       sizePerPage: 250
     };
 
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <div>
         <ToastContainer autoClose={2000} />
         <FormGroup row className="marginBottomZero">
