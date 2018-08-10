@@ -7,6 +7,8 @@ import CardLayout from "../../components/CardLayout/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import _ from "lodash";
+import Loader from "../../components/Loader/Loader";
+
 class AboutEternus extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +17,8 @@ class AboutEternus extends Component {
         info: "",
         url: ""
       },
-      infoRequired: false
+      infoRequired: false,
+      loading: true
     };
   }
   componentDidMount() {
@@ -28,6 +31,7 @@ class AboutEternus extends Component {
           position: toast.POSITION.BOTTOM_RIGHT
         });
       }
+      compRef.setState({ loading: false });
     }, 1000);
   }
   componentDidUpdate(prevProps, prevState) {
@@ -46,6 +50,7 @@ class AboutEternus extends Component {
   }
   onSubmit() {
     if (this.state.aboutEternus.info) {
+      this.setState({ loading: true });
       let isEmpty = !Object.keys(this.props.aboutEternus).length;
       let aboutEternus = _.pick(this.state.aboutEternus, ["info", "url"]);
       let id;
@@ -68,7 +73,8 @@ class AboutEternus extends Component {
   }
   Toaster(compRef, createEditError, actionName) {
     if (!createEditError) {
-      this.onReset();
+      //compRef.onReset();
+      compRef.setState({ loading: false });
       toast.success(
         "About Eternus Information " + actionName + " Successfully.",
         {
@@ -76,6 +82,7 @@ class AboutEternus extends Component {
         }
       );
     } else {
+      compRef.setState({ loading: false });
       toast.error("Something went wrong", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -93,7 +100,9 @@ class AboutEternus extends Component {
   }
   render() {
     const { info, url } = { ...this.state.aboutEternus };
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="About Eternus">
         <FormGroup row>
           <Col xs="12" md="6">

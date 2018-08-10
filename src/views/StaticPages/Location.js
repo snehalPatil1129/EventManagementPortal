@@ -9,6 +9,7 @@ import Geocode from "react-geocode";
 import _ from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "../../components/Loader/Loader";
 
 class EventLocation extends Component {
   constructor(props) {
@@ -24,11 +25,16 @@ class EventLocation extends Component {
       },
       eventRequired: false,
       addressRequired: false,
-      cordinateError: ""
+      cordinateError: "",
+      loading: true
     };
   }
   componentDidMount() {
     this.props.getEvents();
+    let compRef = this;
+    setTimeout(function() {
+      compRef.setState({ loading: false });
+    }, 1000);
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.eventLocation !== this.props.eventLocation) {
@@ -107,6 +113,7 @@ class EventLocation extends Component {
       eventLocation.longitude &&
       eventLocation.address
     ) {
+      this.setState({ loading: true });
       let isEmpty = !Object.keys(this.props.eventLocation).length;
       let eventLocation = _.pick(this.state.eventLocation, [
         "event",
@@ -137,6 +144,7 @@ class EventLocation extends Component {
     }
   }
   Toaster(compRef, createEditError, actionName) {
+    this.setState({ loading: false });
     if (!createEditError) {
       this.onReset();
       toast.success(
@@ -169,7 +177,9 @@ class EventLocation extends Component {
   }
   render() {
     const { eventLocation } = { ...this.state };
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Event Location">
         <FormGroup row>
           <Col xs="12" md="6">

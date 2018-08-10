@@ -8,7 +8,7 @@ import Select from "react-select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import _ from "lodash";
-
+import Loader from "../../components/Loader/Loader";
 class HelpDesk extends Component {
   constructor(props) {
     super(props);
@@ -26,11 +26,16 @@ class HelpDesk extends Component {
       techContactRequired: false,
       eventRequired: false,
       inValidEventEmail: false,
-      inValidTechEmail: false
+      inValidTechEmail: false,
+      loading: true
     };
   }
   componentDidMount() {
     this.props.getEvents();
+    let compRef = this;
+    setTimeout(function() {
+      compRef.setState({ loading: false });
+    }, 1000);
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.helpDesk !== this.props.helpDesk) {
@@ -116,6 +121,7 @@ class HelpDesk extends Component {
       helpDesk.techSupportEmail &&
       helpDesk.techSupportContact
     ) {
+      this.setState({ loading: true });
       let isEmpty = !Object.keys(this.props.helpDesk).length;
       let helpDesk = _.pick(this.state.helpDesk, [
         "event",
@@ -159,7 +165,9 @@ class HelpDesk extends Component {
     }
   }
   Toaster(compRef, createEditError, actionName) {
+    this.setState({ loading: false });
     if (!createEditError) {
+      this.onReset();
       toast.success("Help Desk Information " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -190,7 +198,9 @@ class HelpDesk extends Component {
   }
   render() {
     const { helpDesk } = { ...this.state };
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Help Desk">
         <FormGroup row>
           <Col xs="12" md="4">

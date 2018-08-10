@@ -10,12 +10,13 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class SponsorsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: ""
+      event: "",
+      loading: true
     };
   }
   componentDidMount() {
@@ -28,6 +29,7 @@ class SponsorsList extends Component {
           position: toast.POSITION.BOTTOM_RIGHT
         });
       }
+      compRef.setState({ loading: false });
     }, 1000);
     this.props.getEvents();
   }
@@ -98,7 +100,9 @@ class SponsorsList extends Component {
       ],
       sizePerPage: 250
     };
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Sponsors List">
         <FormGroup row>
           <Col xs="12" md="8">

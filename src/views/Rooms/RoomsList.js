@@ -10,18 +10,23 @@ import Select from "react-select";
 import "react-select/dist/react-select.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class RoomsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: ""
+      event: "",
+      loading: true
     };
   }
   componentDidMount() {
     this.props.getRoomsList();
     this.getRoomErrorToaster();
     this.props.getEvents();
+    let compRef = this;
+    setTimeout(function() {
+      compRef.setState({ loading: false });
+    }, 1000);
   }
   getRoomErrorToaster() {
     let compRef = this;
@@ -111,7 +116,9 @@ class RoomsList extends Component {
       ],
       sizePerPage: 250
     };
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Rooms List">
         <FormGroup row>
           <Col xs="12" md="8">

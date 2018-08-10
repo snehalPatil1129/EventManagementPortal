@@ -8,7 +8,7 @@ import _ from "lodash";
 import Select from "react-select";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class AboutUs extends Component {
   constructor(props) {
     super(props);
@@ -18,12 +18,17 @@ class AboutUs extends Component {
         url: "",
         event: ""
       },
+      loading: true,
       infoRequired: false,
       eventRequired: false
     };
   }
   componentDidMount() {
     this.props.getEvents();
+    let compRef = this;
+    setTimeout(function() {
+      compRef.setState({ loading: false });
+    }, 1000);
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.aboutUs !== this.props.aboutUs) {
@@ -77,6 +82,7 @@ class AboutUs extends Component {
   }
   onSubmit() {
     if (this.state.aboutUs.info && this.state.aboutUs.event) {
+      this.setState({ loading: true });
       let isEmpty = !Object.keys(this.props.aboutUs).length;
       let aboutUs = _.pick(this.state.aboutUs, ["info", "url", "event"]);
       let id;
@@ -97,6 +103,7 @@ class AboutUs extends Component {
     }
   }
   Toaster(compRef, createEditError, actionName) {
+    this.setState({ loading: false });
     if (!createEditError) {
       this.onReset();
       toast.success("About Us Information " + actionName + " Successfully.", {
@@ -122,7 +129,9 @@ class AboutUs extends Component {
   }
   render() {
     const { info, url, event } = { ...this.state.aboutUs };
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="About Us">
         <FormGroup row>
           <Col xs="12" md="4">

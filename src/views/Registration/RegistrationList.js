@@ -11,13 +11,14 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class RegistrationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       event: "",
-      profile: ""
+      profile: "",
+      loading: true
     };
   }
   componentDidMount() {
@@ -31,6 +32,7 @@ class RegistrationList extends Component {
           position: toast.POSITION.BOTTOM_RIGHT
         });
       }
+      compRef.setState({ loading: false });
     }, 1000);
     this.props.getEvents();
   }
@@ -151,8 +153,9 @@ class RegistrationList extends Component {
     const selectRowProp = {
       mode: "checkbox"
     };
-
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Attendee List">
         <FormGroup row>
           <Col xs="12" md="8">

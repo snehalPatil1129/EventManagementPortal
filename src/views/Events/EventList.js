@@ -70,7 +70,7 @@ class EventList extends Component {
     let componentRef = this;
     return (
       <Link to={this} onClick={() => componentRef.deleteConfirm(row._id)}>
-        <i className="fa fa-trash" />
+        <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }

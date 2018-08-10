@@ -17,4 +17,3 @@ const CardLayout = props => (
 );
 
 export default CardLayout;
-
