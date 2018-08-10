@@ -10,9 +10,10 @@ export const logRegistrationError = error => {
   };
 };
 
-export const creatEditAttendeeFail = () => {
+export const creatEditAttendeeFail = error => {
   return {
-    type: actionTypes.CREATE_EDIT_ATTENDEE_FAIL
+    type: actionTypes.CREATE_EDIT_ATTENDEE_FAIL,
+    creatError: error
   };
 };
 
@@ -129,7 +130,7 @@ export const editAttendeeData = (id, attendee) => {
         dispatch(getAttendees());
       })
       .catch(error => {
-        dispatch(creatEditAttendeeFail());
+        dispatch(creatEditAttendeeFail(error.response.data));
       });
   };
 };
@@ -160,7 +161,7 @@ export const createAttendee = (attendee, attendeeCount) => {
           });
       })
       .catch(error => {
-        dispatch(creatEditAttendeeFail());
+        dispatch(creatEditAttendeeFail(error.response.data));
       });
   };
 };

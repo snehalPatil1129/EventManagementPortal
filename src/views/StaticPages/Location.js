@@ -35,7 +35,9 @@ class EventLocation extends Component {
       let isEmpty = !Object.keys(this.props.eventLocation).length;
       if (!isEmpty) {
         this.setState({
-          eventLocation: this.props.eventLocation
+          eventLocation: this.props.eventLocation,
+          eventRequired: false,
+          addressRequired: false
         });
       } else {
         this.setState(prevState => ({
@@ -50,14 +52,15 @@ class EventLocation extends Component {
   onChangeInput(event) {
     let eventLocation = { ...this.state.eventLocation };
     eventLocation[event.target.name] = event.target.value;
-    this.setState({ eventLocation: eventLocation });
+    this.setState({ eventLocation: eventLocation, addressRequired: false });
   }
   handleEventChange(value) {
     if (value !== null) {
       let eventLocation = { ...this.state.eventLocation };
       eventLocation.event = value;
       this.setState({
-        eventLocation: eventLocation
+        eventLocation: eventLocation,
+        eventRequired: false
       });
       this.props.getEventAddress(value);
       let compRef = this;
@@ -73,23 +76,28 @@ class EventLocation extends Component {
   }
   getCordinates() {
     let eventLocation = { ...this.state.eventLocation };
-    Geocode.fromAddress(eventLocation.address)
-      .then(response => {
-        const { lat, lng } = response.results[0].geometry.location;
-        this.setState(prevState => ({
-          eventLocation: {
-            ...prevState.eventLocation,
-            latitude: lat,
-            longitude: lng,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }
-        }));
-        this.onSubmit();
-      })
-      .catch(error => {
-        this.setState({ cordinateError: "Please Submit Again" });
-      });
+    if (eventLocation.address && eventLocation.event) {
+      Geocode.fromAddress(eventLocation.address)
+        .then(response => {
+          const { lat, lng } = response.results[0].geometry.location;
+          this.setState(prevState => ({
+            eventLocation: {
+              ...prevState.eventLocation,
+              latitude: lat,
+              longitude: lng,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421
+            }
+          }));
+          this.onSubmit();
+        })
+        .catch(error => {
+          this.setState({ cordinateError: "Please Submit Again" });
+        });
+    } else {
+      !eventLocation.event ? this.setState({ eventRequired: true }) : null;
+      !eventLocation.address ? this.setState({ addressRequired: true }) : null;
+    }
   }
   onSubmit() {
     let eventLocation = { ...this.state.eventLocation };
@@ -122,9 +130,7 @@ class EventLocation extends Component {
       }, 1000);
     } else {
       !eventLocation.event ? this.setState({ eventRequired: true }) : null;
-      !eventLocation.address
-        ? this.setState({ eventEmailRequired: true })
-        : null;
+      !eventLocation.address ? this.setState({ addressRequired: true }) : null;
       !eventLocation.latitude || !eventLocation.longitude
         ? this.setState({ cordinateError: "Please Submit Again" })
         : null;
@@ -175,6 +181,14 @@ class EventLocation extends Component {
               value={eventLocation.event}
               onChange={this.handleEventChange.bind(this)}
             />
+            {this.state.eventRequired ? (
+              <div
+                style={{ color: "red", marginTop: 0 }}
+                className="help-block"
+              >
+                Please Select Event
+              </div>
+            ) : null}
           </Col>
           <Col md="6">
             <InputElement
@@ -182,6 +196,7 @@ class EventLocation extends Component {
               type="text"
               placeholder="Event Address"
               name="address"
+              required={this.state.addressRequired}
               value={eventLocation.address}
               onchanged={event => this.onChangeInput(event)}
             />
@@ -204,6 +219,7 @@ class EventLocation extends Component {
               size="md"
               color="danger"
               style={{ marginLeft: -160 }}
+              onClick={() => this.onReset()}
             >
               Reset
             </Button>

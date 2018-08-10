@@ -195,7 +195,7 @@ class SponsorForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select event
               </div>
             ) : null}
           </Col>
@@ -246,7 +246,7 @@ class SponsorForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select category
               </div>
             ) : null}
           </Col>

@@ -115,21 +115,21 @@ class FormList extends Component {
             <TableHeaderColumn
               dataField="eventName"
               headerAlign="left"
-              width="100"
+              width="80"
             >
               Event Name
             </TableHeaderColumn>
             <TableHeaderColumn
               dataField="sessionName"
               headerAlign="left"
-              width="100"
+              width="80"
             >
               Session Name
             </TableHeaderColumn>
             <TableHeaderColumn
               dataField="formType"
               headerAlign="left"
-              width="100"
+              width="80"
             >
               Form Type
             </TableHeaderColumn>
@@ -139,21 +139,27 @@ class FormList extends Component {
               headerAlign="left"
               width="20"
               export={false}
-            />
+            >
+              Preview
+            </TableHeaderColumn>
             <TableHeaderColumn
               dataField="edit"
               dataFormat={this.onEditForm.bind(this)}
               headerAlign="left"
               width="20"
               export={false}
-            />
+            >
+              Edit
+            </TableHeaderColumn>
             <TableHeaderColumn
               dataField="delete"
               dataFormat={this.ondeleteForm.bind(this)}
               headerAlign="left"
               width="20"
               export={false}
-            />
+            >
+              Delete
+            </TableHeaderColumn>
           </BootstrapTable>
         </FormGroup>
         <Col>

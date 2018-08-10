@@ -22,7 +22,8 @@ class Registration extends Component {
         profiles: [],
         briefInfo: "",
         profileImageURL: "",
-        event: ""
+        event: "",
+        roleName: ""
       },
       firstNameRequired: false,
       lastNameRequired: false,
@@ -30,8 +31,9 @@ class Registration extends Component {
       contactRequired: false,
       eventRequired: false,
       editAttendee: false,
-      invalidContact: false,
-      profileRequired: false
+      inValidContact: false,
+      profileRequired: false,
+      inValidEmail: false
     };
   }
   componentDidMount() {
@@ -95,21 +97,31 @@ class Registration extends Component {
       emailRequired: false,
       contactRequired: false,
       eventRequired: false,
-      invalidContact: false,
-      profileRequired: false
+      inValidContact: false,
+      profileRequired: false,
+      inValidEmail: false
     });
   }
   onSubmit() {
     let compRef = this;
     let attendeeCount = this.props.attendeeCount;
     let attendee = { ...this.state.Registration };
+    let validContact;
+    let validEmail;
+    if (attendee.email) {
+      validEmail = attendee.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+    }
+    if (attendee.contact) {
+      validContact = attendee.contact.toString().length === 10;
+    }
     if (
+      validContact &&
+      validEmail &&
       attendee.firstName &&
       attendee.lastName &&
       attendee.email &&
       attendee.contact &&
       attendee.event &&
-      attendee.contact.toString().length === 10 &&
       attendee.profiles.length > 0
     ) {
       let editedAttendee = _.pick(attendee, [
@@ -120,7 +132,8 @@ class Registration extends Component {
         "briefInfo",
         "profileImageURL",
         "event",
-        "profiles"
+        "profiles",
+        "roleName"
       ]);
       this.state.editAttendee
         ? this.props.editAttendeeData(attendee._id, editedAttendee)
@@ -128,23 +141,31 @@ class Registration extends Component {
       this.setState({ loading: true });
       setTimeout(() => {
         let createEditError = compRef.props.createEditError;
+        let errorMessage = compRef.props.creatError;
         let status = "";
         compRef.state.editAttendee
           ? (status = "Updated")
           : (status = "Created");
-        compRef.Toaster(compRef, createEditError, status);
+        compRef.Toaster(compRef, createEditError, status, errorMessage);
       }, 1000);
     } else {
       !attendee.firstName ? this.setState({ firstNameRequired: true }) : null;
       !attendee.lastName ? this.setState({ lastNameRequired: true }) : null;
-      !attendee.email ? this.setState({ emailRequired: true }) : null;
-      !attendee.contact ? this.setState({ contactRequired: true }) : null;
       !attendee.event ? this.setState({ eventRequired: true }) : null;
-      attendee.contact.toString().length !== 10
-        ? this.setState({ invalidContact: true })
+      !validContact && attendee.contact
+        ? this.setState({ inValidContact: true })
         : null;
       attendee.profiles.length == 0
         ? this.setState({ profileRequired: true })
+        : null;
+      validEmail && attendee.email
+        ? null
+        : this.setState({ inValidEmail: true });
+      !attendee.email
+        ? this.setState({ emailRequired: true, inValidEmail: false })
+        : null;
+      !attendee.contact
+        ? this.setState({ contactRequired: true, inValidContact: false })
         : null;
     }
   }
@@ -166,11 +187,12 @@ class Registration extends Component {
       emailRequired: false,
       contactRequired: false,
       eventRequired: false,
-      invalidContact: false,
-      profileRequired: false
+      inValidContact: false,
+      profileRequired: false,
+      inValidEmail: false
     });
   }
-  Toaster(compRef, createEditError, actionName) {
+  Toaster(compRef, createEditError, actionName, errorMessage) {
     if (!createEditError) {
       compRef.onReset();
       toast.success("Attendee " + actionName + " Successfully.", {
@@ -180,9 +202,14 @@ class Registration extends Component {
         compRef.redirectFunction();
       }, 1000);
     } else {
-      toast.error("Something went wrong", {
-        position: toast.POSITION.BOTTOM_RIGHT
-      });
+      compRef.setState({ loading: false });
+      errorMessage
+        ? toast.error("User with Already Exists", {
+            position: toast.POSITION.BOTTOM_RIGHT
+          })
+        : toast.error("Something Went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT
+          });
     }
   }
   redirectFunction() {
@@ -214,6 +241,7 @@ class Registration extends Component {
         let lastEle = Registration.profiles[len - 1];
         let profilesArray = lastEle.split(",");
         Registration.profiles = profilesArray;
+        Registration.roleName = profilesArray[0];
         this.setState({ Registration: Registration });
       }
     }
@@ -263,6 +291,7 @@ class Registration extends Component {
               placeholder="Email"
               name="email"
               icon="icon-envelope"
+              inValid={this.state.inValidEmail}
               value={Registration.email}
               required={this.state.emailRequired}
               onchanged={event => this.onChangeInput(event)}
@@ -275,8 +304,9 @@ class Registration extends Component {
               name="contact"
               icon="icon-phone"
               maxLength="10"
+              inValid={this.state.inValidContact}
               value={Registration.contact}
-              required={this.state.emailRequired}
+              required={this.state.contactRequired}
               onchanged={event => this.onChangeInput(event)}
             />
           </Col>
@@ -295,7 +325,7 @@ class Registration extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select event
               </div>
             ) : null}
           </Col>
@@ -335,7 +365,7 @@ class Registration extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select event
               </div>
             ) : null}
           </Col>
@@ -386,7 +416,8 @@ const mapStateToProps = state => {
     eventList: state.event.eventList,
     attendeeCount: state.attendeeCount.attendeeCount,
     createEditError: state.registration.createEditError,
-    profileList: state.profileList.profileList
+    profileList: state.profileList.profileList,
+    creatError: state.registration.creatError
   };
 };
 const mapDispatchToProps = dispatch => {

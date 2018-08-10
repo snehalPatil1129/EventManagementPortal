@@ -22,6 +22,11 @@ const InputElement = props => (
         {props.placeholder} is Required
       </div>
     ) : null}
+    {props.inValid ? (
+      <div style={{ color: "red" }} className="help-block">
+        {props.placeholder} is Invalid
+      </div>
+    ) : null}
   </InputGroup>
 );
 

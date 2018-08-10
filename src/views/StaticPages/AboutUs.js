@@ -98,6 +98,7 @@ class AboutUs extends Component {
   }
   Toaster(compRef, createEditError, actionName) {
     if (!createEditError) {
+      this.onReset();
       toast.success("About Us Information " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
@@ -137,7 +138,7 @@ class AboutUs extends Component {
                 style={{ color: "red", marginTop: -1 }}
                 className="help-block"
               >
-                *Required
+                Please select event
               </div>
             ) : null}
           </Col>
@@ -146,7 +147,7 @@ class AboutUs extends Component {
           <Col xs="12" md="6">
             <InputElement
               icon="icon-info"
-              type="textarea"
+              type="text"
               placeholder="Information about Us..."
               name="info"
               value={info}

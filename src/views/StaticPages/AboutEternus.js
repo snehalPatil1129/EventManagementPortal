@@ -68,6 +68,7 @@ class AboutEternus extends Component {
   }
   Toaster(compRef, createEditError, actionName) {
     if (!createEditError) {
+      this.onReset();
       toast.success(
         "About Eternus Information " + actionName + " Successfully.",
         {
@@ -98,7 +99,7 @@ class AboutEternus extends Component {
           <Col xs="12" md="6">
             <InputElement
               icon="icon-info"
-              type="textarea"
+              type="text"
               placeholder="Information about Eternus..."
               name="info"
               value={info}

@@ -25,7 +25,8 @@ class Rooms extends Component {
       roomNameRequired: false,
       eventRequired: false,
       capacityRequired: false,
-      loading: false
+      loading: false,
+      inValidCapacity: false
     };
   }
   componentDidMount() {
@@ -79,13 +80,14 @@ class Rooms extends Component {
       Room: Room,
       roomNameRequired: false,
       eventRequired: false,
-      capacityRequired: false
+      capacityRequired: false,
+      inValidCapacity: false
     });
   }
   onSubmit() {
     let Room = { ...this.state.Room };
     let id = this.props.currentRoom._id;
-    if (Room.roomName && Room.capacity && Room.event) {
+    if (Room.roomName && Room.capacity > 0 && Room.event) {
       this.state.editRoom
         ? this.props.editRoom(id, Room)
         : this.props.createRoom(Room);
@@ -101,6 +103,7 @@ class Rooms extends Component {
       !Room.roomName ? this.setState({ roomNameRequired: true }) : null;
       !Room.capacity ? this.setState({ capacityRequired: true }) : null;
       !Room.event ? this.setState({ eventRequired: true }) : null;
+      Room.capacity < 0 ? this.setState({ inValidCapacity: true }) : null;
     }
   }
   Toaster(compRef, createEditError, actionName) {
@@ -134,7 +137,8 @@ class Rooms extends Component {
       },
       roomNameRequired: false,
       eventRequired: false,
-      capacityRequired: false
+      capacityRequired: false,
+      inValidCapacity: false
     });
   }
   handleSelectChange(value) {
@@ -197,7 +201,7 @@ class Rooms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please Select Event
               </div>
             ) : null}
           </Col>
@@ -211,6 +215,7 @@ class Rooms extends Component {
               placeholder="Capacity"
               name="capacity"
               value={Room.capacity}
+              inValid={this.state.inValidCapacity}
               maxLength="10"
               required={this.state.capacityRequired}
               onchanged={event => this.onChangeInput(event)}
@@ -242,14 +247,25 @@ class Rooms extends Component {
         </FormGroup>
         <FormGroup row>
           <Col xs="12" md="3">
-            <Button
-              type="button"
-              size="md"
-              color="success"
-              onClick={() => this.onSubmit()}
-            >
-              Submit
-            </Button>
+            {this.state.editRoom ? (
+              <Button
+                type="button"
+                size="md"
+                color="success"
+                onClick={() => this.onSubmit()}
+              >
+                Update
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                size="md"
+                color="success"
+                onClick={() => this.onSubmit()}
+              >
+                Create
+              </Button>
+            )}
           </Col>
           <Col md="3">
             <Button

@@ -177,14 +177,18 @@ class RoomsList extends Component {
               headerAlign="left"
               width="30"
               export={false}
-            />
+            >
+              Edit
+            </TableHeaderColumn>
             <TableHeaderColumn
               dataField="delete"
               dataFormat={this.onDeleteRoom.bind(this)}
               headerAlign="left"
               width="30"
               export={false}
-            />
+            >
+              Delete
+            </TableHeaderColumn>
           </BootstrapTable>
         </FormGroup>
         <Col>

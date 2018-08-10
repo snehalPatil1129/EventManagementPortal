@@ -337,7 +337,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select form type
               </div>
             ) : null}
           </Col>
@@ -354,7 +354,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select Event
               </div>
             ) : null}
           </Col>
@@ -371,7 +371,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select session
               </div>
             ) : null}
           </Col>

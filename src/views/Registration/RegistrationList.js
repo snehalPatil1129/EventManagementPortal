@@ -84,19 +84,23 @@ class RegistrationList extends Component {
 
   getSelectedRowKeys() {
     let selectedUsersId = this.refs.table.state.selectedRowKeys;
-    let users = [];
-    this.props.attendeeList.forEach(attendee => {
-      selectedUsersId.forEach(userId => {
-        if (attendee._id === userId) {
-          users.push({ userInfo: attendee });
-        }
+    if (selectedUsersId.length > 0) {
+      let users = [];
+      this.props.attendeeList.forEach(attendee => {
+        selectedUsersId.forEach(userId => {
+          if (attendee._id === userId) {
+            users.push({ userInfo: attendee });
+          }
+        });
       });
-    });
-    attendeeCardMethod.generateQRcodeBulk(
-      users,
-      this.state.eventName,
-      this.state.profile
-    );
+      attendeeCardMethod.generateQRcodeBulk(
+        users,
+        this.state.eventName,
+        this.state.profile
+      );
+    } else {
+      alert("Please select attendees for printing");
+    }
   }
 
   handleEventChange(value) {

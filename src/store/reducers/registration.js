@@ -7,7 +7,8 @@ const initialState = {
   errorFlag: false,
   createEditError: false,
   getAttendeeError: false,
-  deleteAttendeeError: false
+  deleteAttendeeError: false,
+  creatError: ""
 };
 const registrationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -18,7 +19,8 @@ const registrationReducer = (state = initialState, action) => {
         error: "",
         createEditError: false,
         getAttendeeError: false,
-        deleteAttendeeError: false
+        deleteAttendeeError: false,
+        creatError: ""
       };
     case actionTypes.GET_ATTENDEE_DATA:
       return {
@@ -27,33 +29,37 @@ const registrationReducer = (state = initialState, action) => {
         error: "",
         createEditError: false,
         getAttendeeError: false,
-        deleteAttendeeError: false
+        deleteAttendeeError: false,
+        creatError: ""
       };
     case actionTypes.LOG_REGISTRATION_ERROR:
       return {
         ...state,
         createEditError: false,
         getAttendeeError: false,
-        deleteAttendeeError: false
+        deleteAttendeeError: false,
+        creatError: ""
       };
     case actionTypes.CREATE_EDIT_ATTENDEE_FAIL:
       return {
         ...state,
-        createEditError: true
+        createEditError: true,
+        creatError: action.creatError
       };
     case actionTypes.GET_ATTENDEE_LIST_FAIL:
       return {
         ...state,
-        getAttendeeError: true
+        getAttendeeError: true,
+        creatError: ""
       };
     case actionTypes.DELETE_ATTENDEE_FAIL:
       return {
         ...state,
-        deleteAttendeeError: true
+        deleteAttendeeError: true,
+        creatError: ""
       };
     default:
       return state;
   }
 };
 export default registrationReducer;
-

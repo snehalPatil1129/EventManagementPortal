@@ -363,7 +363,7 @@ class SessionForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select event
               </div>
             ) : null}
           </Col>
@@ -380,7 +380,7 @@ class SessionForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *Required
+                Please select room
               </div>
             ) : null}
           </Col>
@@ -433,7 +433,7 @@ class SessionForm extends Component {
                       style={{ color: "red", marginTop: 0 }}
                       className="help-block"
                     >
-                      *Required
+                      Please select speaker
                     </div>
                   ) : null}
                 </Col>
@@ -453,7 +453,7 @@ class SessionForm extends Component {
                       style={{ color: "red", marginTop: 0 }}
                       className="help-block"
                     >
-                      *Required
+                      Please select volunteers
                     </div>
                   ) : null}
                 </Col>

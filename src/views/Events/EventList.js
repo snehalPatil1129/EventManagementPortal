@@ -22,7 +22,7 @@ class EventList extends Component {
     this.state = {
       deleteFlag: false,
       eventId: "",
-      loading : true
+      loading: true
     };
   }
   componentDidMount() {
@@ -44,7 +44,7 @@ class EventList extends Component {
   deleteEvent() {
     let eventId = this.state.eventId;
     let compRef = this;
-    this.setState({loading: true})
+    this.setState({ loading: true });
     this.props.deleteEvent(eventId);
     this.setState({ deleteFlag: false });
     setTimeout(() => {
@@ -54,7 +54,7 @@ class EventList extends Component {
   }
 
   Toaster(compRef, successFlag, actionName) {
-    this.setState({loading:false})
+    this.setState({ loading: false });
     if (successFlag) {
       toast.success("Event " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
@@ -149,13 +149,11 @@ class EventList extends Component {
                       headerAlign="left"
                       isKey
                       hidden
-                    >
-                      ID
-                    </TableHeaderColumn>
+                    />
                     <TableHeaderColumn
                       dataField="eventName"
                       headerAlign="left"
-                      width="200"
+                      width="100"
                       dataSort
                       csvHeader="eventName"
                     >
@@ -172,10 +170,19 @@ class EventList extends Component {
                     <TableHeaderColumn
                       dataField="venue"
                       headerAlign="left"
-                      width="250"
+                      width="100"
                       csvHeader="venue"
                     >
                       Venue
+                    </TableHeaderColumn>
+                    <TableHeaderColumn
+                      dataField="edit"
+                      dataFormat={this.onEditEvent.bind(this)}
+                      headerAlign="left"
+                      width="30"
+                      export={false}
+                    >
+                      Edit
                     </TableHeaderColumn>
                     <TableHeaderColumn
                       dataField="delete"
@@ -183,14 +190,9 @@ class EventList extends Component {
                       headerAlign="left"
                       width="30"
                       export={false}
-                    />
-                    <TableHeaderColumn
-                      dataField="edit"
-                      dataFormat={this.onEditEvent.bind(this)}
-                      headerAlign="left"
-                      width="30"
-                      export={false}
-                    />
+                    >
+                      Delete
+                    </TableHeaderColumn>
                   </BootstrapTable>
                   <Modal
                     openFlag={this.state.deleteFlag}
