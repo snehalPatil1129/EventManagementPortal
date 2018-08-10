@@ -54,6 +54,14 @@ export const deleteSessionSuccess = sessionId => {
     sessionId: sessionId
   };
 };
+
+export const getSessionTypeListsSuccess = sessionTypeList => {
+  return {
+    type: actionTypes.GET_SESSION_TYPE_LIST_SUCCESS,
+    sessionTypeList: sessionTypeList
+  };
+};
+
 export const getSessions = () => {
   return dispatch => {
     axios
@@ -142,6 +150,24 @@ export const deleteSession = sessionId => {
       })
       .catch(error => {
         dispatch(deleteSessionFail(error));
+      });
+  };
+};
+
+export const getSessionTypeList = () => {
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/sessionTypeList`)
+      .then(response => {
+        let SessionTypeList = [];
+        let dataList = response.data[0].sessionTypes;
+        dataList.forEach(data => {
+          SessionTypeList.push({ label: data, value: data });
+        });
+        dispatch(getSessionTypeListsSuccess(SessionTypeList));
+      })
+      .catch(error => {
+        //dispatch(getSessionTypeListsFail(error));
       });
   };
 };
