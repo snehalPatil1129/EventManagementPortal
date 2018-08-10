@@ -1,6 +1,6 @@
 export { loginUser, logoutUser, forgetPassword } from "./auth";
 
-export { getEvents, createEvent, updateEvent, deleteEvent } from "./event";
+export { getEvents, createEvent, updateEvent, deleteEvent, getEventById } from "./event";
 
 export {
   getRooms,
