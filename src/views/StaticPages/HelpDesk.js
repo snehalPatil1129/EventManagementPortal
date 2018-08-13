@@ -27,6 +27,8 @@ class HelpDesk extends Component {
       eventRequired: false,
       inValidEventEmail: false,
       inValidTechEmail: false,
+      inValidEventContact: false,
+      inValidTechContact: false,
       loading: true
     };
   }
@@ -67,7 +69,9 @@ class HelpDesk extends Component {
       techEmailRequired: false,
       techContactRequired: false,
       inValidEventEmail: false,
-      inValidTechEmail: false
+      inValidTechEmail: false,
+      inValidEventContact: false,
+      inValidTechContact: false
     });
   }
   handleEventChange(value) {
@@ -82,7 +86,9 @@ class HelpDesk extends Component {
         techContactRequired: false,
         eventRequired: false,
         inValidEventEmail: false,
-        inValidTechEmail: false
+        inValidTechEmail: false,
+        inValidEventContact: false,
+        inValidTechContact: false
       });
       this.props.getHelpDeskForEvent(value);
       let compRef = this;
@@ -116,10 +122,12 @@ class HelpDesk extends Component {
       techEmailValid &&
       eventEmailValid &&
       helpDesk.event &&
-      helpDesk.eventSupportContact &&
+      (helpDesk.eventSupportContact &&
+        helpDesk.eventSupportContact.toString().length === 10) &&
       helpDesk.eventSupportEmail &&
       helpDesk.techSupportEmail &&
-      helpDesk.techSupportContact
+      (helpDesk.techSupportContact &&
+        helpDesk.techSupportContact.toString().length === 10)
     ) {
       this.setState({ loading: true });
       let isEmpty = !Object.keys(this.props.helpDesk).length;
@@ -144,11 +152,23 @@ class HelpDesk extends Component {
       }, 1000);
     } else {
       !helpDesk.event ? this.setState({ eventRequired: true }) : null;
+      helpDesk.eventSupportContact.toString().length === 0
+        ? null
+        : this.setState({ inValidEventContact: true });
+      helpDesk.techSupportContact.toString().length === 0
+        ? null
+        : this.setState({ inValidTechContact: true });
       !helpDesk.eventSupportContact
-        ? this.setState({ eventContactRequired: true })
+        ? this.setState({
+            eventContactRequired: true,
+            inValidEventContact: false
+          })
         : null;
       !helpDesk.techSupportContact
-        ? this.setState({ techContactRequired: true })
+        ? this.setState({
+            techContactRequired: true,
+            inValidTechContact: false
+          })
         : null;
       eventEmailValid && helpDesk.eventSupportEmail
         ? null
@@ -193,7 +213,9 @@ class HelpDesk extends Component {
       techContactRequired: false,
       eventRequired: false,
       inValidEventEmail: false,
-      inValidTechEmail: false
+      inValidTechEmail: false,
+      inValidEventContact: false,
+      inValidTechContact: false
     }));
   }
   render() {
@@ -241,6 +263,7 @@ class HelpDesk extends Component {
               placeholder="Event Support Contact"
               name="eventSupportContact"
               maxLength="10"
+              inValid={this.state.inValidEventContact}
               required={this.state.eventContactRequired}
               value={helpDesk.eventSupportContact}
               onchanged={event => this.onChangeInput(event)}
@@ -254,7 +277,7 @@ class HelpDesk extends Component {
               type="email"
               placeholder="Technical Support Email"
               name="techSupportEmail"
-              inValidEmail={this.state.inValidTechEmail}
+              inValid={this.state.inValidTechEmail}
               required={this.state.techEmailRequired}
               value={helpDesk.techSupportEmail}
               onchanged={event => this.onChangeInput(event)}
@@ -267,6 +290,7 @@ class HelpDesk extends Component {
               placeholder="Technical Support Contact"
               name="techSupportContact"
               maxLength="10"
+              inValid={this.state.inValidTechContact}
               required={this.state.techContactRequired}
               value={helpDesk.techSupportContact}
               onchanged={event => this.onChangeInput(event)}

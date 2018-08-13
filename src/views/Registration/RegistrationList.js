@@ -2,8 +2,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import * as actions from "../../store/actions/index";
-import { FormGroup, Col, Button } from "reactstrap";
-import CardLayout from "../../components/CardLayout/";
+import {
+  FormGroup,
+  Col,
+  Button,
+  Card,
+  CardHeader,
+  Row,
+  CardBody
+} from "reactstrap";
 import * as attendeeCardMethod from "../../components/AttendeeCard/";
 import Select from "react-select";
 import "react-select/dist/react-select.css";
@@ -57,19 +64,24 @@ class RegistrationList extends Component {
     let compRef = this;
     setTimeout(() => {
       let deleteAttendeeError = compRef.props.deleteAttendeeError;
-      compRef.Toaster(compRef, deleteAttendeeError, "Delete");
+      let deleteErrorMsg = compRef.props.deleteError;
+      compRef.Toaster(compRef, deleteAttendeeError, "Delete", deleteErrorMsg);
     }, 1000);
   }
 
-  Toaster(compRef, deleteAttendeeError, actionName) {
+  Toaster(compRef, deleteAttendeeError, actionName, deleteErrorMsg) {
     if (!deleteAttendeeError) {
       toast.success("Attendee " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
     } else {
-      toast.error("Something went wrong", {
-        position: toast.POSITION.BOTTOM_RIGHT
-      });
+      deleteErrorMsg
+        ? toast.error(deleteErrorMsg, {
+            position: toast.POSITION.BOTTOM_RIGHT
+          })
+        : toast.error("Something went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT
+          });
     }
   }
 
@@ -156,137 +168,149 @@ class RegistrationList extends Component {
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
     ) : (
-      <CardLayout name="Attendee List">
-        <FormGroup row>
-          <Col xs="12" md="8">
+      <div>
+        <ToastContainer autoClose={2000} />
+        <FormGroup row className="marginBottomZero">
+          <Col xs="6" md="3">
             <Link to={`${this.props.match.url}/registration`}>
-              <Button
-                type="button"
-                color="primary"
-                style={{ marginLeft: -14 }}
-                size="small"
-              >
-                {" "}
+              <Button type="button" color="primary">
                 <i className="fa fa-plus" />
-                Add Attendee{" "}
+                Add Attendee
               </Button>
-            </Link>{" "}
-            &nbsp;&nbsp;
-            <Button
-              type="button"
-              onClick={this.getSelectedRowKeys.bind(this)}
-              color="success"
-            >
-              <i className="fa fa-print" />
-              Print QR Code For All
-            </Button>
-          </Col>
-        </FormGroup>{" "}
-        &nbsp;&nbsp;
-        <FormGroup row>
-          <Col md="4">
-            <Select
-              name="Event"
-              placeholder="Select Event"
-              options={this.props.eventList}
-              value={this.state.event}
-              simpleValue
-              onChange={this.handleEventChange.bind(this)}
-            />
-          </Col>
-          <Col md="4">
-            <Select
-              name="Profile"
-              placeholder="Select Profile"
-              options={this.props.profileList}
-              value={this.state.profile}
-              simpleValue
-              onChange={this.handleProfileChange.bind(this)}
-            />
+            </Link>
           </Col>
         </FormGroup>
-        <FormGroup row>
-          <BootstrapTable
-            ref="table"
-            data={this.props.attendeeList}
-            pagination={true}
-            search={true}
-            selectRow={selectRowProp}
-            options={options}
-          >
-            <TableHeaderColumn dataField="_id" headerAlign="left" isKey hidden>
-              Id
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="firstName"
-              headerAlign="left"
-              width="100"
-              csvHeader="First Name"
-            >
-              First Name
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="lastName"
-              headerAlign="left"
-              width="100"
-              csvHeader="Last Name"
-            >
-              Last Name
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="email"
-              headerAlign="left"
-              width="100"
-              csvHeader="Email"
-            >
-              Email
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="eventName"
-              headerAlign="left"
-              width="100"
-              csvHeader="Event"
-            >
-              Event
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="edit"
-              dataFormat={this.onEditAttendee.bind(this)}
-              headerAlign="left"
-              width="40"
-              export={false}
-            >
-              Edit
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="delete"
-              dataFormat={this.ondeleteAttendee.bind(this)}
-              headerAlign="left"
-              width="40"
-              export={false}
-            >
-              Delete
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="print"
-              dataFormat={this.onPrintAttendeeQRCode.bind(this)}
-              headerAlign="left"
-              width="30"
-              export={false}
-            >
-              Print
-            </TableHeaderColumn>
-          </BootstrapTable>
-        </FormGroup>
-        <FormGroup row>
-          <Col md="6">
-            <div style={{ color: "red" }} className="help-block">
-              {this.props.registrationError}
-            </div>
-          </Col>
-          <ToastContainer autoClose={2000} />
-        </FormGroup>
-      </CardLayout>
+
+        <br />
+        <div className="animated fadeIn">
+          <Row>
+            <Col xs="12" lg="12">
+              <Card>
+                <CardHeader>
+                  <FormGroup row className="marginBottomZero">
+                    <Col xs="6" md="3">
+                      <h1 className="regHeading paddingTop8">Attendee List</h1>
+                    </Col>
+                  </FormGroup>
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="4">
+                      <Select
+                        name="Event"
+                        placeholder="Select Event"
+                        options={this.props.eventList}
+                        value={this.state.event}
+                        simpleValue
+                        onChange={this.handleEventChange.bind(this)}
+                      />
+                    </Col>
+                    <Col md="4">
+                      <Select
+                        name="Profile"
+                        placeholder="Select Profile"
+                        options={this.props.profileList}
+                        value={this.state.profile}
+                        simpleValue
+                        onChange={this.handleProfileChange.bind(this)}
+                      />
+                    </Col>
+                    <Col md="3">
+                      <Button
+                        type="button"
+                        onClick={this.getSelectedRowKeys.bind(this)}
+                        color="success"
+                      >
+                        <i className="fa fa-print" />
+                        Print QR Code For All
+                      </Button>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <BootstrapTable
+                      ref="table"
+                      data={this.props.attendeeList}
+                      pagination={true}
+                      search={true}
+                      selectRow={selectRowProp}
+                      options={options}
+                      exportCSV={true}
+                    >
+                      <TableHeaderColumn
+                        dataField="_id"
+                        headerAlign="left"
+                        isKey
+                        hidden
+                      >
+                        Id
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="firstName"
+                        headerAlign="left"
+                        width="100"
+                        csvHeader="First Name"
+                      >
+                        First Name
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="lastName"
+                        headerAlign="left"
+                        width="100"
+                        csvHeader="Last Name"
+                      >
+                        Last Name
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="email"
+                        headerAlign="left"
+                        width="100"
+                        csvHeader="Email"
+                      >
+                        Email
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="eventName"
+                        headerAlign="left"
+                        width="100"
+                        csvHeader="Event"
+                      >
+                        Event
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="edit"
+                        dataFormat={this.onEditAttendee.bind(this)}
+                        headerAlign="left"
+                        width="40"
+                        export={false}
+                      >
+                        Edit
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="delete"
+                        dataFormat={this.ondeleteAttendee.bind(this)}
+                        headerAlign="left"
+                        width="40"
+                        export={false}
+                      >
+                        Delete
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="print"
+                        dataFormat={this.onPrintAttendeeQRCode.bind(this)}
+                        headerAlign="left"
+                        width="30"
+                        export={false}
+                      >
+                        Print
+                      </TableHeaderColumn>
+                    </BootstrapTable>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </div>
     );
   }
 }
@@ -298,7 +322,8 @@ const mapStateToProps = state => {
     eventList: state.event.eventList,
     getAttendeeError: state.registration.getAttendeeError,
     deleteAttendeeError: state.registration.deleteAttendeeError,
-    profileList: state.profileList.profileList
+    profileList: state.profileList.profileList,
+    deleteError: state.registration.deleteError
   };
 };
 

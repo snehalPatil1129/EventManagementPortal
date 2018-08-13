@@ -28,7 +28,8 @@ class Login extends Component {
       let compRef = this;
       setTimeout(() => {
         let loginError = compRef.props.loginError;
-        compRef.Toaster(compRef, loginError, "Login ");
+        let loginErrorMsg = compRef.props.loginErrorMsg;
+        compRef.Toaster(compRef, loginError, "Login ", loginErrorMsg);
       }, 1000);
     } else {
       toast.error("Please Enter Valid Email/Password...", {
@@ -36,7 +37,7 @@ class Login extends Component {
       });
     }
   }
-  Toaster(compRef, loginError, actionName) {
+  Toaster(compRef, loginError, actionName, loginErrorMsg) {
     if (!loginError) {
       localStorage.setItem("user", this.state.user.email);
       toast.success(actionName + " Successfull...", {
@@ -46,7 +47,7 @@ class Login extends Component {
         compRef.redirectFunction();
       }, 1000);
     } else {
-      toast.error("Invalid Email/Password...", {
+      toast.error(loginErrorMsg, {
         position: toast.POSITION.BOTTOM_RIGHT
       });
     }
@@ -123,7 +124,8 @@ class Login extends Component {
 const mapStateToProps = state => {
   return {
     loginError: state.auth.loginError,
-    forgetPasswordMsg: state.auth.forgetPasswordMsg
+    forgetPasswordMsg: state.auth.forgetPasswordMsg,
+    loginErrorMsg: state.auth.loginErrorMsg
   };
 };
 const mapDispatchToProps = dispatch => {
