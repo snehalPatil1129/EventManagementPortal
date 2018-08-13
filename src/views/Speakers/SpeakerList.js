@@ -2,8 +2,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import * as actions from "../../store/actions/index";
-import { FormGroup, Col, Button } from "reactstrap";
-import CardLayout from "../../components/CardLayout/";
+import {
+  FormGroup,
+  Col,
+  Button,
+  Card,
+  CardHeader,
+  Row,
+  CardBody
+} from "reactstrap";
 import Select from "react-select";
 import "react-select/dist/react-select.css";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
@@ -11,17 +18,22 @@ import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import * as attendeeCardMethod from "../../components/AttendeeCard/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Loader from "../../components/Loader/Loader";
 class SpeakerList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: ""
+      event: "",
+      loading: true
     };
   }
   componentDidMount() {
     this.props.getSpeakerList();
     this.props.getEvents();
+    let compRef = this;
+    setTimeout(() => {
+      compRef.setState({ loading: false });
+    }, 1000);
   }
 
   deleteSpeaker(id) {
@@ -118,124 +130,142 @@ class SpeakerList extends Component {
     const selectRowProp = {
       mode: "checkbox"
     };
-    return (
-      <CardLayout name="Speaker List">
-        <FormGroup row>
-          <Col xs="12" md="8">
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
+      <div>
+        <ToastContainer autoClose={2000} />
+        <FormGroup row className="marginBottomZero">
+          <Col xs="6" md="3">
             <Link to={`${this.props.match.url}/speakerForm`}>
-              <Button
-                type="button"
-                color="primary"
-                style={{ marginLeft: -14 }}
-                size="small"
-              >
-                {" "}
+              <Button type="button" color="primary" size="small">
                 <i className="fa fa-plus" />
-                Add Speaker{" "}
+                Add Speaker
               </Button>
             </Link>
-            &nbsp;&nbsp;
-            <Button
-              type="button"
-              onClick={this.getSelectedRowKeys.bind(this)}
-              color="success"
-            >
-              <i className="fa fa-print" />
-              Print QR Code For All
-            </Button>
-          </Col>
-          <Col md="4">
-            <Select
-              name="Event"
-              placeholder="Select Event"
-              options={this.props.eventList}
-              value={this.state.event}
-              simpleValue
-              onChange={this.handleEventChange.bind(this)}
-            />
           </Col>
         </FormGroup>
-        <FormGroup row>
-          <BootstrapTable
-            ref="table"
-            data={this.props.speakerList}
-            pagination={true}
-            search={true}
-            selectRow={selectRowProp}
-            options={options}
-            exportCSV={true}
-          >
-            <TableHeaderColumn dataField="_id" headerAlign="left" isKey hidden>
-              Id
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="firstName"
-              headerAlign="left"
-              width="100"
-              csvHeader="First Name"
-            >
-              First Name
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="lastName"
-              headerAlign="left"
-              width="100"
-              csvHeader="Last Name"
-            >
-              Last Name
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="email"
-              headerAlign="left"
-              width="100"
-              csvHeader="Email"
-            >
-              Email
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="eventName"
-              headerAlign="left"
-              width="100"
-              csvHeader="Event"
-            >
-              Event
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="edit"
-              dataFormat={this.onEditSpeaker.bind(this)}
-              headerAlign="left"
-              width="40"
-              export={false}
-            >
-              Edit
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="delete"
-              dataFormat={this.ondeleteSpeaker.bind(this)}
-              headerAlign="left"
-              width="40"
-              export={false}
-            >
-              Delete
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="print"
-              dataFormat={this.onPrintSpeakerQRCode.bind(this)}
-              headerAlign="left"
-              width="30"
-              export={false}
-            />
-          </BootstrapTable>
-        </FormGroup>
-        <FormGroup row>
-          <Col md="6">
-            <ToastContainer autoClose={2000} />
-            <div style={{ color: "red" }} className="help-block">
-              {this.props.speakerError}
-            </div>
-          </Col>
-        </FormGroup>
-      </CardLayout>
+
+        <br />
+        <div className="animated fadeIn">
+          <Row>
+            <Col xs="12" lg="12">
+              <Card>
+                <CardHeader>
+                  <FormGroup row className="marginBottomZero">
+                    <Col xs="6" md="3">
+                      <h1 className="regHeading paddingTop8">Speaker List</h1>
+                    </Col>
+                  </FormGroup>
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="4">
+                      <Select
+                        name="Event"
+                        placeholder="Select Event"
+                        options={this.props.eventList}
+                        value={this.state.event}
+                        simpleValue
+                        onChange={this.handleEventChange.bind(this)}
+                      />
+                    </Col>
+                    <Col md="3">
+                      <Button
+                        type="button"
+                        onClick={this.getSelectedRowKeys.bind(this)}
+                        color="success"
+                      >
+                        <i className="fa fa-print" />
+                        Print QR Code For All
+                      </Button>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <BootstrapTable
+                      ref="table"
+                      data={this.props.speakerList}
+                      pagination={true}
+                      search={true}
+                      selectRow={selectRowProp}
+                      options={options}
+                      exportCSV={true}
+                    >
+                      <TableHeaderColumn
+                        dataField="_id"
+                        headerAlign="left"
+                        isKey
+                        hidden
+                      >
+                        Id
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="firstName"
+                        headerAlign="left"
+                        width="100"
+                        csvHeader="First Name"
+                      >
+                        First Name
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="lastName"
+                        headerAlign="left"
+                        width="100"
+                        csvHeader="Last Name"
+                      >
+                        Last Name
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="email"
+                        headerAlign="left"
+                        width="100"
+                        csvHeader="Email"
+                      >
+                        Email
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="eventName"
+                        headerAlign="left"
+                        width="100"
+                        csvHeader="Event"
+                      >
+                        Event
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="edit"
+                        dataFormat={this.onEditSpeaker.bind(this)}
+                        headerAlign="left"
+                        width="40"
+                        export={false}
+                      >
+                        Edit
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="delete"
+                        dataFormat={this.ondeleteSpeaker.bind(this)}
+                        headerAlign="left"
+                        width="40"
+                        export={false}
+                      >
+                        Delete
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="print"
+                        dataFormat={this.onPrintSpeakerQRCode.bind(this)}
+                        headerAlign="left"
+                        width="30"
+                        export={false}
+                      >
+                        Print
+                      </TableHeaderColumn>
+                    </BootstrapTable>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </div>
     );
   }
 }

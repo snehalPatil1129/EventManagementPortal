@@ -2,8 +2,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import * as actions from "../../store/actions/index";
-import { FormGroup, Col, Button } from "reactstrap";
-import CardLayout from "../../components/CardLayout/";
+import {
+  FormGroup,
+  Col,
+  Button,
+  Card,
+  CardHeader,
+  Row,
+  CardBody
+} from "reactstrap";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import Select from "react-select";
@@ -119,89 +126,107 @@ class RoomsList extends Component {
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
     ) : (
-      <CardLayout name="Rooms List">
-        <FormGroup row>
-          <Col xs="12" md="8">
+      <div>
+        <ToastContainer autoClose={2000} />
+        <FormGroup row className="marginBottomZero">
+          <Col xs="6" md="3">
             <Link to={`${this.props.match.url}/rooms`}>
-              <Button
-                type="button"
-                color="primary"
-                style={{ marginBottom: -35 }}
-                size="small"
-              >
-                {" "}
+              <Button type="button" color="primary" size="small">
                 <i className="fa fa-plus" />
-                Create Room{" "}
+                Create Room
               </Button>
             </Link>
-          </Col>{" "}
-          <Col md="4">
-            <Select
-              name="Event"
-              placeholder="Select Event"
-              options={this.props.eventList}
-              value={this.state.event}
-              simpleValue
-              onChange={this.handleEventChange.bind(this)}
-            />
           </Col>
         </FormGroup>
-        <FormGroup row>
-          <BootstrapTable
-            ref="table"
-            data={this.props.roomList}
-            pagination={true}
-            search={true}
-            options={options}
-          >
-            <TableHeaderColumn dataField="_id" headerAlign="left" isKey hidden>
-              Id
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="roomName"
-              headerAlign="left"
-              width="100"
-            >
-              Room Name
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="eventName"
-              headerAlign="left"
-              width="100"
-            >
-              Event Name
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="capacity"
-              headerAlign="left"
-              width="100"
-            >
-              Capacity
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="edit"
-              dataFormat={this.onEditRoom.bind(this)}
-              headerAlign="left"
-              width="30"
-              export={false}
-            >
-              Edit
-            </TableHeaderColumn>
-            <TableHeaderColumn
-              dataField="delete"
-              dataFormat={this.onDeleteRoom.bind(this)}
-              headerAlign="left"
-              width="30"
-              export={false}
-            >
-              Delete
-            </TableHeaderColumn>
-          </BootstrapTable>
-        </FormGroup>
-        <Col>
-          <ToastContainer autoClose={2000} />
-        </Col>
-      </CardLayout>
+        <br />
+        <div className="animated fadeIn">
+          <Row>
+            <Col xs="12" lg="12">
+              <Card>
+                <CardHeader>
+                  <FormGroup row className="marginBottomZero">
+                    <Col xs="6" md="3">
+                      <h1 className="regHeading paddingTop8">Rooms List</h1>
+                    </Col>
+                  </FormGroup>
+                </CardHeader>
+                <CardBody>
+                  <FormGroup row>
+                    <Col md="4">
+                      <Select
+                        name="Event"
+                        placeholder="Select Event"
+                        options={this.props.eventList}
+                        value={this.state.event}
+                        simpleValue
+                        onChange={this.handleEventChange.bind(this)}
+                      />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row>
+                    <BootstrapTable
+                      ref="table"
+                      data={this.props.roomList}
+                      pagination={true}
+                      search={true}
+                      options={options}
+                      exportCSV={true}
+                    >
+                      <TableHeaderColumn
+                        dataField="_id"
+                        headerAlign="left"
+                        isKey
+                        hidden
+                      >
+                        Id
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="roomName"
+                        headerAlign="left"
+                        width="100"
+                      >
+                        Room Name
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="eventName"
+                        headerAlign="left"
+                        width="100"
+                      >
+                        Event Name
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="capacity"
+                        headerAlign="left"
+                        width="100"
+                      >
+                        Capacity
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="edit"
+                        dataFormat={this.onEditRoom.bind(this)}
+                        headerAlign="left"
+                        width="30"
+                        export={false}
+                      >
+                        Edit
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
+                        dataField="delete"
+                        dataFormat={this.onDeleteRoom.bind(this)}
+                        headerAlign="left"
+                        width="30"
+                        export={false}
+                      >
+                        Delete
+                      </TableHeaderColumn>
+                    </BootstrapTable>
+                  </FormGroup>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </div>
     );
   }
 }

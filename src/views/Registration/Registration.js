@@ -206,7 +206,7 @@ class Registration extends Component {
     } else {
       compRef.setState({ loading: false });
       errorMessage
-        ? toast.error("User with Already Exists", {
+        ? toast.error("User Already Exists", {
             position: toast.POSITION.BOTTOM_RIGHT
           })
         : toast.error("Something Went wrong", {

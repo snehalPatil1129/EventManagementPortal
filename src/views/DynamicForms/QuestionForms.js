@@ -393,7 +393,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", fontSize: 15, marginTop: 10 }}
                 className="help-block"
               >
-                *Empty/Invalid Form not allowed
+                *Please Add Question
               </div>
             ) : null}
           </Col>
