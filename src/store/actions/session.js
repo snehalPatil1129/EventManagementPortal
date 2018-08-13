@@ -82,6 +82,31 @@ export const getSessions = () => {
   };
 };
 
+export const getSessionsByEvent = (eventId) => {
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/session`)
+      .then(response => {
+        let sessionList = [];
+        let sessions = [];
+        response.data.forEach(data => {
+          if (data.event!= null){
+           if(data.event._id === eventId){
+             sessions.push(data);
+           }
+          }
+        })
+        dispatch(getSessionsSuccess(sessions, sessionList));
+      })
+      .catch(error => {
+        dispatch(getSessionsFail(error));
+      });
+  };
+};
+
+
+
+
 export const createSession = session => {
   let sessionObj = _.pick(session, [
     "sessionName",

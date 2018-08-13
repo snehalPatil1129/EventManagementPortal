@@ -75,6 +75,7 @@ class SessionForm extends Component {
   changeRoom(roomValue) {
     let Session = { ...this.state.Session };
     Session["room"] = roomValue;
+  
     let calendarSessionList = [];
     this.setState({
       isBreakOut: false,
@@ -84,14 +85,14 @@ class SessionForm extends Component {
       roomRequired: false
     });
     if (this.state.eventValue && roomValue) {
-      this.props.sessions.forEach(session => {
-        if (
-          session.event._id === this.state.eventValue &&
-          session.room === roomValue
-        ) {
+      this.props.getSessions();
+      setTimeout(()=>{
+       this.props.sessions.forEach(session => {
+        if (session.event._id == this.state.eventValue && session.room === roomValue) {
           this.displaySessions(session, calendarSessionList);
         }
       });
+      }, 1000)
     }
   }
 
@@ -113,12 +114,16 @@ class SessionForm extends Component {
       eventRequired: false,
       calendarSessionList: []
     });
-    if (eventValue) {
-      this.props.sessions.forEach(session => {
-        if (session.sessionType === "breakout") {
+   
+    if (eventValue ) {
+      this.props.getSessions();
+      setTimeout(()=>{
+       this.props.sessions.forEach(session => {
+        if (session.event._id == eventValue && session.sessionType === "breakout") {
           this.displaySessions(session, calendarSessionList);
         }
       });
+      }, 1000)
     }
     rooms.forEach(room => {
       if (room.event._id === eventValue) {
@@ -126,11 +131,11 @@ class SessionForm extends Component {
       }
     });
 
-    events.forEach(event => {
-      if (event._id === eventValue) {
-        eventStartDate = moment(event.startDate).toDate();
-      }
-    });
+    // events.forEach(event => {
+    //   if (event._id === eventValue) {
+    //     eventStartDate = moment(event.startDate).toDate();
+    //   }
+    // });
 
     speakers.forEach(speaker => {
       if (speaker.event._id === eventValue) {
@@ -263,7 +268,10 @@ class SessionForm extends Component {
 
   onSubmitHandler() {
     let session = { ...this.state.Session };
+    let calendarSessionList = [];
     let compRef = this;
+    let eventId = session.event;
+    let room = session.room;
     this.validateForm();
     if (this.state.isBreakOut) {
       if (
@@ -274,7 +282,13 @@ class SessionForm extends Component {
         session.endTime
       ) {
         this.props.createSession(session);
-      } else {
+        setTimeout(()=>{
+        compRef.props.sessions.forEach(session=>{
+          if(session.event._id=== eventId && session.sessionType==="breakout"){
+             this.displaySessions(session, calendarSessionList)}
+        })
+        },1500)
+      } }else {
         if (
           session.sessionName &&
           session.sessionType &&
@@ -287,18 +301,27 @@ class SessionForm extends Component {
           session.sessionCapacity
         ) {
           this.props.createSession(session);
+          setTimeout(()=>{
+          compRef.props.sessions.forEach(session=>{
+            if(session.event._id=== eventId && session.room ===room){
+               this.displaySessions(session, calendarSessionList)}
+          })
+          },1500)
         }
       }
       setTimeout(() => {
         let sessionCreated = this.props.sessionCreated;
         compRef.Toaster(sessionCreated, "Created");
       }, 1000);
-    }
+   
   }
 
   onUpdateHandler() {
     let compRef = this;
     let session = { ...this.state.Session };
+    let eventId = session.event;
+    let room = session.room;
+    let calendarSessionList = [];
     this.validateForm();
     if (this.state.isBreakOut) {
       if (
@@ -310,11 +333,18 @@ class SessionForm extends Component {
       ) {
         session["sessionCapacity"] = "";
         this.props.updateSession(session);
-      } else {
+        setTimeout(()=>{
+          console.log("after update",compRef.props.sessions)
+          compRef.props.sessions.forEach(session=>{
+            if(session.event._id=== eventId && session.sessionType==="breakout"){
+               this.displaySessions(session, calendarSessionList)}
+          })
+          },1500)
+      }  }else {
         if (
           session.sessionName &&
           session.sessionType &&
-          session.eventName &&
+          session.event &&
           session.speakers &&
           session.volunteers &&
           session.startTime &&
@@ -329,7 +359,7 @@ class SessionForm extends Component {
         let sessionUpdated = this.props.sessionUpdated;
         compRef.Toaster(sessionUpdated, "Updated");
       }, 1000);
-    }
+   
   }
 
   onDeleteHandler() {
@@ -648,6 +678,7 @@ const mapDispatchToProps = dispatch => {
     createSession: session => dispatch(actions.createSession(session)),
     getSessions: () => dispatch(actions.getSessions()),
     deleteSession: sessionId => dispatch(actions.deleteSession(sessionId)),
+    getSessionsByEvent: eventId => dispatch(actions.getSessionsByEvent(eventId)),
     updateSession: session => dispatch(actions.updateSession(session)),
     getSessionTypeList: () => dispatch(actions.getSessionTypeList())
   };

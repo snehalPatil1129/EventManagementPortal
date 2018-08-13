@@ -70,7 +70,8 @@ export {
   getSessions,
   deleteSession,
   updateSession,
-  getSessionTypeList
+  getSessionTypeList,
+  getSessionsByEvent
 } from "./session";
 
 export {
