@@ -50,7 +50,9 @@ class Registration extends Component {
           "briefInfo",
           "profileImageURL"
         ]);
-        Attendee.event = this.props.attendeeData.event._id;
+        this.props.attendeeData.event
+          ? (Attendee.event = this.props.attendeeData.event._id)
+          : null;
         Attendee.profiles = this.props.attendeeData.profiles;
         Attendee._id = this.props.attendeeData._id;
         this.setState({

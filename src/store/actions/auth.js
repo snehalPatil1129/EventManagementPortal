@@ -12,9 +12,10 @@ export const logoutUser = () => {
     type: actionTypes.LOGOUT_USER
   };
 };
-export const loginError = () => {
+export const loginError = error => {
   return {
-    type: actionTypes.LOGIN_ERROR
+    type: actionTypes.LOGIN_ERROR,
+    loginErrorMsg: error
   };
 };
 export const forgetPasswordMsg = msg => {
@@ -33,7 +34,7 @@ export const loginUser = user => {
         }
       })
       .catch(error => {
-        dispatch(loginError());
+        dispatch(loginError(error.response.data));
       });
   };
 };
