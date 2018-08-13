@@ -23,9 +23,10 @@ export const getAttendeeFail = () => {
   };
 };
 
-export const deleteAttendeeFail = () => {
+export const deleteAttendeeFail = error => {
   return {
-    type: actionTypes.DELETE_ATTENDEE_FAIL
+    type: actionTypes.DELETE_ATTENDEE_FAIL,
+    deleteError: error
   };
 };
 
@@ -174,7 +175,7 @@ export const deleteAttendee = id => {
         dispatch(getAttendees());
       })
       .catch(error => {
-        dispatch(deleteAttendeeFail());
+        dispatch(deleteAttendeeFail(error.response.data));
       });
   };
 };

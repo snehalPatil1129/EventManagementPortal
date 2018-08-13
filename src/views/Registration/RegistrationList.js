@@ -64,19 +64,24 @@ class RegistrationList extends Component {
     let compRef = this;
     setTimeout(() => {
       let deleteAttendeeError = compRef.props.deleteAttendeeError;
-      compRef.Toaster(compRef, deleteAttendeeError, "Delete");
+      let deleteErrorMsg = compRef.props.deleteError;
+      compRef.Toaster(compRef, deleteAttendeeError, "Delete", deleteErrorMsg);
     }, 1000);
   }
 
-  Toaster(compRef, deleteAttendeeError, actionName) {
+  Toaster(compRef, deleteAttendeeError, actionName, deleteErrorMsg) {
     if (!deleteAttendeeError) {
       toast.success("Attendee " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
     } else {
-      toast.error("Something went wrong", {
-        position: toast.POSITION.BOTTOM_RIGHT
-      });
+      deleteErrorMsg
+        ? toast.error(deleteErrorMsg, {
+            position: toast.POSITION.BOTTOM_RIGHT
+          })
+        : toast.error("Something went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT
+          });
     }
   }
 
@@ -317,7 +322,8 @@ const mapStateToProps = state => {
     eventList: state.event.eventList,
     getAttendeeError: state.registration.getAttendeeError,
     deleteAttendeeError: state.registration.deleteAttendeeError,
-    profileList: state.profileList.profileList
+    profileList: state.profileList.profileList,
+    deleteError: state.registration.deleteError
   };
 };
 

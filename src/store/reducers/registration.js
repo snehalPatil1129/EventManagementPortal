@@ -8,7 +8,8 @@ const initialState = {
   createEditError: false,
   getAttendeeError: false,
   deleteAttendeeError: false,
-  creatError: ""
+  creatError: "",
+  deleteError: ""
 };
 const registrationReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -20,7 +21,8 @@ const registrationReducer = (state = initialState, action) => {
         createEditError: false,
         getAttendeeError: false,
         deleteAttendeeError: false,
-        creatError: ""
+        creatError: "",
+        deleteError: ""
       };
     case actionTypes.GET_ATTENDEE_DATA:
       return {
@@ -30,7 +32,8 @@ const registrationReducer = (state = initialState, action) => {
         createEditError: false,
         getAttendeeError: false,
         deleteAttendeeError: false,
-        creatError: ""
+        creatError: "",
+        deleteError: ""
       };
     case actionTypes.LOG_REGISTRATION_ERROR:
       return {
@@ -38,7 +41,8 @@ const registrationReducer = (state = initialState, action) => {
         createEditError: false,
         getAttendeeError: false,
         deleteAttendeeError: false,
-        creatError: ""
+        creatError: "",
+        deleteError: ""
       };
     case actionTypes.CREATE_EDIT_ATTENDEE_FAIL:
       return {
@@ -56,6 +60,7 @@ const registrationReducer = (state = initialState, action) => {
       return {
         ...state,
         deleteAttendeeError: true,
+        deleteError: action.deleteError,
         creatError: ""
       };
     default:
