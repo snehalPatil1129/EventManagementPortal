@@ -45,21 +45,21 @@ class Dashboard extends Component {
                 <Col xs="12">
                   <Card className="mx-6" style={{ backgroundColor: ColorCode }}>
                     <CardHeader>
-                      <h3>{event.eventName}</h3>
+                      <h1>{event.eventName}</h1>
                     </CardHeader>
                     <CardBody
                       style={{ fontWeight: "bold", fontSize: 20 }}
                       className="p-4"
                     >
-                      <h5> Description : {event.description} </h5>
+                      <h2> Description : {event.description} </h2>
                       <br />
                       <Row>
                         <Col xs="8" md="4">
-                          <h6> Venue : {event.venue} </h6>
+                          <h3> Venue : {event.venue} </h3>
                           <br />
                         </Col>
                         <Col md="4">
-                          <h6> Time : {event.startDate} </h6>
+                          <h3> Time : {event.startDate} </h3>
                         </Col>
                       </Row>
                     </CardBody>

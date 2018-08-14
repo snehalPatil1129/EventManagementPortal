@@ -3,7 +3,7 @@ export default {
     {
       name: "Dashboard",
       url: "/dashboard",
-      icon: "icon-speedometer"
+      icon: "fa fa-dashcube"
     },
     {
       name: "Events",
@@ -33,72 +33,72 @@ export default {
     {
       name: "Attendance",
       url: "/attendance",
-      icon: "icon-user"
+      icon: "fa fa-thumb-tack"
     },
 
     {
       name: "Sponsors",
       url: "/sponsors",
-      icon: "icon-user"
+      icon: "fa fa-money"
     },
     {
       name: "Dynamic Forms",
       url: "/dynamicForms",
-      icon: "icon-question"
+      icon: "fa fa-file-text"
     },
     {
       name: "Reports ",
       url: "/reports/",
-      icon: "icon-pie",
+      icon: "icon-chart",
       children: [
         {
           name: "Event Reports",
           url: "/reports/eventReports",
-          icon: "icon-puzzle"
+          icon: "icon-chart"
         },
         {
           name: "Session Reports",
           url: "/reports/sessionReports",
-          icon: "icon-note"
+          icon: "icon-chart"
         },
         {
           name: "Attendee Reports",
           url: "/reports/attendeeReports",
-          icon: "icon-note"
+          icon: "icon-chart"
         }
       ]
     },
     {
       name: "Static Pages",
       url: "/staticPages/",
-      icon: "icon-puzzle",
+      icon: "fa fa-file",
       children: [
         {
           name: "About Us",
           url: "/staticPages/aboutUs",
-          icon: "icon-puzzle"
+          icon: "icon-info"
         },
         {
           name: "About Eternus",
           url: "/staticPages/aboutEternus",
-          icon: "icon-note"
+          icon: "icon-info"
         },
         {
           name: "Help Desk",
           url: "/staticPages/helpDesk",
-          icon: "icon-note"
+          icon: "icon-phone"
         },
         {
           name: "Event Location",
           url: "/staticPages/eventLocation",
-          icon: "icon-note"
+          icon: "icon-compass"
         }
       ]
     },
     {
       name: "Logout",
       url: "/logout",
-      icon: "icon-question"
+      icon: "fa fa-sign-out"
     }
   ]
 };
