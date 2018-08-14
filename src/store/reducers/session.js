@@ -24,7 +24,7 @@ const sessionReducer = (state = initialState, action) => {
       const newSession = {
         ...action.session,
         id: action.sessionId,
-        event :{_id : action.session.event}
+        event: { _id: action.session.event }
       };
       return {
         ...state,
@@ -38,16 +38,10 @@ const sessionReducer = (state = initialState, action) => {
       };
 
     case actionTypes.UPDATE_SESSION_SUCCESS:
-    console.log("state.sessions",state.sessions);
-    console.log("action.session",action.session);
-    return{
-      ...state,
-      sessions: state.sessions.map(session => session._id === action.sessionId ?
-          { session: action.session } : 
-          session
-      ) ,
-      sessionUpdated: true
-    }
+      return {
+        ...state,
+        sessionUpdated: true
+      };
 
     case actionTypes.UPDATE_SESSION_FAIL:
       return {

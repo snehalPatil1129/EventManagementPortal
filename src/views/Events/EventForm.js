@@ -10,6 +10,7 @@ import { InputGroup, InputGroupText, Col, Button, FormGroup } from "reactstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
+
 class EventForm extends Component {
   constructor(props) {
     super(props);

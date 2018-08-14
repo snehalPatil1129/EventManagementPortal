@@ -11,12 +11,17 @@ const Calendar = props => {
       <BigCalendar
         events={props.events}
         defaultView="week"
-        selectable={true}
+         //selectable={true}
+        selectable= "ignoreEvents"
         onSelectEvent={props.selectSession}
         onSelectSlot={props.onSelectSlot}
+         //startAccessor={new Date("2018, 8, 9, 08:00")}
+        // endAccessor={new Date("2018, 8, 10, 20:00")}
        // date={props.eventStartDate}
-        min={new Date("2018, 1, 1, 08:00")}
-        max={new Date("2018, 1, 1, 20:00")}
+       // defaultDate={props.eventStartDate}
+       min={new Date("2018, 1, 1, 08:00")}
+       max={new Date("2018, 1, 1, 20:00")}
+      eventPropGetter={(props.eventStyleGetter)}
         step={15}
       />
     </div>
