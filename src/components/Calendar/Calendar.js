@@ -7,7 +7,7 @@ BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
 const Calendar = props => {
   return (
-    <div>
+    <div style={{height: '100vh'}}>
       <BigCalendar
         events={props.events}
         defaultView="week"
@@ -21,7 +21,9 @@ const Calendar = props => {
        // defaultDate={props.eventStartDate}
        min={new Date("2018, 1, 1, 08:00")}
        max={new Date("2018, 1, 1, 20:00")}
-      eventPropGetter={(props.eventStyleGetter)}
+       eventPropGetter={(props.eventStyleGetter)}
+      // dayPropGetter={e => ({ style: { backgroundColor: '#89C540', borderColor: '#777' } })}
+      dayPropGetter={(props.eventDaysStyleGetter)}
         step={15}
       />
     </div>

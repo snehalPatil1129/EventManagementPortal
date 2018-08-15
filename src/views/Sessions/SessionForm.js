@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 import InputElement from "../../components/Input/";
 import CardLayout from "../../components/CardLayout/";
+import SessionTypeIndicator from "../../components/SessionTypeIndicator/SessionTypeIndicator";
 import {
   Row,
   Col,
@@ -21,8 +22,7 @@ import Calendar from "../../components/Calendar/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ValidationError from "../../components/ValidationError/ValidationError";
-import TimePicker from "rc-time-picker";
-import "rc-time-picker/assets/index.css";
+import Rectangle from 'react-rectangle';
 
 class SessionForm extends Component {
   constructor(props) {
@@ -62,9 +62,7 @@ class SessionForm extends Component {
       speakersRequired: false,
       volunteersRequired: false,
       endTimeRequired: false,
-      multiDayFlag: false,
-      startTime: moment().startOf("day"),
-      endTime: moment().startOf("day")
+      multiDayFlag: false
     };
   }
 
@@ -77,13 +75,6 @@ class SessionForm extends Component {
     this.props.getSessionTypeList();
   }
 
-  handleStartTimeChange(startTime) {
-    this.setState({ startTime: startTime });
-  }
-
-  handleEndTimeChange(endTime) {
-    this.setState({ endTime: endTime });
-  }
 
   onChangeHandler(session) {
     let sessionDetails = { ...this.state.Session };
@@ -95,8 +86,22 @@ class SessionForm extends Component {
     });
   }
 
+  eventDaysStyleGetter(date){
+    let calendarDate = new Date(date).setHours(0, 0, 0, 0)
+    if (this.state.eventStartDate<=calendarDate && calendarDate<=this.state.eventEndDate)
+      return {
+        className: 'special-day',
+        style: {
+          backgroundColor:((this.state.eventStartDate<=calendarDate && calendarDate<=this.state.eventEndDate) ? '#faa' : '#928785'),
+        }
+      }
+    else return {
+      style: {
+        backgroundColor:'#928785'
+      }
+    }
+  }
   eventStyleGetter(event) {
-    console.log("in event style gettter", event);
     if (event.sessionType == "breakout") var backgroundColor = "#" + "f44250";
     else {
       var backgroundColor = "#" + "c3db2b";
@@ -150,7 +155,6 @@ class SessionForm extends Component {
     let rooms = this.props.rooms;
     let speakers = this.props.speakers;
     let events = this.props.events;
-    let eventStartDate;
     let Session = { ...this.state.Session };
     Session["event"] = eventValue;
     this.setState({
@@ -181,12 +185,10 @@ class SessionForm extends Component {
 
     events.forEach(event => {
       if (event._id === eventValue) {
-        let eventStartDate = moment(event.startDate).format("DD-MM-YYYY");
-        let eventEndDate = moment(event.endDate).format("DD-MM-YYYY");
+        new Date(event["startDate"]).setHours(0, 0, 0, 0)
+        let eventStartDate = new Date(event.startDate).setHours(0, 0, 0, 0);
+        let eventEndDate = new Date(event.endDate).setHours(0, 0, 0, 0);
         this.setState({ eventStartDate, eventEndDate });
-        // eventEndDate = moment(event.endDate)
-        //   .startOf("day")
-        //   .toDate();
       }
     });
 
@@ -213,7 +215,7 @@ class SessionForm extends Component {
         }
       }
     });
-    this.setState({ roomList, volunteerList, speakerList, eventStartDate });
+    this.setState({ roomList, volunteerList, speakerList});
   }
 
   updateCalendarForBreakout(eventId) {
@@ -454,7 +456,13 @@ class SessionForm extends Component {
   }
 
   selectSlot(slotInfo) {
-    let SlotconfirmMessage =
+    let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
+    console.log("this.state.eventStartDate",);
+    console.log("",);
+    console.log("",);
+
+    if(this.state.eventStartDate<=dateselected && dateselected<=this.state.eventEndDate){
+      let SlotconfirmMessage =
       `Start Time : ${slotInfo.start.toLocaleString()} ` +
       `,\r\n End Time: ${slotInfo.end.toLocaleString()}`;
     this.setState({ SlotconfirmMessage: SlotconfirmMessage });
@@ -463,12 +471,6 @@ class SessionForm extends Component {
       `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
         `\nend: ${slotInfo.end.toLocaleString()}`
     );
-
-    let startDate = new Date(slotInfo.start).setHours(0, 0, 0, 0);
-    let endDate = new Date(slotInfo.end).setHours(0, 0, 0, 0);
-    if (endDate > startDate) {
-      this.setState({ multiDayFlag: true });
-    } else {
       let Session = { ...this.state.Session };
       Session["startTime"] = slotInfo.start.toString();
       Session["endTime"] = slotInfo.end.toString();
@@ -478,6 +480,9 @@ class SessionForm extends Component {
         endTimeRequired: false,
         SlotconfirmMessage
       });
+    }
+    else{
+     return;
     }
   }
 
@@ -492,13 +497,8 @@ class SessionForm extends Component {
     });
   }
 
-  multiDayToggle() {
-    this.setState({
-      multiDayFlag: !this.state.multiDayFlag
-    });
-  }
 
-  multiDayConfirm() {}
+
   resetField() {
     let Session = {
       sessionId: "",
@@ -567,7 +567,7 @@ class SessionForm extends Component {
     return (
       <div>
         <FormGroup row>
-          <Col xs="12" md="6">
+          <Col xs="12" md="5">
             <Select
               onChange={this.changeEvent.bind(this)}
               placeholder="--Select Event--"
@@ -580,7 +580,7 @@ class SessionForm extends Component {
               displayName="Event Name"
             />
           </Col>
-          <Col xs="12" md="6">
+          <Col xs="12" md="5">
             <Select
               onChange={this.changeRoom.bind(this)}
               placeholder="--Select Room--"
@@ -603,6 +603,12 @@ class SessionForm extends Component {
               ) : null}
             </div>
           </Col>
+          <Col xs="4" md="2">
+          <div style={{ background: '#607d8b', width: '10%', height: '10%' }}>
+          </div><br/>
+          <div style={{ background: '#607d8b', width: '10%', height: '10%', marginTop: -1 }}>
+         </div>
+          </Col>
         </FormGroup>
         <br />
         <br />
@@ -618,8 +624,9 @@ class SessionForm extends Component {
               events={this.state.calendarSessionList}
               onSelectSlot={slotInfo => this.selectSlot(slotInfo)}
               selectSession={event => this.selectSession(event)}
-              eventStartDate={this.state.eventStartDate}
+             // eventStartDate={this.state.eventStartDate}
               eventStyleGetter={event => this.eventStyleGetter(event)}
+              eventDaysStyleGetter={day => this.eventDaysStyleGetter(day)}
             />
           </Col>
           <Col md="4">
@@ -755,46 +762,6 @@ class SessionForm extends Component {
                 </Col>
               </FormGroup>
             </CardLayout>
-            <Modal
-              isOpen={this.state.multiDayFlag}
-              className={"modal-lg " + this.props.className}
-            >
-              <ModalHeader>Confirm</ModalHeader>
-              <ModalBody>
-                <div>
-                  <FormGroup row>
-                    <Col xs="12">
-                      <Label>Start Time : </Label>
-                      <TimePicker
-                        onChange={this.handleStartTimeChange.bind(this)}
-                        value={this.state.startTime}
-                      />
-                    </Col>
-                  </FormGroup>
-                  <FormGroup row>
-                    <Col xs="12">
-                      <Label>End Time : </Label>
-                      <TimePicker
-                        onChange={this.handleEndTimeChange.bind(this)}
-                        value={this.state.endTime}
-                      />
-                    </Col>
-                  </FormGroup>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  color="success"
-                  onClick={this.multiDayConfirm.bind(this)}
-                >
-                  submit
-                </Button>
-                &nbsp;
-                <Button color="danger" onClick={this.multiDayToggle.bind(this)}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </Modal>
           </Col>
         </Row>
       </div>
