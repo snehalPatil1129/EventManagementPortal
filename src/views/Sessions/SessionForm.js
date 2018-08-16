@@ -158,12 +158,13 @@ class SessionForm extends Component {
       this.props.getSessions();
       setTimeout(() => {
         this.props.sessions.forEach(session => {
-          if (
-            (session.event._id == this.state.eventValue &&
-              session.room === roomValue) ||
-            session.sessionType === "breakout"
-          ) {
-            this.displaySessions(session, calendarSessionList);
+          if (session.event._id === Session.event) {
+            if (
+              session.room === roomValue ||
+              session.sessionType === "breakout"
+            ) {
+              this.displaySessions(session, calendarSessionList);
+            }
           }
         });
       }, 1000);
@@ -193,7 +194,7 @@ class SessionForm extends Component {
       setTimeout(() => {
         this.props.sessions.forEach(session => {
           if (
-            session.event._id == eventValue &&
+            session.event._id === eventValue &&
             session.sessionType === "breakout"
           ) {
             this.displaySessions(session, calendarSessionList);
