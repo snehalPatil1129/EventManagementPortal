@@ -6,6 +6,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
 const Calendar = props => {
+  console.log(" Calendar props.eventDate", props.eventDate)
   return (
     <div style={{height: '100vh'}}>
       <BigCalendar
@@ -25,6 +26,9 @@ const Calendar = props => {
       // dayPropGetter={e => ({ style: { backgroundColor: '#89C540', borderColor: '#777' } })}
       dayPropGetter={(props.eventDaysStyleGetter)}
         step={15}
+        date={props.eventDate}
+       // onNavigate={(date) => { this.setState({ selectedDate: date }}
+       onNavigate={(props.navigateEventDate)}
       />
     </div>
   );

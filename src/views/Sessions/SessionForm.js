@@ -142,6 +142,11 @@ class SessionForm extends Component {
     };
   }
 
+  navigateEventDate(date){
+    let eventDate = moment(date).startOf('day');
+    this.setState({eventDate:date})
+  }
+
   changeRoom(roomValue) {
     let Session = { ...this.state.Session };
     Session["room"] = roomValue;
@@ -211,9 +216,10 @@ class SessionForm extends Component {
     events.forEach(event => {
       if (event._id === eventValue) {
         new Date(event["startDate"]).setHours(0, 0, 0, 0);
+        let eventDate = moment(event.startDate).startOf('day');
         let eventStartDate = new Date(event.startDate).setHours(0, 0, 0, 0);
         let eventEndDate = new Date(event.endDate).setHours(0, 0, 0, 0);
-        this.setState({ eventStartDate, eventEndDate });
+        this.setState({eventDate, eventStartDate, eventEndDate });
       }
     });
 
@@ -481,12 +487,24 @@ class SessionForm extends Component {
   }
 
   selectSlot(slotInfo) {
+    let SessionObj = {...this.state.Session}
     let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
     if (
       this.state.eventStartDate <= dateselected &&
       dateselected <= this.state.eventEndDate
     ) {
-      let SlotconfirmMessage =
+      if(SessionObj.room!=="" && SessionObj.room!==undefined){
+        this.props.sessions.forEach((session)=>{
+          if(session.event_id ===SessionObj.event && session.room === SessionObj.room){
+            if(new Date(session.startDate)>= new Date(slotInfo.start)||
+               new Date(session.endDate) <= new Date(slotInfo.end)){
+                  return;
+               }}
+              
+        })
+      }
+     
+        let SlotconfirmMessage =
         `Start Time : ${slotInfo.start.toLocaleString()} ` +
         `,\r\n End Time: ${slotInfo.end.toLocaleString()}`;
       this.setState({ SlotconfirmMessage: SlotconfirmMessage });
@@ -504,6 +522,7 @@ class SessionForm extends Component {
         endTimeRequired: false,
         SlotconfirmMessage
       });
+      
     } else {
       return;
     }
@@ -654,9 +673,10 @@ class SessionForm extends Component {
               events={this.state.calendarSessionList}
               onSelectSlot={slotInfo => this.selectSlot(slotInfo)}
               selectSession={event => this.selectSession(event)}
-              // eventStartDate={this.state.eventStartDate}
+              eventDate={this.state.eventDate}
               eventStyleGetter={event => this.eventStyleGetter(event)}
               eventDaysStyleGetter={day => this.eventDaysStyleGetter(day)}
+              navigateEventDate={date => this.navigateEventDate(date)}
             />
           </Col>
           <Col md="4">
