@@ -9,6 +9,7 @@ const InputElement = props => (
       </InputGroupText>
     </InputGroupAddon>
     <Input
+      disabled={props.disabled}
       type={props.type}
       placeholder={props.placeholder}
       name={props.name}
