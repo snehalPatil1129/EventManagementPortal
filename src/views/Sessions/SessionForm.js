@@ -22,7 +22,7 @@ import Calendar from "../../components/Calendar/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ValidationError from "../../components/ValidationError/ValidationError";
-import Rectangle from 'react-rectangle';
+import Rectangle from "react-rectangle";
 
 class SessionForm extends Component {
   constructor(props) {
@@ -75,7 +75,6 @@ class SessionForm extends Component {
     this.props.getSessionTypeList();
   }
 
-
   onChangeHandler(session) {
     let sessionDetails = { ...this.state.Session };
     sessionDetails[session.target.name] = session.target.value;
@@ -86,23 +85,37 @@ class SessionForm extends Component {
     });
   }
 
-  eventDaysStyleGetter(date){
-    let calendarDate = new Date(date).setHours(0, 0, 0, 0)
-    if (this.state.eventStartDate<=calendarDate && calendarDate<=this.state.eventEndDate)
+  eventDaysStyleGetter(date) {
+    let calendarDate = new Date(date).setHours(0, 0, 0, 0);
+    if (
+      this.state.eventStartDate <= calendarDate &&
+      calendarDate <= this.state.eventEndDate
+    )
       return {
-        className: 'special-day',
+        className: "special-day",
         style: {
-          backgroundColor:((this.state.eventStartDate<=calendarDate && calendarDate<=this.state.eventEndDate) ? '#faa' : '#928785'),
+          backgroundColor:
+            this.state.eventStartDate <= calendarDate &&
+            calendarDate <= this.state.eventEndDate
+              ? "#A0E1B8"
+              : "#B2BCC1"
         }
-      }
-    else return {
-      style: {
-        backgroundColor:'#928785'
-      }
-    }
+      };
+    else
+      return {
+        style: {
+          backgroundColor: "#B2BCC1"
+        }
+      };
   }
   eventStyleGetter(event) {
-    if (event.sessionType == "breakout") var backgroundColor = "#" + "f44250";
+    if (event.sessionType === "breakout") var backgroundColor = "#" + "f44250";
+    else if (event.sessionType === "keynote")
+      var backgroundColor = "#" + "800000";
+    else if (event.sessionType === "deepdive")
+      var backgroundColor = "#" + "81C4E5";
+    else if (event.sessionType === "panel")
+      var backgroundColor = "#" + "0F2E3E";
     else {
       var backgroundColor = "#" + "c3db2b";
     }
@@ -185,7 +198,7 @@ class SessionForm extends Component {
 
     events.forEach(event => {
       if (event._id === eventValue) {
-        new Date(event["startDate"]).setHours(0, 0, 0, 0)
+        new Date(event["startDate"]).setHours(0, 0, 0, 0);
         let eventStartDate = new Date(event.startDate).setHours(0, 0, 0, 0);
         let eventEndDate = new Date(event.endDate).setHours(0, 0, 0, 0);
         this.setState({ eventStartDate, eventEndDate });
@@ -215,7 +228,7 @@ class SessionForm extends Component {
         }
       }
     });
-    this.setState({ roomList, volunteerList, speakerList});
+    this.setState({ roomList, volunteerList, speakerList });
   }
 
   updateCalendarForBreakout(eventId) {
@@ -457,20 +470,19 @@ class SessionForm extends Component {
 
   selectSlot(slotInfo) {
     let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
-    console.log("this.state.eventStartDate",);
-    console.log("",);
-    console.log("",);
-
-    if(this.state.eventStartDate<=dateselected && dateselected<=this.state.eventEndDate){
+    if (
+      this.state.eventStartDate <= dateselected &&
+      dateselected <= this.state.eventEndDate
+    ) {
       let SlotconfirmMessage =
-      `Start Time : ${slotInfo.start.toLocaleString()} ` +
-      `,\r\n End Time: ${slotInfo.end.toLocaleString()}`;
-    this.setState({ SlotconfirmMessage: SlotconfirmMessage });
+        `Start Time : ${slotInfo.start.toLocaleString()} ` +
+        `,\r\n End Time: ${slotInfo.end.toLocaleString()}`;
+      this.setState({ SlotconfirmMessage: SlotconfirmMessage });
 
-    alert(
-      `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
-        `\nend: ${slotInfo.end.toLocaleString()}`
-    );
+      alert(
+        `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
+          `\nend: ${slotInfo.end.toLocaleString()}`
+      );
       let Session = { ...this.state.Session };
       Session["startTime"] = slotInfo.start.toString();
       Session["endTime"] = slotInfo.end.toString();
@@ -480,9 +492,8 @@ class SessionForm extends Component {
         endTimeRequired: false,
         SlotconfirmMessage
       });
-    }
-    else{
-     return;
+    } else {
+      return;
     }
   }
 
@@ -493,11 +504,10 @@ class SessionForm extends Component {
       Session: sessionObj,
       updateFlag: true,
       speakerValue: sessionObj.speakers,
-      volunteerValue: sessionObj.volunteers
+      volunteerValue: sessionObj.volunteers,
+      sessionTypeValue: sessionObj.sessionType
     });
   }
-
-
 
   resetField() {
     let Session = {
@@ -603,12 +613,20 @@ class SessionForm extends Component {
               ) : null}
             </div>
           </Col>
-          <Col xs="4" md="2">
-          <div style={{ background: '#607d8b', width: '10%', height: '10%' }}>
-          </div><br/>
-          <div style={{ background: '#607d8b', width: '10%', height: '10%', marginTop: -1 }}>
-         </div>
-          </Col>
+          {/* <Col xs="4" md="2">
+            <div
+              style={{ background: "#607d8b", width: "10%", height: "10%" }}
+            />
+            <br />
+            <div
+              style={{
+                background: "#607d8b",
+                width: "10%",
+                height: "10%",
+                marginTop: -1
+              }}
+            />
+          </Col> */}
         </FormGroup>
         <br />
         <br />
@@ -624,7 +642,7 @@ class SessionForm extends Component {
               events={this.state.calendarSessionList}
               onSelectSlot={slotInfo => this.selectSlot(slotInfo)}
               selectSession={event => this.selectSession(event)}
-             // eventStartDate={this.state.eventStartDate}
+              // eventStartDate={this.state.eventStartDate}
               eventStyleGetter={event => this.eventStyleGetter(event)}
               eventDaysStyleGetter={day => this.eventDaysStyleGetter(day)}
             />
