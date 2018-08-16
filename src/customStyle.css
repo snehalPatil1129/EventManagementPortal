@@ -175,6 +175,9 @@ input[type="checkbox"] {
 .rbc-time-header > .rbc-row:nth-child(2) {
   display: none;
 }
+.rbc-btn-group > button:first-child:not(:last-child) {
+  display: none;
+}
 .rbc-time-content {
   border-top: 1px solid #ddd !important;
 }
@@ -275,4 +278,11 @@ input[type="checkbox"] {
   margin-top: 3px;
   cursor: pointer;
   color: #e7060e;
+}
+
+/* 16 Aug,2018 */
+
+.datepicker {
+  width: 365px;
+  height: 35px;
 }
