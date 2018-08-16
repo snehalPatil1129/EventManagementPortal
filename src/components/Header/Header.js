@@ -28,7 +28,9 @@ class Header extends Component {
         <NavbarToggler className="d-lg-none" onClick={this.mobileSidebarToggle}>
           <span className="navbar-toggler-icon" />
         </NavbarToggler>
-        <NavbarBrand href="#" />
+        <NavbarBrand href="#">
+          <img src="../../img/tie-pune-logo.jpg" className="logoImg" />
+        </NavbarBrand>
         <NavbarToggler
           className="d-md-down-none mr-auto"
           onClick={this.sidebarToggle}

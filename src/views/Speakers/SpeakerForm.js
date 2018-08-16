@@ -167,7 +167,7 @@ class SpeakerForm extends Component {
           <Col xs="12" md="6">
             <InputElement
               type="text"
-              placeholder="First Name"
+              placeholder="First name"
               name="firstName"
               icon="icon-user"
               value={Speaker.firstName}
@@ -178,7 +178,7 @@ class SpeakerForm extends Component {
           <Col md="6">
             <InputElement
               type="text"
-              placeholder="Last Name"
+              placeholder="Last name"
               name="lastName"
               icon="icon-user"
               value={Speaker.lastName}
@@ -202,7 +202,7 @@ class SpeakerForm extends Component {
           <Col md="6">
             <InputElement
               type="number"
-              placeholder="Contact Number"
+              placeholder="Contact number"
               name="contact"
               icon="icon-phone"
               value={Speaker.contact}
@@ -214,7 +214,7 @@ class SpeakerForm extends Component {
         <FormGroup row>
           <Col xs="12" md="6">
             <Select
-              placeholder="Select Event"
+              placeholder="Select event"
               value={Speaker.event}
               options={eventOptions}
               simpleValue
@@ -232,7 +232,7 @@ class SpeakerForm extends Component {
           <Col md="6">
             <InputElement
               type="text"
-              placeholder="Brief Info"
+              placeholder="Brief info"
               name="briefInfo"
               icon="icon-info"
               value={Speaker.briefInfo}
@@ -244,7 +244,7 @@ class SpeakerForm extends Component {
           <Col xs="12" md="6">
             <InputElement
               type="text"
-              placeholder="Profile Image URL"
+              placeholder="Profile image URL"
               name="profileImageURL"
               icon="icon-link"
               value={Speaker.profileImageURL}

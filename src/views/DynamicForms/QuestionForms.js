@@ -326,7 +326,7 @@ class QuestionForms extends Component {
           <Col xs="12" md="4">
             <Select
               name="form"
-              placeholder="Select Form Type"
+              placeholder="Select form type"
               value={formType}
               options={formOptions}
               simpleValue
@@ -354,7 +354,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select Event
+                Please select event
               </div>
             ) : null}
           </Col>
@@ -393,7 +393,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", fontSize: 15, marginTop: 10 }}
                 className="help-block"
               >
-                *Please Add Question
+                *Please add question
               </div>
             ) : null}
           </Col>

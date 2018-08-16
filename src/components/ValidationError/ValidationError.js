@@ -4,7 +4,7 @@ const ValidationError = props => (
   <div>
     {props.required ? (
       <div style={{ color: "red", marginTop: 0 }}>
-        * {props.displayName} is Required
+        * {props.displayName} is required
       </div>
     ) : null}
   </div>

@@ -175,7 +175,7 @@ class SponsorForm extends Component {
             <InputElement
               icon="icon-tag"
               type="text"
-              placeholder="Sponsor Name"
+              placeholder="Sponsor name"
               name="name"
               required={this.state.nameRequired}
               value={Sponsor.name}
@@ -184,7 +184,7 @@ class SponsorForm extends Component {
           </Col>
           <Col md="6">
             <Select
-              placeholder="Select Event"
+              placeholder="Select event"
               value={Sponsor.event}
               options={eventOptions}
               simpleValue

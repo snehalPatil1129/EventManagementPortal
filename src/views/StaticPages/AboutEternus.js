@@ -109,7 +109,7 @@ class AboutEternus extends Component {
             <InputElement
               icon="icon-info"
               type="text"
-              placeholder="Information about Eternus..."
+              placeholder="Information about eternus"
               name="info"
               value={info}
               required={this.state.infoRequired}
@@ -120,7 +120,7 @@ class AboutEternus extends Component {
             <InputElement
               icon="icon-link"
               type="text"
-              placeholder="Link to Eternus"
+              placeholder="Link to eternus"
               name="url"
               value={url}
               onchanged={event => this.onChangeInput(event)}

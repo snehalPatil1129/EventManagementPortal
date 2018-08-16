@@ -43,15 +43,14 @@ class EventForm extends Component {
           o => o._id === this.props.match.params.id
         );
         this.setCurrentEvent(event);
-      }else {
+      } else {
         this.setState({ loading: true });
         this.props.getEventById(this.props.match.params.id);
         let compRef = this;
         setTimeout(function() {
-          if(Object.keys(compRef.props.currentEvent).length){
+          if (Object.keys(compRef.props.currentEvent).length) {
             compRef.setCurrentEvent(compRef.props.currentEvent);
-          }
-          else{
+          } else {
             compRef.props.history.push("/events");
           }
         }, 1000);
@@ -59,12 +58,12 @@ class EventForm extends Component {
     }
   }
 
-  setCurrentEvent(currentEvent){
+  setCurrentEvent(currentEvent) {
     let Event = {
       id: currentEvent._id,
       eventName: currentEvent.eventName,
       venue: currentEvent.venue,
-      description:currentEvent.description,
+      description: currentEvent.description,
       startDate: moment(currentEvent.startDate),
       endDate: moment(currentEvent.endDate)
     };
@@ -225,15 +224,15 @@ class EventForm extends Component {
         </Button>
       );
 
-      return this.state.loading ? (
-        <Loader loading={this.state.loading} />
-      ) : (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Event">
         <FormGroup row>
           <Col xs="12" md="6">
             <InputElement
               type="text"
-              placeholder="Event Name"
+              placeholder="Event name"
               name="eventName"
               icon="icon-home"
               value={this.state.Event.eventName}
@@ -257,7 +256,7 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                startDate is Required
+                Start date is required
               </div>
             ) : null}
           </Col>
@@ -279,7 +278,7 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                endDate is Required
+                End date is required
               </div>
             ) : null}
           </Col>
@@ -334,7 +333,6 @@ class EventForm extends Component {
           </Col>
         </FormGroup>
       </CardLayout>
-      
     );
   }
 }

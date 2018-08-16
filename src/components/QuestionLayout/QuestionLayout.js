@@ -28,7 +28,7 @@ const QuestionLayout = props => (
         </InputGroupAddon>
         <Input
           type="text"
-          placeholder="Enter Question"
+          placeholder="Enter question"
           name={props.name}
           value={props.questionValue}
           onChange={props.onchanged}
@@ -38,7 +38,7 @@ const QuestionLayout = props => (
     <Col md="3">
       <Select
         name={toString(props.name)}
-        placeholder="Select Input Type"
+        placeholder="Select input type"
         options={options}
         value={props.selectValue}
         onChange={props.onChangeSelect}

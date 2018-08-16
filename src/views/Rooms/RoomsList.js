@@ -155,7 +155,7 @@ class RoomsList extends Component {
                     <Col md="4">
                       <Select
                         name="Event"
-                        placeholder="Select Event"
+                        placeholder="Select event"
                         options={this.props.eventList}
                         value={this.state.event}
                         simpleValue

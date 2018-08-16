@@ -580,27 +580,27 @@ class SessionForm extends Component {
           <Col xs="12" md="5">
             <Select
               onChange={this.changeEvent.bind(this)}
-              placeholder="--Select Event--"
+              placeholder="Select event"
               simpleValue
               value={this.state.eventValue}
               options={this.props.eventList}
             />
             <ValidationError
               required={this.state.eventRequired}
-              displayName="Event Name"
+              displayName="Event name"
             />
           </Col>
           <Col xs="12" md="5">
             <Select
               onChange={this.changeRoom.bind(this)}
-              placeholder="--Select Room--"
+              placeholder="Select room"
               simpleValue
               value={this.state.roomValue}
               options={this.state.roomList}
             />
             <ValidationError
               required={this.state.roomRequired && !this.state.isBreakOut}
-              displayName="Room Name"
+              displayName="Room name"
             />
             <div>
               {this.state.isBreakOut ? (
@@ -658,7 +658,7 @@ class SessionForm extends Component {
                 <Col xs="12">
                   <InputElement
                     type="text"
-                    placeholder="Session Name"
+                    placeholder="Session name"
                     name="sessionName"
                     icon="icon-user"
                     required={this.state.sessionNameRequired}
@@ -671,14 +671,14 @@ class SessionForm extends Component {
                 <Col xs="12">
                   <Select
                     onChange={this.changeSessionType.bind(this)}
-                    placeholder="--Select Session Type--"
+                    placeholder="Select session type"
                     simpleValue
                     value={this.state.sessionTypeValue}
                     options={this.props.sessionTypeList}
                   />
                   <ValidationError
                     required={this.state.sessionTypeRequired}
-                    displayName="Session Type"
+                    displayName="Session type"
                   />
                 </Col>
               </FormGroup>
@@ -687,7 +687,7 @@ class SessionForm extends Component {
                   <Select
                     multi
                     onChange={this.changeSpeakers.bind(this)}
-                    placeholder="--Select Speakers--"
+                    placeholder="Select speakers"
                     simpleValue
                     disabled={this.state.isBreakOut}
                     value={this.state.speakerValue}
@@ -705,7 +705,7 @@ class SessionForm extends Component {
                 <Col xs="12">
                   <Select
                     multi
-                    placeholder="--Select Volunteers-- "
+                    placeholder="Select volunteers"
                     simpleValue
                     value={this.state.volunteerValue}
                     disabled={this.state.isBreakOut}
@@ -736,7 +736,7 @@ class SessionForm extends Component {
                 <Col xs="12">
                   <InputElement
                     type="number"
-                    placeholder="Session Capacity"
+                    placeholder="Session capacity"
                     name="sessionCapacity"
                     icon="icon-phone"
                     disabled={this.state.isBreakOut}

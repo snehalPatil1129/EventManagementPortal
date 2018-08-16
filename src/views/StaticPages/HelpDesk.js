@@ -226,7 +226,7 @@ class HelpDesk extends Component {
         <FormGroup row>
           <Col xs="12" md="4">
             <Select
-              placeholder="Select Event"
+              placeholder="Select event"
               value={helpDesk.event}
               options={this.props.eventList}
               simpleValue
@@ -247,7 +247,7 @@ class HelpDesk extends Component {
             <InputElement
               icon="icon-envelope"
               type="email"
-              placeholder="Event Support Email"
+              placeholder="Event support email"
               name="eventSupportEmail"
               inValid={this.state.inValidEventEmail}
               required={this.state.eventEmailRequired}
@@ -259,7 +259,7 @@ class HelpDesk extends Component {
             <InputElement
               icon="icon-phone"
               type="text"
-              placeholder="Event Support Contact"
+              placeholder="Event support contact"
               name="eventSupportContact"
               maxLength="10"
               inValid={this.state.inValidEventContact}
@@ -274,7 +274,7 @@ class HelpDesk extends Component {
             <InputElement
               icon="icon-envelope"
               type="email"
-              placeholder="Technical Support Email"
+              placeholder="Technical support email"
               name="techSupportEmail"
               inValid={this.state.inValidTechEmail}
               required={this.state.techEmailRequired}
@@ -286,7 +286,7 @@ class HelpDesk extends Component {
             <InputElement
               type="text"
               icon="icon-phone"
-              placeholder="Technical Support Contact"
+              placeholder="Technical support contact"
               name="techSupportContact"
               maxLength="10"
               inValid={this.state.inValidTechContact}
