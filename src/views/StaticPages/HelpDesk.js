@@ -151,37 +151,36 @@ class HelpDesk extends Component {
         compRef.Toaster(compRef, creatEditHelpDeskError, status);
       }, 1000);
     } else {
-      !helpDesk.event ? this.setState({ eventRequired: true }) : null;
-      helpDesk.eventSupportContact.toString().length === 0
-        ? null
-        : this.setState({ inValidEventContact: true });
-      helpDesk.techSupportContact.toString().length === 0
-        ? null
-        : this.setState({ inValidTechContact: true });
-      !helpDesk.eventSupportContact
-        ? this.setState({
-            eventContactRequired: true,
-            inValidEventContact: false
-          })
-        : null;
-      !helpDesk.techSupportContact
-        ? this.setState({
-            techContactRequired: true,
-            inValidTechContact: false
-          })
-        : null;
-      eventEmailValid && helpDesk.eventSupportEmail
-        ? null
-        : this.setState({ inValidEventEmail: true });
-      techEmailValid && helpDesk.techSupportEmail
-        ? null
-        : this.setState({ inValidTechEmail: true });
-      !helpDesk.eventSupportEmail
-        ? this.setState({ eventEmailRequired: true, inValidEventEmail: false })
-        : null;
-      !helpDesk.techSupportEmail
-        ? this.setState({ techEmailRequired: true, inValidTechEmail: false })
-        : null;
+      if (!helpDesk.event) {
+        this.setState({ eventRequired: true });
+      }
+      if (helpDesk.eventSupportContact.toString().length !== 10) {
+        this.setState({ inValidEventContact: true });
+      }
+      if (helpDesk.techSupportContact.toString().length !== 10) {
+        this.setState({ inValidTechContact: true });
+      }
+      if (!helpDesk.eventSupportContact) {
+        this.setState({
+          inValidEventContact: false,
+          eventContactRequired: true
+        });
+      }
+      if (!helpDesk.techSupportContact) {
+        this.setState({ inValidTechContact: false, techContactRequired: true });
+      }
+      if (!eventEmailValid) {
+        this.setState({ inValidEventEmail: true });
+      }
+      if (!techEmailValid) {
+        this.setState({ inValidTechEmail: true });
+      }
+      if (!helpDesk.eventSupportEmail) {
+        this.setState({ inValidEventEmail: false, eventEmailRequired: true });
+      }
+      if (!helpDesk.techSupportEmail) {
+        this.setState({ inValidTechEmail: false, techEmailRequired: true });
+      }
     }
   }
   Toaster(compRef, createEditError, actionName) {
