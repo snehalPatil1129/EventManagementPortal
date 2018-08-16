@@ -72,7 +72,7 @@ const AnswerLayout = props => {
                 />
                 <Input
                   type="text"
-                  placeholder="Add Choice"
+                  placeholder="Add choice"
                   name={id}
                   value={opt.value}
                   onChange={props.onChangeOptionValue}

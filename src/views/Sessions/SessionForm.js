@@ -61,8 +61,7 @@ class SessionForm extends Component {
       startTimeRequired: false,
       speakersRequired: false,
       volunteersRequired: false,
-      endTimeRequired: false,
-      multiDayFlag: false
+      endTimeRequired: false
     };
   }
 
@@ -80,9 +79,20 @@ class SessionForm extends Component {
     sessionDetails[session.target.name] = session.target.value;
     this.setState({
       Session: sessionDetails,
-      sessionNameRequired: false,
-      sessionCapacityRequired: false
+      sessionNameRequired: false
     });
+  }
+
+  ChangeCapacityHandler(session) {
+    if (session.target.value >= 0) {
+      let sessionDetails = { ...this.state.Session };
+      sessionDetails[session.target.name] = session.target.value;
+      this.setState({
+        Session: sessionDetails,
+        sessionNameRequired: false,
+        sessionCapacityRequired: false
+      });
+    } else return;
   }
 
   eventDaysStyleGetter(date) {
@@ -149,8 +159,9 @@ class SessionForm extends Component {
       setTimeout(() => {
         this.props.sessions.forEach(session => {
           if (
-            session.event._id == this.state.eventValue ||
-            session.room === roomValue
+            (session.event._id == this.state.eventValue &&
+              session.room === roomValue) ||
+            session.sessionType === "breakout"
           ) {
             this.displaySessions(session, calendarSessionList);
           }
@@ -580,27 +591,27 @@ class SessionForm extends Component {
           <Col xs="12" md="5">
             <Select
               onChange={this.changeEvent.bind(this)}
-              placeholder="--Select Event--"
+              placeholder="Select event"
               simpleValue
               value={this.state.eventValue}
               options={this.props.eventList}
             />
             <ValidationError
               required={this.state.eventRequired}
-              displayName="Event Name"
+              displayName="Event name"
             />
           </Col>
           <Col xs="12" md="5">
             <Select
               onChange={this.changeRoom.bind(this)}
-              placeholder="--Select Room--"
+              placeholder="Select room"
               simpleValue
               value={this.state.roomValue}
               options={this.state.roomList}
             />
             <ValidationError
               required={this.state.roomRequired && !this.state.isBreakOut}
-              displayName="Room Name"
+              displayName="Room name"
             />
             <div>
               {this.state.isBreakOut ? (
@@ -658,9 +669,9 @@ class SessionForm extends Component {
                 <Col xs="12">
                   <InputElement
                     type="text"
-                    placeholder="Session Name"
+                    placeholder="Session name"
                     name="sessionName"
-                    icon="icon-user"
+                    icon="icon-calendar"
                     required={this.state.sessionNameRequired}
                     value={this.state.Session.sessionName}
                     onchanged={session => this.onChangeHandler(session)}
@@ -671,14 +682,14 @@ class SessionForm extends Component {
                 <Col xs="12">
                   <Select
                     onChange={this.changeSessionType.bind(this)}
-                    placeholder="--Select Session Type--"
+                    placeholder="Select session type"
                     simpleValue
                     value={this.state.sessionTypeValue}
                     options={this.props.sessionTypeList}
                   />
                   <ValidationError
                     required={this.state.sessionTypeRequired}
-                    displayName="Session Type"
+                    displayName="Session type"
                   />
                 </Col>
               </FormGroup>
@@ -687,7 +698,7 @@ class SessionForm extends Component {
                   <Select
                     multi
                     onChange={this.changeSpeakers.bind(this)}
-                    placeholder="--Select Speakers--"
+                    placeholder="Select speakers"
                     simpleValue
                     disabled={this.state.isBreakOut}
                     value={this.state.speakerValue}
@@ -705,7 +716,7 @@ class SessionForm extends Component {
                 <Col xs="12">
                   <Select
                     multi
-                    placeholder="--Select Volunteers-- "
+                    placeholder="Select volunteers"
                     simpleValue
                     value={this.state.volunteerValue}
                     disabled={this.state.isBreakOut}
@@ -726,7 +737,7 @@ class SessionForm extends Component {
                     type="text"
                     placeholder="Description"
                     name="description"
-                    icon="icon-phone"
+                    icon="icon-note"
                     value={this.state.Session.description}
                     onchanged={session => this.onChangeHandler(session)}
                   />
@@ -736,16 +747,16 @@ class SessionForm extends Component {
                 <Col xs="12">
                   <InputElement
                     type="number"
-                    placeholder="Session Capacity"
+                    placeholder="Session capacity"
                     name="sessionCapacity"
-                    icon="icon-phone"
+                    icon="icon-pie-chart"
                     disabled={this.state.isBreakOut}
                     required={
                       this.state.sessionCapacityRequired &&
                       !this.state.isBreakOut
                     }
                     value={this.state.Session.sessionCapacity}
-                    onchanged={session => this.onChangeHandler(session)}
+                    onchanged={session => this.ChangeCapacityHandler(session)}
                   />
                 </Col>
               </FormGroup>

@@ -266,7 +266,7 @@ class Registration extends Component {
           <Col xs="12" md="6">
             <InputElement
               type="text"
-              placeholder="First Name"
+              placeholder="First name"
               name="firstName"
               icon="icon-user"
               value={Registration.firstName}
@@ -277,7 +277,7 @@ class Registration extends Component {
           <Col md="6">
             <InputElement
               type="text"
-              placeholder="Last Name"
+              placeholder="Last name"
               name="lastName"
               icon="icon-user"
               value={Registration.lastName}
@@ -302,7 +302,7 @@ class Registration extends Component {
           <Col md="6">
             <InputElement
               type="text"
-              placeholder="Contact Number"
+              placeholder="Contact number"
               name="contact"
               icon="icon-phone"
               maxLength="10"
@@ -316,7 +316,7 @@ class Registration extends Component {
         <FormGroup row>
           <Col xs="12" md="6">
             <Select
-              placeholder="Select Event"
+              placeholder="Select event"
               value={Registration.event}
               options={eventOptions}
               simpleValue
@@ -334,7 +334,7 @@ class Registration extends Component {
           <Col md="6">
             <InputElement
               type="text"
-              placeholder="Brief Info"
+              placeholder="Brief info"
               name="briefInfo"
               icon="icon-info"
               value={Registration.briefInfo}
@@ -346,7 +346,7 @@ class Registration extends Component {
           <Col xs="12" md="6">
             <InputElement
               type="text"
-              placeholder="Profile Image URL"
+              placeholder="Profile image URL"
               name="profileImageURL"
               icon="icon-link"
               value={Registration.profileImageURL}
@@ -356,7 +356,7 @@ class Registration extends Component {
           <Col md="6">
             <Select
               multi
-              placeholder="Select Profiles"
+              placeholder="Select profiles"
               value={Registration.profiles}
               options={this.props.profileList}
               simpleValue

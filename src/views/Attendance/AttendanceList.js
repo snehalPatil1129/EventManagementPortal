@@ -65,7 +65,7 @@ class AttendanceList extends Component {
           <Col xs="12" md="4">
             <Select
               name="Event"
-              placeholder="Select Event"
+              placeholder="Select event"
               options={this.props.events}
               value={this.state.event}
               simpleValue
@@ -75,7 +75,7 @@ class AttendanceList extends Component {
           <Col md="4">
             <Select
               name="Session"
-              placeholder="Select Session"
+              placeholder="Select session"
               options={this.props.sessions}
               value={this.state.session}
               simpleValue

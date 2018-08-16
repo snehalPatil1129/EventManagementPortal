@@ -136,7 +136,7 @@ class AboutUs extends Component {
         <FormGroup row>
           <Col xs="12" md="4">
             <Select
-              placeholder="Select Event"
+              placeholder="Select event"
               value={event}
               options={this.props.eventList}
               simpleValue
@@ -157,7 +157,7 @@ class AboutUs extends Component {
             <InputElement
               icon="icon-info"
               type="text"
-              placeholder="Information about Us..."
+              placeholder="Information about us"
               name="info"
               value={info}
               required={this.state.infoRequired}

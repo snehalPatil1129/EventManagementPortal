@@ -185,7 +185,7 @@ class EventLocation extends Component {
           <Col xs="12" md="6">
             <Select
               name="event"
-              placeholder="Select Event"
+              placeholder="Select event"
               simpleValue
               options={this.props.eventList}
               value={eventLocation.event}
@@ -196,7 +196,7 @@ class EventLocation extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please Select Event
+                Please select event
               </div>
             ) : null}
           </Col>
@@ -204,7 +204,7 @@ class EventLocation extends Component {
             <InputElement
               icon="icon-home"
               type="text"
-              placeholder="Event Address"
+              placeholder="Event address"
               name="address"
               required={this.state.addressRequired}
               value={eventLocation.address}

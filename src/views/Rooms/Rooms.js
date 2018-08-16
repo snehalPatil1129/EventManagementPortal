@@ -181,7 +181,7 @@ class Rooms extends Component {
             <InputElement
               icon="icon-home"
               type="text"
-              placeholder="Room Name"
+              placeholder="Room name"
               name="roomName"
               required={this.state.roomNameRequired}
               value={Room.roomName}
@@ -190,7 +190,7 @@ class Rooms extends Component {
           </Col>
           <Col md="6">
             <Select
-              placeholder="Select Event"
+              placeholder="Select event"
               value={Room.event}
               options={eventOptions}
               simpleValue
@@ -201,7 +201,7 @@ class Rooms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please Select Event
+                Please select event
               </div>
             ) : null}
           </Col>
@@ -225,7 +225,7 @@ class Rooms extends Component {
             <InputElement
               icon="icon-pie-chart"
               type="number"
-              placeholder="Buffer Capacity"
+              placeholder="Buffer capacity"
               name="bufferCapacity"
               value={Room.bufferCapacity}
               onchanged={event => this.onChangeInput(event)}
@@ -237,7 +237,7 @@ class Rooms extends Component {
             <Select
               multi
               onChange={this.handleSelectChange.bind(this)}
-              placeholder="Select your Services(s)"
+              placeholder="Select your services(s)"
               simpleValue
               value={Room.availableServices}
               options={options}

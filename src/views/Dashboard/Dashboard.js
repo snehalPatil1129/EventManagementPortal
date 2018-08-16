@@ -32,13 +32,16 @@ class Dashboard extends Component {
     var ColorCode = "#808587";
     if (this.state.loading) {
       return <Loader loading={this.state.loading} />;
+    } else if (this.props.events.length === 0) {
+      return (
+        <div className="animated fadeIn">
+          <h5>No events found...</h5>
+        </div>
+      );
     } else {
       return (
         <div className="animated fadeIn">
-          {this.state.events.map((event, index) => {
-            event.startDate = moment(event.startDate).format(
-              "hh:mm on DD-MM-YYYY"
-            );
+          {this.props.events.map((event, index) => {
             index % 2 === 0 ? (ColorCode = "#8bc3d7") : (ColorCode = "#808587");
             return (
               <Row key={index} className="justify-content-left">
@@ -51,15 +54,22 @@ class Dashboard extends Component {
                       style={{ fontWeight: "bold", fontSize: 20 }}
                       className="p-4"
                     >
-                      <h2> Description : {event.description} </h2>
+                      <h4> {event.description} </h4>
                       <br />
                       <Row>
                         <Col xs="8" md="4">
-                          <h3> Venue : {event.venue} </h3>
+                          <h4>
+                            <i className="fa fa-map-marker" /> {event.venue}
+                          </h4>
                           <br />
                         </Col>
                         <Col md="4">
-                          <h3> Time : {event.startDate} </h3>
+                          <h4>
+                            <i className="fa fa-clock-o" />
+                            {moment(event.startDate).format(
+                              "hh:mm on DD-MM-YYYY"
+                            )}
+                          </h4>
                         </Col>
                       </Row>
                     </CardBody>

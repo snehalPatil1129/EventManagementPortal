@@ -8,9 +8,10 @@ export const createSpeakerSuccess = () => {
   };
 };
 
-export const createSpeakerFail = () => {
+export const createSpeakerFail = createError => {
   return {
-    type: actionTypes.CREATE_SPEAKER_FAIL
+    type: actionTypes.CREATE_SPEAKER_FAIL,
+    createError: createError
   };
 };
 
@@ -153,7 +154,7 @@ export const createSpeaker = (speaker, attendeeCount) => {
           });
       })
       .catch(error => {
-        dispatch(createSpeakerFail());
+        dispatch(createSpeakerFail(error.response.data));
         //dispatch(logRegistrationError());
       });
   };

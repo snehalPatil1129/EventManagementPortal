@@ -50,7 +50,7 @@ class EventList extends Component {
     setTimeout(() => {
       let eventDeleted = this.props.eventDeleted;
       compRef.Toaster(compRef, eventDeleted, "Deleted");
-    }, 3000);
+    }, 4000);
   }
 
   Toaster(compRef, successFlag, actionName) {
@@ -107,6 +107,9 @@ class EventList extends Component {
       ],
       sizePerPage: 250
     };
+    const selectRowProp = {
+      mode: "checkbox"
+    };
 
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
@@ -142,6 +145,7 @@ class EventList extends Component {
                     data={this.props.events}
                     pagination={true}
                     options={sortingOptions}
+                    selectRow={selectRowProp}
                     exportCSV={true}
                   >
                     <TableHeaderColumn

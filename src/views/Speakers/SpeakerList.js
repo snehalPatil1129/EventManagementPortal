@@ -163,7 +163,7 @@ class SpeakerList extends Component {
                     <Col md="4">
                       <Select
                         name="Event"
-                        placeholder="Select Event"
+                        placeholder="Select event"
                         options={this.props.eventList}
                         value={this.state.event}
                         simpleValue
@@ -274,7 +274,7 @@ const mapStateToProps = state => {
   return {
     speakerError: state.speaker.error,
     speakerList: state.speaker.speakerList,
-    eventList: state.event.eventListm,
+    eventList: state.event.eventList,
     speakerDeleted: state.speaker.speakerDeleted
   };
 };

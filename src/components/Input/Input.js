@@ -20,12 +20,12 @@ const InputElement = props => (
     />
     {props.required ? (
       <div style={{ color: "red" }} className="help-block">
-        {props.placeholder} is Required
+        {props.placeholder} is required
       </div>
     ) : null}
     {props.inValid ? (
       <div style={{ color: "red" }} className="help-block">
-        {props.placeholder} is Invalid
+        {props.placeholder} is invalid
       </div>
     ) : null}
   </InputGroup>

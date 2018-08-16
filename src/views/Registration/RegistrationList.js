@@ -198,7 +198,7 @@ class RegistrationList extends Component {
                     <Col md="4">
                       <Select
                         name="Event"
-                        placeholder="Select Event"
+                        placeholder="Select event"
                         options={this.props.eventList}
                         value={this.state.event}
                         simpleValue
@@ -208,7 +208,7 @@ class RegistrationList extends Component {
                     <Col md="4">
                       <Select
                         name="Profile"
-                        placeholder="Select Profile"
+                        placeholder="Select profile"
                         options={this.props.profileList}
                         value={this.state.profile}
                         simpleValue

@@ -6,7 +6,14 @@ import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import InputElement from "../../components/Input/";
 import CardLayout from "../../components/CardLayout/";
-import { InputGroup, InputGroupText, Col, Button, FormGroup } from "reactstrap";
+import {
+  InputGroup,
+  InputGroupText,
+  Col,
+  Button,
+  FormGroup,
+  Label
+} from "reactstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
@@ -43,15 +50,14 @@ class EventForm extends Component {
           o => o._id === this.props.match.params.id
         );
         this.setCurrentEvent(event);
-      }else {
+      } else {
         this.setState({ loading: true });
         this.props.getEventById(this.props.match.params.id);
         let compRef = this;
         setTimeout(function() {
-          if(Object.keys(compRef.props.currentEvent).length){
+          if (Object.keys(compRef.props.currentEvent).length) {
             compRef.setCurrentEvent(compRef.props.currentEvent);
-          }
-          else{
+          } else {
             compRef.props.history.push("/events");
           }
         }, 1000);
@@ -59,12 +65,12 @@ class EventForm extends Component {
     }
   }
 
-  setCurrentEvent(currentEvent){
+  setCurrentEvent(currentEvent) {
     let Event = {
       id: currentEvent._id,
       eventName: currentEvent.eventName,
       venue: currentEvent.venue,
-      description:currentEvent.description,
+      description: currentEvent.description,
       startDate: moment(currentEvent.startDate),
       endDate: moment(currentEvent.endDate)
     };
@@ -134,6 +140,8 @@ class EventForm extends Component {
         let eventCreated = this.props.eventCreated;
         compRef.Toaster(compRef, eventCreated, "Created");
       }, 1500);
+    } else {
+      this.setState({ loading: false });
     }
   }
   redirectFunction() {
@@ -181,6 +189,8 @@ class EventForm extends Component {
         let eventUpdated = this.props.eventUpdated;
         compRef.Toaster(compRef, eventUpdated, "Updated");
       }, 1500);
+    } else {
+      this.setState({ loading: false });
     }
   }
   resetField() {
@@ -225,15 +235,15 @@ class EventForm extends Component {
         </Button>
       );
 
-      return this.state.loading ? (
-        <Loader loading={this.state.loading} />
-      ) : (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <CardLayout name="Event">
         <FormGroup row>
           <Col xs="12" md="6">
             <InputElement
               type="text"
-              placeholder="Event Name"
+              placeholder="Event name"
               name="eventName"
               icon="icon-home"
               value={this.state.Event.eventName}
@@ -241,7 +251,12 @@ class EventForm extends Component {
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
-          <Col md="6">
+        </FormGroup>
+        <FormGroup row>
+          <Col xs="12" md="2">
+            <h4>Start Date :</h4>
+          </Col>
+          <Col md="4">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
@@ -257,13 +272,14 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                startDate is Required
+                Start date is required
               </div>
             ) : null}
           </Col>
-        </FormGroup>
-        <FormGroup row>
-          <Col xs="12" md="6">
+          <Col xs="12" md="2">
+            <h4>End Date :</h4>
+          </Col>
+          <Col xs="12" md="4">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
@@ -279,21 +295,12 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                endDate is Required
+                End date is required
               </div>
             ) : null}
           </Col>
-          <Col md="6">
-            <InputElement
-              type="text"
-              placeholder="Description"
-              name="description"
-              icon="icon-note"
-              value={this.state.Event.description}
-              onchanged={event => this.onChangeHandler(event)}
-            />
-          </Col>
         </FormGroup>
+        <FormGroup row />
         <FormGroup row>
           <Col xs="12" md="6">
             <InputElement
@@ -303,6 +310,16 @@ class EventForm extends Component {
               icon="icon-home"
               value={this.state.Event.venue}
               required={this.state.venueRequired}
+              onchanged={event => this.onChangeHandler(event)}
+            />
+          </Col>
+          <Col md="6">
+            <InputElement
+              type="text"
+              placeholder="Description"
+              name="description"
+              icon="icon-note"
+              value={this.state.Event.description}
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
@@ -334,7 +351,6 @@ class EventForm extends Component {
           </Col>
         </FormGroup>
       </CardLayout>
-      
     );
   }
 }
