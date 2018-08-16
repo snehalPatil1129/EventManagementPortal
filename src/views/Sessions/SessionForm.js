@@ -487,42 +487,51 @@ class SessionForm extends Component {
   }
 
   selectSlot(slotInfo) {
+    let selectFlag = true;
     let SessionObj = {...this.state.Session}
+    console.log("SessionObj",SessionObj);
     let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
     if (
       this.state.eventStartDate <= dateselected &&
       dateselected <= this.state.eventEndDate
     ) {
+      
       if(SessionObj.room!=="" && SessionObj.room!==undefined){
         this.props.sessions.forEach((session)=>{
-          if(session.event_id ===SessionObj.event && session.room === SessionObj.room){
-            if(new Date(session.startDate)>= new Date(slotInfo.start)||
+          if(session.event._id ===SessionObj.event && session.room === SessionObj.room){
+            console.log("new Date(slotInfo.start).getTime()",new Date(slotInfo.start).getTime());
+            console.log("new Date(session.startTime)",new Date(session.startTime))
+            if(new Date(session.startTime)>= new Date(slotInfo.start)||
                new Date(session.endDate) <= new Date(slotInfo.end)){
-                  return;
+                selectFlag = false;
+                return;
                }}
               
         })
       }
-     
-        let SlotconfirmMessage =
-        `Start Time : ${slotInfo.start.toLocaleString()} ` +
-        `,\r\n End Time: ${slotInfo.end.toLocaleString()}`;
-      this.setState({ SlotconfirmMessage: SlotconfirmMessage });
-
-      alert(
-        `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
-          `\nend: ${slotInfo.end.toLocaleString()}`
-      );
-      let Session = { ...this.state.Session };
-      Session["startTime"] = slotInfo.start.toString();
-      Session["endTime"] = slotInfo.end.toString();
-      this.setState({
-        Session: Session,
-        startTimeRequired: false,
-        endTimeRequired: false,
-        SlotconfirmMessage
-      });
-      
+      console.log("selectFlag", selectFlag)
+        if( selectFlag == false)
+          return;
+        else{
+          let SlotconfirmMessage =
+          `Start Time : ${slotInfo.start.toLocaleString()} ` +
+          `,\r\n End Time: ${slotInfo.end.toLocaleString()}`;
+        this.setState({ SlotconfirmMessage: SlotconfirmMessage });
+  
+        alert(
+          `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
+            `\nend: ${slotInfo.end.toLocaleString()}`
+        );
+        let Session = { ...this.state.Session };
+        Session["startTime"] = slotInfo.start.toString();
+        Session["endTime"] = slotInfo.end.toString();
+        this.setState({
+          Session: Session,
+          startTimeRequired: false,
+          endTimeRequired: false,
+          SlotconfirmMessage
+        });
+        }
     } else {
       return;
     }
