@@ -274,7 +274,7 @@ const mapStateToProps = state => {
   return {
     speakerError: state.speaker.error,
     speakerList: state.speaker.speakerList,
-    eventList: state.event.eventListm,
+    eventList: state.event.eventList,
     speakerDeleted: state.speaker.speakerDeleted
   };
 };

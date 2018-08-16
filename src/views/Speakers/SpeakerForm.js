@@ -28,7 +28,9 @@ class SpeakerForm extends Component {
       emailRequired: false,
       contactRequired: false,
       eventRequired: false,
-      editSpeaker: false
+      editSpeaker: false,
+      inValidContact: false,
+      inValidEmail: false
     };
   }
   componentDidMount() {
@@ -51,13 +53,24 @@ class SpeakerForm extends Component {
       });
     }
   }
+
   onChangeInput(event) {
     const { Speaker } = { ...this.state };
     Speaker[event.target.name] = event.target.value;
-    this.setState({ Speaker: Speaker });
+    this.setState({
+      Speaker: Speaker,
+      firstNameRequired: false,
+      lastNameRequired: false,
+      emailRequired: false,
+      contactRequired: false,
+      eventRequired: false,
+      inValidContact: false,
+      inValidEmail: false
+    });
   }
 
   Toaster(compRef, successFlag, actionName) {
+    let errorMessage = compRef.props.createError;
     if (successFlag) {
       toast.success("Speaker " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
@@ -66,9 +79,13 @@ class SpeakerForm extends Component {
         compRef.redirectFunction();
       }, 1000);
     } else {
-      toast.error("Something went wrong", {
-        position: toast.POSITION.BOTTOM_RIGHT
-      });
+      errorMessage
+        ? toast.error("Speaker Already Exists", {
+            position: toast.POSITION.BOTTOM_RIGHT
+          })
+        : toast.error("Something Went wrong", {
+            position: toast.POSITION.BOTTOM_RIGHT
+          });
     }
   }
 
@@ -79,8 +96,17 @@ class SpeakerForm extends Component {
   onSubmit() {
     let speaker = { ...this.state.Speaker };
     let attendeeCount = this.props.attendeeCount;
-
+    let validContact;
+    let validEmail;
+    if (speaker.email) {
+      validEmail = speaker.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+    }
+    if (speaker.contact) {
+      validContact = speaker.contact.toString().length === 10;
+    }
     if (
+      validContact &&
+      validEmail &&
       speaker.firstName &&
       speaker.lastName &&
       speaker.email &&
@@ -96,15 +122,26 @@ class SpeakerForm extends Component {
         "profileImageURL",
         "event"
       ]);
+
       this.state.editSpeaker
         ? this.updateSpeaker(speaker._id, editedSpeaker)
         : this.createSpeaker(speaker, attendeeCount);
     } else {
       !speaker.firstName ? this.setState({ firstNameRequired: true }) : null;
       !speaker.lastName ? this.setState({ lastNameRequired: true }) : null;
-      !speaker.email ? this.setState({ emailRequired: true }) : null;
-      !speaker.contact ? this.setState({ contactRequired: true }) : null;
       !speaker.event ? this.setState({ eventRequired: true }) : null;
+      !validContact && speaker.contact
+        ? this.setState({ inValidContact: true })
+        : null;
+      validEmail && speaker.email
+        ? null
+        : this.setState({ inValidEmail: true });
+      !speaker.email
+        ? this.setState({ emailRequired: true, inValidEmail: false })
+        : null;
+      !speaker.contact
+        ? this.setState({ contactRequired: true, inValidContact: false })
+        : null;
     }
   }
 
@@ -126,15 +163,25 @@ class SpeakerForm extends Component {
     }, 1000);
   }
   onReset() {
-    let Speaker = { ...this.state.Speaker };
-    Speaker.firstName = "";
-    Speaker.lastName = "";
-    Speaker.email = "";
-    Speaker.contact = "";
-    Speaker.briefInfo = "";
-    Speaker.profileImageURL = "";
-    Speaker.event = "";
-    this.setState({ Speaker: Speaker });
+    let Speaker = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      contact: "",
+      briefInfo: "",
+      profileImageURL: "",
+      event: ""
+    };
+    this.setState({
+      Speaker: Speaker,
+      firstNameRequired: false,
+      lastNameRequired: false,
+      emailRequired: false,
+      contactRequired: false,
+      eventRequired: false,
+      inValidContact: false,
+      inValidEmail: false
+    });
   }
 
   handleEventSelectChange(value) {
@@ -161,6 +208,28 @@ class SpeakerForm extends Component {
   render() {
     const { Speaker } = { ...this.state };
     const eventOptions = this.props.eventList;
+    if (this.state.editSpeaker)
+      this.buttons = (
+        <Button
+          type="submit"
+          size="md"
+          color="success"
+          onClick={this.onSubmit.bind(this)}
+        >
+          <i className="icon-note" /> Update
+        </Button>
+      );
+    else
+      this.buttons = (
+        <Button
+          type="submit"
+          size="md"
+          color="success"
+          onClick={this.onSubmit.bind(this)}
+        >
+          <i className="icon-note" /> Submit
+        </Button>
+      );
     return (
       <CardLayout name="Speaker">
         <FormGroup row>
@@ -195,6 +264,7 @@ class SpeakerForm extends Component {
               name="email"
               icon="icon-envelope"
               value={Speaker.email}
+              inValid={this.state.inValidEmail}
               required={this.state.emailRequired}
               onchanged={event => this.onChangeInput(event)}
             />
@@ -206,6 +276,7 @@ class SpeakerForm extends Component {
               name="contact"
               icon="icon-phone"
               value={Speaker.contact}
+              inValid={this.state.inValidContact}
               required={this.state.emailRequired}
               onchanged={event => this.onChangeInput(event)}
             />
@@ -254,14 +325,7 @@ class SpeakerForm extends Component {
         </FormGroup>
         <FormGroup row>
           <Col xs="12" md="3">
-            <Button
-              type="button"
-              size="md"
-              color="success"
-              onClick={() => this.onSubmit()}
-            >
-              Submit
-            </Button>
+            {this.buttons}
           </Col>
           <Col md="3">
             <Button
@@ -292,7 +356,8 @@ const mapStateToProps = state => {
     eventList: state.event.eventList,
     attendeeCount: state.attendeeCount.attendeeCount,
     speakerCreated: state.speaker.speakerCreated,
-    speakerUpdated: state.speaker.speakerUpdated
+    speakerUpdated: state.speaker.speakerUpdated,
+    createError: state.speaker.createError
   };
 };
 const mapDispatchToProps = dispatch => {

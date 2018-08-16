@@ -61,8 +61,7 @@ class SessionForm extends Component {
       startTimeRequired: false,
       speakersRequired: false,
       volunteersRequired: false,
-      endTimeRequired: false,
-      multiDayFlag: false
+      endTimeRequired: false
     };
   }
 
@@ -80,9 +79,20 @@ class SessionForm extends Component {
     sessionDetails[session.target.name] = session.target.value;
     this.setState({
       Session: sessionDetails,
-      sessionNameRequired: false,
-      sessionCapacityRequired: false
+      sessionNameRequired: false
     });
+  }
+
+  ChangeCapacityHandler(session) {
+    if (session.target.value >= 0) {
+      let sessionDetails = { ...this.state.Session };
+      sessionDetails[session.target.name] = session.target.value;
+      this.setState({
+        Session: sessionDetails,
+        sessionNameRequired: false,
+        sessionCapacityRequired: false
+      });
+    } else return;
   }
 
   eventDaysStyleGetter(date) {
@@ -149,8 +159,9 @@ class SessionForm extends Component {
       setTimeout(() => {
         this.props.sessions.forEach(session => {
           if (
-            session.event._id == this.state.eventValue ||
-            session.room === roomValue
+            (session.event._id == this.state.eventValue &&
+              session.room === roomValue) ||
+            session.sessionType === "breakout"
           ) {
             this.displaySessions(session, calendarSessionList);
           }
@@ -660,7 +671,7 @@ class SessionForm extends Component {
                     type="text"
                     placeholder="Session name"
                     name="sessionName"
-                    icon="icon-user"
+                    icon="icon-calendar"
                     required={this.state.sessionNameRequired}
                     value={this.state.Session.sessionName}
                     onchanged={session => this.onChangeHandler(session)}
@@ -726,7 +737,7 @@ class SessionForm extends Component {
                     type="text"
                     placeholder="Description"
                     name="description"
-                    icon="icon-phone"
+                    icon="icon-note"
                     value={this.state.Session.description}
                     onchanged={session => this.onChangeHandler(session)}
                   />
@@ -738,14 +749,14 @@ class SessionForm extends Component {
                     type="number"
                     placeholder="Session capacity"
                     name="sessionCapacity"
-                    icon="icon-phone"
+                    icon="icon-pie-chart"
                     disabled={this.state.isBreakOut}
                     required={
                       this.state.sessionCapacityRequired &&
                       !this.state.isBreakOut
                     }
                     value={this.state.Session.sessionCapacity}
-                    onchanged={session => this.onChangeHandler(session)}
+                    onchanged={session => this.ChangeCapacityHandler(session)}
                   />
                 </Col>
               </FormGroup>

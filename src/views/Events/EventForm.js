@@ -6,7 +6,14 @@ import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import InputElement from "../../components/Input/";
 import CardLayout from "../../components/CardLayout/";
-import { InputGroup, InputGroupText, Col, Button, FormGroup } from "reactstrap";
+import {
+  InputGroup,
+  InputGroupText,
+  Col,
+  Button,
+  FormGroup,
+  Label
+} from "reactstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
@@ -133,6 +140,8 @@ class EventForm extends Component {
         let eventCreated = this.props.eventCreated;
         compRef.Toaster(compRef, eventCreated, "Created");
       }, 1500);
+    } else {
+      this.setState({ loading: false });
     }
   }
   redirectFunction() {
@@ -180,6 +189,8 @@ class EventForm extends Component {
         let eventUpdated = this.props.eventUpdated;
         compRef.Toaster(compRef, eventUpdated, "Updated");
       }, 1500);
+    } else {
+      this.setState({ loading: false });
     }
   }
   resetField() {
@@ -240,7 +251,12 @@ class EventForm extends Component {
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
-          <Col md="6">
+        </FormGroup>
+        <FormGroup row>
+          <Col xs="12" md="2">
+            <h4>Start Date :</h4>
+          </Col>
+          <Col md="4">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
@@ -260,9 +276,10 @@ class EventForm extends Component {
               </div>
             ) : null}
           </Col>
-        </FormGroup>
-        <FormGroup row>
-          <Col xs="12" md="6">
+          <Col xs="12" md="2">
+            <h4>End Date :</h4>
+          </Col>
+          <Col xs="12" md="4">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
@@ -282,17 +299,8 @@ class EventForm extends Component {
               </div>
             ) : null}
           </Col>
-          <Col md="6">
-            <InputElement
-              type="text"
-              placeholder="Description"
-              name="description"
-              icon="icon-note"
-              value={this.state.Event.description}
-              onchanged={event => this.onChangeHandler(event)}
-            />
-          </Col>
         </FormGroup>
+        <FormGroup row />
         <FormGroup row>
           <Col xs="12" md="6">
             <InputElement
@@ -302,6 +310,16 @@ class EventForm extends Component {
               icon="icon-home"
               value={this.state.Event.venue}
               required={this.state.venueRequired}
+              onchanged={event => this.onChangeHandler(event)}
+            />
+          </Col>
+          <Col md="6">
+            <InputElement
+              type="text"
+              placeholder="Description"
+              name="description"
+              icon="icon-note"
+              value={this.state.Event.description}
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
