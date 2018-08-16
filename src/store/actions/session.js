@@ -54,6 +54,14 @@ export const deleteSessionSuccess = sessionId => {
     sessionId: sessionId
   };
 };
+
+export const getSessionTypeListsSuccess = sessionTypeList => {
+  return {
+    type: actionTypes.GET_SESSION_TYPE_LIST_SUCCESS,
+    sessionTypeList: sessionTypeList
+  };
+};
+
 export const getSessions = () => {
   return dispatch => {
     axios
@@ -67,6 +75,28 @@ export const getSessions = () => {
         });
 
         dispatch(getSessionsSuccess(response.data, sessionList));
+      })
+      .catch(error => {
+        dispatch(getSessionsFail(error));
+      });
+  };
+};
+
+export const getSessionsByEvent = eventId => {
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/session`)
+      .then(response => {
+        let sessionList = [];
+        let sessions = [];
+        response.data.forEach(data => {
+          if (data.event != null) {
+            if (data.event._id === eventId) {
+              sessions.push(data);
+            }
+          }
+        });
+        dispatch(getSessionsSuccess(sessions, sessionList));
       })
       .catch(error => {
         dispatch(getSessionsFail(error));
@@ -124,6 +154,7 @@ export const updateSession = session => {
       .put(`${AppConfig.serverURL}/api/session/${id}`, sessionObj)
       .then(response => {
         dispatch(updateSessionSuccess(response.data._id, session));
+        dispatch(getSessions());
       })
       .catch(error => {
         dispatch(updateSessionFail(error));
@@ -142,6 +173,24 @@ export const deleteSession = sessionId => {
       })
       .catch(error => {
         dispatch(deleteSessionFail(error));
+      });
+  };
+};
+
+export const getSessionTypeList = () => {
+  return dispatch => {
+    axios
+      .get(`${AppConfig.serverURL}/api/sessionTypeList`)
+      .then(response => {
+        let SessionTypeList = [];
+        let dataList = response.data[0].sessionTypes;
+        dataList.forEach(data => {
+          SessionTypeList.push({ label: data, value: data });
+        });
+        dispatch(getSessionTypeListsSuccess(SessionTypeList));
+      })
+      .catch(error => {
+        //dispatch(getSessionTypeListsFail(error));
       });
   };
 };
