@@ -247,7 +247,7 @@ class RegistrationList extends Component {
                       <TableHeaderColumn
                         dataField="firstName"
                         headerAlign="left"
-                        width="100"
+                        width="60"
                         csvHeader="First Name"
                       >
                         First Name
@@ -255,7 +255,7 @@ class RegistrationList extends Component {
                       <TableHeaderColumn
                         dataField="lastName"
                         headerAlign="left"
-                        width="100"
+                        width="60"
                         csvHeader="Last Name"
                       >
                         Last Name
@@ -263,15 +263,23 @@ class RegistrationList extends Component {
                       <TableHeaderColumn
                         dataField="email"
                         headerAlign="left"
-                        width="100"
+                        width="80"
                         csvHeader="Email"
                       >
                         Email
                       </TableHeaderColumn>
                       <TableHeaderColumn
+                        dataField="contact"
+                        headerAlign="left"
+                        width="80"
+                        csvHeader="Contact"
+                      >
+                        Contact
+                      </TableHeaderColumn>
+                      <TableHeaderColumn
                         dataField="eventName"
                         headerAlign="left"
-                        width="100"
+                        width="80"
                         csvHeader="Event"
                       >
                         Event

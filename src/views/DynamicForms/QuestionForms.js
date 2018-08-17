@@ -205,7 +205,7 @@ class QuestionForms extends Component {
         blankQuestionsPresent = true;
       }
       if (
-        fItem.inputType === "Mulitple Choice" ||
+        fItem.inputType === "Multiple choice" ||
         fItem.inputType === "Check Box"
       ) {
         for (let i = 0; i < fItem.options.length; i++) {
@@ -377,7 +377,7 @@ class QuestionForms extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Col xs="12" md="8">
+          <Col xs="12" md="6">
             <Button
               type="button"
               size="md"
@@ -387,13 +387,14 @@ class QuestionForms extends Component {
               Add Question{" "}
             </Button>
           </Col>
-          <Col md="4">
+          <Col md="6">
             {this.state.invalidForm ? (
               <div
                 style={{ color: "red", fontSize: 15, marginTop: 10 }}
                 className="help-block"
               >
-                *Please add question
+                *Invalid form - Questions /Multiple Choice/ Check Box fields
+                can't be empty
               </div>
             ) : null}
           </Col>

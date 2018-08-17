@@ -41,44 +41,58 @@ class Dashboard extends Component {
     } else {
       return (
         <div className="animated fadeIn">
-          {this.props.events.map((event, index) => {
-            index % 2 === 0 ? (ColorCode = "#8bc3d7") : (ColorCode = "#808587");
-            return (
-              <Row key={index} className="justify-content-left">
-                <Col xs="12">
-                  <Card className="mx-6" style={{ backgroundColor: ColorCode }}>
-                    <CardHeader>
-                      <h1>{event.eventName}</h1>
-                    </CardHeader>
-                    <CardBody
-                      style={{ fontWeight: "bold", fontSize: 20 }}
-                      className="p-4"
+          <div>
+            {this.props.events.map((event, index) => {
+              index % 2 === 0
+                ? (ColorCode = "#8bc3d7")
+                : (ColorCode = "#808587");
+              return (
+                <Row key={index} className="justify-content-left">
+                  <Col xs="12">
+                    <Card
+                      className="mx-6"
+                      style={{ backgroundColor: ColorCode }}
                     >
-                      <h4> {event.description} </h4>
-                      <br />
-                      <Row>
-                        <Col xs="8" md="4">
-                          <h4>
-                            <i className="fa fa-map-marker" /> {event.venue}
-                          </h4>
-                          <br />
-                        </Col>
-                        <Col md="4">
-                          <h4>
-                            <i className="fa fa-clock-o" />
-                            {moment(event.startDate).format(
-                              "hh:mm on DD-MM-YYYY"
-                            )}
-                          </h4>
-                        </Col>
-                      </Row>
-                    </CardBody>
-                  </Card>
-                </Col>
-                <ToastContainer autoClose={2000} />
-              </Row>
-            );
-          })}
+                      <CardHeader>
+                        <h1>{event.eventName}</h1>
+                      </CardHeader>
+                      <CardBody
+                        style={{ fontWeight: "bold", fontSize: 20 }}
+                        className="p-4"
+                      >
+                        <h4> {event.description} </h4>
+                        <br />
+                        <Row>
+                          <Col xs="8" md="4">
+                            <h4>
+                              <i className="fa fa-map-marker" /> {event.venue}
+                            </h4>
+                            <br />
+                          </Col>
+                          <Col md="4">
+                            <h4>
+                              <i className="fa fa-clock-o" />
+                              {moment(event.startDate).format(
+                                "hh:mm on DD-MM-YYYY"
+                              )}
+                            </h4>
+                          </Col>
+                        </Row>
+                      </CardBody>
+                    </Card>
+                  </Col>
+                  <ToastContainer autoClose={2000} />
+                </Row>
+              );
+            })}
+          </div>
+          {/* <div>
+            <div class="pm-button">
+              <a href="https://www.payumoney.com/paybypayumoney/#/AA5AF4F8AAE527C22E26FA4FB3A0CCAE">
+                <img src="https://www.payumoney.com/media/images/payby_payumoney/new_buttons/21.png" />
+              </a>
+            </div>{" "}
+          </div> */}
         </div>
       );
     }

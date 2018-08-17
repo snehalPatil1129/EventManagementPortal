@@ -29,7 +29,7 @@ class Header extends Component {
           <span className="navbar-toggler-icon" />
         </NavbarToggler>
         <NavbarBrand href="#">
-          <img src="../../img/tie-pune-logo.jpg" className="logoImg" />
+          <img src="img/tie-pune-logo.jpg" className="logoImg" />
         </NavbarBrand>
         <NavbarToggler
           className="d-md-down-none mr-auto"
@@ -37,9 +37,6 @@ class Header extends Component {
         >
           <span className="navbar-toggler-icon" />
         </NavbarToggler>
-        {/* <NavbarToggler className="d-md-down-none" onClick={this.asideToggle}>
-          <span className="navbar-toggler-icon" />
-        </NavbarToggler> */}
       </header>
     );
   }
