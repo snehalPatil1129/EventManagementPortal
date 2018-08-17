@@ -86,15 +86,19 @@ class SpeakerList extends Component {
 
   getSelectedRowKeys() {
     let selectedUsersId = this.refs.table.state.selectedRowKeys;
-    let users = [];
-    this.props.speakerList.forEach(speaker => {
-      selectedUsersId.forEach(userId => {
-        if (speaker._id === userId) {
-          users.push({ userInfo: speaker });
-        }
+    if (selectedUsersId.length > 0) {
+      let users = [];
+      this.props.speakerList.forEach(speaker => {
+        selectedUsersId.forEach(userId => {
+          if (speaker._id === userId) {
+            users.push({ userInfo: speaker });
+          }
+        });
       });
-    });
-    attendeeCardMethod.generateQRcodeBulk(users);
+      attendeeCardMethod.generateQRcodeBulk(users);
+    } else {
+      alert("Please select speakers for printing");
+    }
   }
 
   onPrintSpeakerQRCode(cell, row) {

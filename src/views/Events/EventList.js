@@ -16,6 +16,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "../../components/Modal/ModalCart";
 import Loader from "../../components/Loader/Loader";
+import moment from "moment";
 class EventList extends Component {
   constructor(props) {
     super(props);
@@ -82,6 +83,12 @@ class EventList extends Component {
         <i className="fa fa-pencil" title="Edit" />
       </Link>
     );
+  }
+  formatStartDate(cell, row) {
+    return cell ? moment(cell).format("DD/MM/YYYY") : "";
+  }
+  formatEndDate(cell, row) {
+    return cell ? moment(cell).format("DD/MM/YYYY") : "";
   }
   render() {
     const sortingOptions = {
@@ -166,15 +173,33 @@ class EventList extends Component {
                     <TableHeaderColumn
                       dataField="description"
                       headerAlign="left"
-                      width="250"
+                      width="150"
                       csvHeader="description"
                     >
                       Description
                     </TableHeaderColumn>
                     <TableHeaderColumn
+                      dataField="startDate"
+                      headerAlign="left"
+                      width="50"
+                      dataFormat={this.formatStartDate.bind(this)}
+                      csvHeader="Start date"
+                    >
+                      Start date
+                    </TableHeaderColumn>
+                    <TableHeaderColumn
+                      dataField="endDate"
+                      headerAlign="left"
+                      width="50"
+                      dataFormat={this.formatEndDate.bind(this)}
+                      csvHeader="End date"
+                    >
+                      End date
+                    </TableHeaderColumn>
+                    <TableHeaderColumn
                       dataField="venue"
                       headerAlign="left"
-                      width="100"
+                      width="50"
                       csvHeader="venue"
                     >
                       Venue
