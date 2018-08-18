@@ -12,8 +12,8 @@ const Calendar = props => {
       <BigCalendar
         events={props.events}
         defaultView="week"
-         //selectable={true}
-        selectable= "ignoreEvents"
+        selectable={true}
+        //selectable= "ignoreEvents"
         onSelectEvent={props.selectSession}
         onSelectSlot={props.onSelectSlot}
          //startAccessor={new Date("2018, 8, 9, 08:00")}

@@ -137,7 +137,8 @@ class SessionForm extends Component {
       opacity: 0.8,
       color: "black",
       border: "0px",
-      display: "block"
+      display: "block",
+      maxWidth : "100%"
     };
     return {
       style: style
@@ -270,9 +271,10 @@ class SessionForm extends Component {
     compRef.props.sessions.forEach(session => {
       if (session.event._id === eventId && session.sessionType === "breakout") {
         this.displaySessions(session, calendarSessionList);
-      } else {
-        this.setState({ calendarSessionList: [] });
-      }
+       }
+      // else {
+      //   this.setState({ calendarSessionList: [] });
+      // }
     });
   }
 
@@ -280,11 +282,14 @@ class SessionForm extends Component {
     let calendarSessionList = [];
     let compRef = this;
     compRef.props.sessions.forEach(session => {
-      if (session.event._id === eventId && session.room === room) {
-        this.displaySessions(session, calendarSessionList);
-      } else {
-        this.setState({ calendarSessionList: [] });
-      }
+      if (session.event._id === eventId) {
+        if(session.room === room || session.sessionType === "breakout"){
+          this.displaySessions(session, calendarSessionList);
+        }
+      } 
+      // else {
+      //   this.setState({ calendarSessionList: [] });
+      // }
     });
   }
   displaySessions(session, calendarSessionList) {
@@ -402,8 +407,9 @@ class SessionForm extends Component {
   onSubmitHandler() {
     let session = { ...this.state.Session };
     let compRef = this;
-    let eventId = session.event;
-    let room = session.room;
+    let eventId = this.state.eventValue;
+    let room = this.state.roomValue;
+   
     this.validateForm();
     if (this.state.isBreakOut) {
       if (
@@ -593,7 +599,12 @@ class SessionForm extends Component {
   }
 
   selectSlot(slotInfo) {
-    let SlotalertMessage =
+    let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
+    if (
+      this.state.eventStartDate <= dateselected &&
+      dateselected <= this.state.eventEndDate
+    ) {
+      let SlotalertMessage =
       "Confirm slot :" +
       " " +
       " " +
@@ -610,6 +621,8 @@ class SessionForm extends Component {
     let sessionEnd = slotInfo.end;
     this.setState({ SlotalertMessage, sessionStart, sessionEnd });
     this.slotConfirmPopup();
+    }
+   
   }
 
   selectSession(session) {
@@ -638,7 +651,8 @@ class SessionForm extends Component {
         extraServices: "",
         speakers: [],
         volunteers: [],
-        sessionCapacity: ""
+        sessionCapacity: "",
+        sessionType : ""
       };
     } else {
       Session = {
@@ -651,7 +665,8 @@ class SessionForm extends Component {
         volunteers: [],
         startTime: "",
         endTime: "",
-        sessionCapacity: ""
+        sessionCapacity: "",
+        sessionType : ""
       };
     }
 
