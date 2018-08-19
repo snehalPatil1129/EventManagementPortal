@@ -45,7 +45,7 @@ class SessionForm extends Component {
         isRegistrationRequired: false
       },
       submitted: false,
-      isBreakOut: true,
+      isCommon: true,
       calendarSessionList: [],
       sessionTypeValue: "",
       eventValue: "",
@@ -121,7 +121,7 @@ class SessionForm extends Component {
       };
   }
   eventStyleGetter(event) {
-    if (event.sessionType === "breakout") var backgroundColor = "#" + "f44250";
+    if (event.sessionType === "common") var backgroundColor = "#" + "f44250";
     else if (event.sessionType === "keynote")
       var backgroundColor = "#" + "800000";
     else if (event.sessionType === "deepdive")
@@ -156,7 +156,6 @@ class SessionForm extends Component {
 
     let calendarSessionList = [];
     this.setState({
-      isBreakOut: false,
       roomValue,
       Session: Session,
       calendarSessionList: [],
@@ -168,24 +167,10 @@ class SessionForm extends Component {
         this.props.sessions.forEach(session => {
           if (session.event._id === this.state.eventValue) {
             if (
-              session.room === roomValue ||
-              session.sessionType === "breakout"
+              session.room === roomValue
             ) {
               this.displaySessions(session, calendarSessionList);
             }
-          }
-        });
-      }, 1000);
-    }
-    if (this.state.eventValue && roomValue == null) {
-      this.props.getSessions();
-      setTimeout(() => {
-        this.props.sessions.forEach(session => {
-          if (
-            session.event._id === this.state.eventValue &&
-            session.sessionType === "breakout"
-          ) {
-            this.displaySessions(session, calendarSessionList);
           }
         });
       }, 1000);
@@ -209,20 +194,7 @@ class SessionForm extends Component {
       eventRequired: false,
       calendarSessionList: []
     });
-
-    if (eventValue) {
-      this.props.getSessions();
-      setTimeout(() => {
-        this.props.sessions.forEach(session => {
-          if (
-            session.event._id === eventValue &&
-            session.sessionType === "breakout"
-          ) {
-            this.displaySessions(session, calendarSessionList);
-          }
-        });
-      }, 1000);
-    }
+    
     rooms.forEach(room => {
       if (room.event._id === eventValue) {
         roomList.push({ label: room.roomName, value: room._id });
@@ -265,31 +237,15 @@ class SessionForm extends Component {
     this.setState({ roomList, volunteerList, speakerList });
   }
 
-  updateCalendarForBreakout(eventId) {
-    let calendarSessionList = [];
-    let compRef = this;
-    compRef.props.sessions.forEach(session => {
-      if (session.event._id === eventId && session.sessionType === "breakout") {
-        this.displaySessions(session, calendarSessionList);
-       }
-      // else {
-      //   this.setState({ calendarSessionList: [] });
-      // }
-    });
-  }
-
   updateCalendar(eventId, room) {
     let calendarSessionList = [];
     let compRef = this;
     compRef.props.sessions.forEach(session => {
       if (session.event._id === eventId) {
-        if(session.room === room || session.sessionType === "breakout"){
+        if(session.room === room){
           this.displaySessions(session, calendarSessionList);
         }
       } 
-      // else {
-      //   this.setState({ calendarSessionList: [] });
-      // }
     });
   }
   displaySessions(session, calendarSessionList) {
@@ -306,11 +262,9 @@ class SessionForm extends Component {
   changeSessionType(value) {
     if (value != null) {
       let Session = { ...this.state.Session };
-      if (value === "breakout") {
-        Session["room"] = "";
-        this.setState({ isBreakOut: true, Session: Session, roomValue: "" });
-      } else this.setState({ isBreakOut: false });
-
+      if (value === "common") {
+        this.setState({ isCommon: true});
+      } else this.setState({ isCommon: false });
       Session["sessionType"] = value;
       this.setState({
         Session: Session,
@@ -378,14 +332,13 @@ class SessionForm extends Component {
 
   validateForm() {
     let session = { ...this.state.Session };
-    console.log("session.speakers[0]", session.speakers[0]);
     !session.sessionName ? this.setState({ sessionNameRequired: true }) : null;
     !session.event ? this.setState({ eventRequired: true }) : null;
     !session.room ? this.setState({ roomRequired: true }) : null;
     !session.startTime ? this.setState({ startTimeRequired: true }) : null;
     !session.endTime ? this.setState({ endTimeRequired: true }) : null;
     !session.sessionType ? this.setState({ sessionTypeRequired: true }) : null;
-    if (!this.state.isBreakOut) {
+    if (!this.state.isCommon) {
       !session.sessionCapacity
         ? this.setState({ sessionCapacityRequired: true })
         : null;
@@ -411,17 +364,18 @@ class SessionForm extends Component {
     let room = this.state.roomValue;
    
     this.validateForm();
-    if (this.state.isBreakOut) {
+    if (this.state.isCommon) {
       if (
         session.sessionName &&
         session.sessionType &&
         session.event &&
         session.startTime &&
-        session.endTime
+        session.endTime &&
+        session.room
       ) {
         this.props.createSession(session);
         setTimeout(() => {
-          this.updateCalendarForBreakout(eventId);
+          this.updateCalendar(eventId, room);
         }, 1500);
         setTimeout(() => {
           let sessionCreated = this.props.sessionCreated;
@@ -461,7 +415,7 @@ class SessionForm extends Component {
     let eventId = this.state.eventValue;
     let room = this.state.roomValue;
     this.validateForm();
-    if (this.state.isBreakOut) {
+    if (this.state.isCommon) {
       if (
         session.sessionName &&
         session.sessionType &&
@@ -472,7 +426,7 @@ class SessionForm extends Component {
         session["sessionCapacity"] = "";
         this.props.updateSession(session);
         setTimeout(() => {
-          this.updateCalendarForBreakout(eventId);
+          this.updateCalendar(eventId, room);
         }, 1500);
         setTimeout(() => {
           let sessionUpdated = this.props.sessionUpdated;
@@ -513,16 +467,11 @@ class SessionForm extends Component {
 
     this.props.deleteSession(session._id);
 
-    if (this.state.isBreakOut) {
-      setTimeout(() => {
-        this.updateCalendarForBreakout(eventId);
-      }, 1500);
-    } else {
+    if (this.state.isCommon) {
       setTimeout(() => {
         this.updateCalendar(eventId, room);
       }, 1500);
-    }
-
+    } 
     setTimeout(() => {
       let sessionDeleted = this.props.sessionDeleted;
       compRef.Toaster(sessionDeleted, "Deleted");
@@ -592,7 +541,6 @@ class SessionForm extends Component {
         editDeleteFlag: false,
         slotPopupFlag : false
       });
-      // }
     } else {
       return;
     }
@@ -622,13 +570,12 @@ class SessionForm extends Component {
     this.setState({ SlotalertMessage, sessionStart, sessionEnd });
     this.slotConfirmPopup();
     }
-   
   }
 
   selectSession(session) {
     let sessionObj = Object.assign({}, session);
-    if (sessionObj.sessionType === "breakout") {
-      this.setState({ isBreakOut: true });
+    if (sessionObj.sessionType === "common") {
+      this.setState({ isCommon: true });
     }
     this.setState({
       Session: sessionObj,
@@ -715,19 +662,9 @@ class SessionForm extends Component {
               options={this.state.roomList}
             />
             <ValidationError
-              required={this.state.roomRequired && !this.state.isBreakOut}
+              required={this.state.roomRequired}
               displayName="Room name"
             />
-            <div>
-              {this.state.isBreakOut ? (
-                <div
-                  style={{ color: "black", marginTop: 0, fontSize: "12px" }}
-                  className="help-block"
-                >
-                  Room is not required for breakout session
-                </div>
-              ) : null}
-            </div>
           </Col>
         </FormGroup>
         <br />
@@ -796,13 +733,13 @@ class SessionForm extends Component {
                     onChange={this.changeSpeakers.bind(this)}
                     placeholder="Select speakers"
                     simpleValue
-                    disabled={this.state.isBreakOut}
+                    disabled={this.state.isCommon}
                     value={this.state.speakerValue}
                     options={this.state.speakerList}
                   />
                   <ValidationError
                     required={
-                      this.state.speakersRequired && !this.state.isBreakOut
+                      this.state.speakersRequired && !this.state.isCommon
                     }
                     displayName="Speaker"
                   />
@@ -815,13 +752,13 @@ class SessionForm extends Component {
                     placeholder="Select volunteers"
                     simpleValue
                     value={this.state.volunteerValue}
-                    disabled={this.state.isBreakOut}
+                    disabled={this.state.isCommon}
                     options={this.state.volunteerList}
                     onChange={this.changeVolunteers.bind(this)}
                   />
                   <ValidationError
                     required={
-                      this.state.volunteersRequired && !this.state.isBreakOut
+                      this.state.volunteersRequired && !this.state.isCommon
                     }
                     displayName="Volunteer"
                   />
@@ -846,10 +783,10 @@ class SessionForm extends Component {
                     placeholder="Session capacity"
                     name="sessionCapacity"
                     icon="icon-pie-chart"
-                    disabled={this.state.isBreakOut}
+                    disabled={this.state.isCommon}
                     required={
                       this.state.sessionCapacityRequired &&
-                      !this.state.isBreakOut
+                      !this.state.isCommon
                     }
                     value={this.state.Session.sessionCapacity}
                     onchanged={session => this.ChangeCapacityHandler(session)}
@@ -859,7 +796,7 @@ class SessionForm extends Component {
               <FormGroup row>
                 <Col xs="12">
                   <input
-                    disabled={this.state.isBreakOut}
+                    disabled={this.state.isCommon}
                     type="checkbox"
                     checked={this.state.Session.isRegrequired}
                     onChange={this.toggleSessionRequired.bind(this)}
