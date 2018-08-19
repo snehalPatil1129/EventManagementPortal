@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 import InputElement from "../../components/Input/";
 import CardLayout from "../../components/CardLayout/";
-import SessionTypeIndicator from "../../components/SessionTypeIndicator/SessionTypeIndicator";
+import SessionIndicator from "../../components/Calendar/SessionIndicator";
 import {
   Row,
   Col,
@@ -263,7 +263,10 @@ class SessionForm extends Component {
     if (value != null) {
       let Session = { ...this.state.Session };
       if (value === "common") {
-        this.setState({ isCommon: true});
+        Session.speakers = "";
+        Session.volunteers="";
+        Session.sessionCapacity = "";
+        this.setState({ isCommon: true, Session : Session, speakerValue :"", volunteerValue:""});
       } else this.setState({ isCommon: false });
       Session["sessionType"] = value;
       this.setState({
@@ -373,14 +376,15 @@ class SessionForm extends Component {
         session.endTime &&
         session.room
       ) {
-        this.props.createSession(session);
-        setTimeout(() => {
-          this.updateCalendar(eventId, room);
-        }, 1500);
-        setTimeout(() => {
-          let sessionCreated = this.props.sessionCreated;
-          compRef.Toaster(sessionCreated, "Created");
-        }, 1000);
+        // this.props.createSession(session);
+        // setTimeout(() => {
+        //   this.updateCalendar(eventId, room);
+        // }, 1500);
+        // setTimeout(() => {
+        //   let sessionCreated = this.props.sessionCreated;
+        //   compRef.Toaster(sessionCreated, "Created");
+        // }, 1000);
+        this.createSession(session,eventId,room);
       }
     } else {
       setTimeout(() => {
@@ -396,7 +400,23 @@ class SessionForm extends Component {
           session.room &&
           session.sessionCapacity
         ) {
-          this.props.createSession(session);
+          this.createSession(session,eventId,room);
+          // this.props.createSession(session);
+          // setTimeout(() => {
+          //   this.updateCalendar(eventId, room);
+          // }, 1500);
+          // setTimeout(() => {
+          //   let sessionCreated = this.props.sessionCreated;
+          //   compRef.Toaster(sessionCreated, "Created");
+          // }, 1000);
+        }
+      }, 800);
+    }
+  }
+  
+  createSession(session,eventId, room ){
+    let compRef = this;
+    this.props.createSession(session);
           setTimeout(() => {
             this.updateCalendar(eventId, room);
           }, 1500);
@@ -404,9 +424,6 @@ class SessionForm extends Component {
             let sessionCreated = this.props.sessionCreated;
             compRef.Toaster(sessionCreated, "Created");
           }, 1000);
-        }
-      }, 800);
-    }
   }
 
   onUpdateHandler() {
@@ -466,12 +483,10 @@ class SessionForm extends Component {
     let room = session.room;
 
     this.props.deleteSession(session._id);
-
-    if (this.state.isCommon) {
       setTimeout(() => {
         this.updateCalendar(eventId, room);
       }, 1500);
-    } 
+    
     setTimeout(() => {
       let sessionDeleted = this.props.sessionDeleted;
       compRef.Toaster(sessionDeleted, "Deleted");
@@ -488,62 +503,65 @@ class SessionForm extends Component {
     let sessionStart = this.state.sessionStart;
     let sessionEnd = this.state.sessionEnd;
     this.resetField();
-    let selectFlag = true;
-    let SessionObj = { ...this.state.Session };
-    console.log("SessionObj", SessionObj);
-    let dateselected = new Date(sessionStart).setHours(0, 0, 0, 0);
-    if (
-      this.state.eventStartDate <= dateselected &&
-      dateselected <= this.state.eventEndDate
-    ) {
-      // if (SessionObj.room !== "" && SessionObj.room !== undefined) {
-      //   this.props.sessions.forEach(session => {
-      //     if (
-      //       session.event._id === SessionObj.event &&
-      //       session.room === SessionObj.room
-      //     ) {
-      //       console.log(
-      //         "new Date(sessionStart).getTime()",
-      //         new Date(sessionStart).getTime()
-      //       );
-      //       console.log(
-      //         "new Date(session.startTime)",
-      //         new Date(session.startTime)
-      //       );
-      //       if (
-      //         new Date(session.startTime) >= new Date(sessionStart) ||
-      //         new Date(session.endDate) <= new Date(sessionEnd)
-      //       ) {
-      //         selectFlag = false;
-      //         return;
-      //       }
-      //     }
-      //   });
-      // }
-      // console.log("selectFlag", selectFlag);
-      // if (selectFlag == false) return;
-      // else {
-      let SlotconfirmMessage =
-        `Start Time : ${sessionStart.toLocaleString()} ` +
-        `,\r\n End Time: ${sessionEnd.toLocaleString()}`;
-      this.setState({ SlotconfirmMessage: SlotconfirmMessage });
-    
-      let Session = { ...this.state.Session };
-      Session["startTime"] = sessionStart.toString();
-      Session["endTime"] = sessionEnd.toString();
-
-      this.setState({
-        Session: Session,
-        startTimeRequired: false,
-        endTimeRequired: false,
-        SlotconfirmMessage,
-        createFlag: true,
-        editDeleteFlag: false,
-        slotPopupFlag : false
-      });
-    } else {
-      return;
-    }
+    setTimeout(()=>{
+      let selectFlag = true;
+      let SessionObj = { ...this.state.Session };
+      console.log("SessionObj", SessionObj);
+      let dateselected = new Date(sessionStart).setHours(0, 0, 0, 0);
+      if (
+        this.state.eventStartDate <= dateselected &&
+        dateselected <= this.state.eventEndDate
+      ) {
+        // if (SessionObj.room !== "" && SessionObj.room !== undefined) {
+        //   this.props.sessions.forEach(session => {
+        //     if (
+        //       session.event._id === SessionObj.event &&
+        //       session.room === SessionObj.room
+        //     ) {
+        //       console.log(
+        //         "new Date(sessionStart).getTime()",
+        //         new Date(sessionStart).getTime()
+        //       );
+        //       console.log(
+        //         "new Date(session.startTime)",
+        //         new Date(session.startTime)
+        //       );
+        //       if (
+        //         new Date(session.startTime) >= new Date(sessionStart) ||
+        //         new Date(session.endDate) <= new Date(sessionEnd)
+        //       ) {
+        //         selectFlag = false;
+        //         return;
+        //       }
+        //     }
+        //   });
+        // }
+        // console.log("selectFlag", selectFlag);
+        // if (selectFlag == false) return;
+        // else {
+        let slotConfirmMessage =
+          `Start Time : ${sessionStart.toLocaleString()} ` +
+          `,\r\n End Time: ${sessionEnd.toLocaleString()}`;
+        this.setState({ slotConfirmMessage: slotConfirmMessage });
+      
+        let Session = { ...this.state.Session };
+        Session["startTime"] = sessionStart.toString();
+        Session["endTime"] = sessionEnd.toString();
+  
+        this.setState({
+          Session: Session,
+          startTimeRequired: false,
+          endTimeRequired: false,
+          slotConfirmMessage,
+          createFlag: true,
+          editDeleteFlag: false,
+          slotPopupFlag : false
+        });
+      } else {
+        return;
+      }
+    },500)
+   
   }
 
   selectSlot(slotInfo) {
@@ -577,13 +595,16 @@ class SessionForm extends Component {
     if (sessionObj.sessionType === "common") {
       this.setState({ isCommon: true });
     }
+    else this.setState({isCommon:false})
+
     this.setState({
       Session: sessionObj,
       editDeleteFlag: true,
       createFlag: false,
       speakerValue: sessionObj.speakers,
       volunteerValue: sessionObj.volunteers,
-      sessionTypeValue: sessionObj.sessionType
+      sessionTypeValue: sessionObj.sessionType,
+      slotConfirmMessage:""
     });
   }
 
@@ -632,14 +653,21 @@ class SessionForm extends Component {
       sessionTypeValue: false,
       volunteersRequired: false,
       endTimeRequired: false,
-      SlotconfirmMessage: ""
+      slotConfirmMessage: ""
     });
   }
 
   render() {
     return (
       <div>
-        <FormGroup row>
+      
+        <FormGroup row >
+         <Col xs="6" md="12">
+          <SessionIndicator/>
+          </Col>
+          </FormGroup>
+           <div style={{marginTop:-25}}>
+        <FormGroup row >
           <Col xs="12" md="5">
             <Select
               onChange={this.changeEvent.bind(this)}
@@ -666,7 +694,9 @@ class SessionForm extends Component {
               displayName="Room name"
             />
           </Col>
+         
         </FormGroup>
+        </div>
         <br />
         <br />
         {this.state.startTimeRequired ? (
@@ -693,7 +723,7 @@ class SessionForm extends Component {
           <Col md="4">
             <div>
               <span style={{ color: "black" }}>
-                {this.state.SlotconfirmMessage}
+                {this.state.slotConfirmMessage}
               </span>
             </div>
             <CardLayout name="">
