@@ -12,9 +12,7 @@ const ModalCart = props => {
         <ModalHeader toggle={props.toggleFunction}>Confirm</ModalHeader>
         <ModalBody>
           <div>
-            <span>
-              Are you sure you want to permanently delete this session ?
-            </span>
+            <span>{props.message}</span>
           </div>
         </ModalBody>
         <ModalFooter>

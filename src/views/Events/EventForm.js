@@ -251,6 +251,16 @@ class EventForm extends Component {
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
+          <Col md="4">
+            <InputElement
+              type="text"
+              placeholder="Description"
+              name="description"
+              icon="icon-note"
+              value={this.state.Event.description}
+              onchanged={event => this.onChangeHandler(event)}
+            />
+          </Col>
         </FormGroup>
         <FormGroup row>
           <Col md="4">
@@ -309,16 +319,7 @@ class EventForm extends Component {
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
-          <Col md="4">
-            <InputElement
-              type="text"
-              placeholder="Description"
-              name="description"
-              icon="icon-note"
-              value={this.state.Event.description}
-              onchanged={event => this.onChangeHandler(event)}
-            />
-          </Col>
+       
         </FormGroup>
         <FormGroup row>
           <Col xs="8" md="3">
