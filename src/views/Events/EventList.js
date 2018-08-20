@@ -227,6 +227,7 @@ class EventList extends Component {
                     openFlag={this.state.deleteFlag}
                     toggleFunction={this.deleteConfirm.bind(this)}
                     confirmFunction={this.deleteEvent.bind(this)}
+                    message=" Are you sure you want to permanently delete this session ?"
                   />
                 </CardBody>
               </Card>

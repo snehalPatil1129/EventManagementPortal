@@ -32,15 +32,7 @@ class Dashboard extends Component {
     var ColorCode = "#808587";
     if (this.state.loading || this.props.events.length === 0) {
       return <Loader loading={this.state.loading} />;
-    }
-    //else if (this.props.events.length === 0) {
-    //   return (
-    //     <div className="animated fadeIn">
-    //       <h5>No events found...</h5>
-    //     </div>
-    //   );
-    // }
-    else {
+    } else {
       return (
         <div className="animated fadeIn">
           <div>
@@ -50,34 +42,38 @@ class Dashboard extends Component {
                 : (ColorCode = "#808587");
               return (
                 <Row key={index} className="justify-content-left">
-                  <Col xs="12">
+                  <Col xs="6">
                     <Card
-                      className="mx-6"
+                      className="mx-12"
                       style={{ backgroundColor: ColorCode }}
                     >
                       <CardHeader>
-                        <h1>{event.eventName}</h1>
+                        <h3>{event.eventName}</h3>
                       </CardHeader>
                       <CardBody
                         style={{ fontWeight: "bold", fontSize: 20 }}
-                        className="p-4"
+                        className="p-8"
                       >
-                        <h4> {event.description} </h4>
-                        <br />
                         <Row>
-                          <Col xs="8" md="4">
-                            <h4>
-                              <i className="fa fa-map-marker" /> {event.venue}
-                            </h4>
-                            <br />
+                        <Col xs="12">
+                          <h5> {event.description} </h5>
                           </Col>
-                          <Col md="4">
-                            <h4>
+                        </Row>
+                        <Row>
+                          <Col xs="12" md="4">
+                            <h5>
+                              <i className="fa fa-map-marker" /> {event.venue}
+                            </h5>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="8">
+                            <h5>
                               <i className="fa fa-clock-o" />
                               {moment(event.startDate).format(
-                                "hh:mm on DD-MM-YYYY"
-                              )}
-                            </h4>
+                                "DD.MM.YYYY"
+                              )} - {moment(event.endDate).format("DD.MM.YYYY")}
+                            </h5>
                           </Col>
                         </Row>
                       </CardBody>

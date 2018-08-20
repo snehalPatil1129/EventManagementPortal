@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 
-const ModalCart = props => {
+const MessageModal = props => {
   return (
     <div>
       <Modal
@@ -9,17 +9,13 @@ const ModalCart = props => {
         toggle={props.toggleFunction}
         className={"modal-lg " + props.className}
       >
-        <ModalHeader toggle={props.toggleFunction}>Confirm</ModalHeader>
+        <ModalHeader>Note</ModalHeader>
         <ModalBody>
           <div>
             <span>{props.message}</span>
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="success" onClick={props.confirmFunction}>
-            Confirm
-          </Button>
-          &nbsp;
           <Button color="danger" onClick={props.toggleFunction}>
             Cancel
           </Button>
@@ -29,4 +25,4 @@ const ModalCart = props => {
   );
 };
 
-export default ModalCart;
+export default MessageModal;

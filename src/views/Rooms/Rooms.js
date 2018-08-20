@@ -221,7 +221,7 @@ class Rooms extends Component {
               onchanged={event => this.onChangeInput(event)}
             />
           </Col>
-          <Col md="6">
+          {/* <Col md="6">
             <InputElement
               icon="icon-pie-chart"
               type="number"
@@ -230,9 +230,9 @@ class Rooms extends Component {
               value={Room.bufferCapacity}
               onchanged={event => this.onChangeInput(event)}
             />
-          </Col>
+          </Col> */}
         </FormGroup>
-        <FormGroup row>
+        {/* <FormGroup row>
           <Col md="6">
             <Select
               multi
@@ -244,7 +244,7 @@ class Rooms extends Component {
               clearable
             />
           </Col>
-        </FormGroup>
+        </FormGroup> */}
         <FormGroup row>
           <Col xs="12" md="3">
             {this.state.editRoom ? (

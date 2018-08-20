@@ -19,12 +19,14 @@ import * as attendeeCardMethod from "../../components/AttendeeCard/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
+import Modal from "../../components/Modal/MessageModal";
 class SpeakerList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       event: "",
-      loading: true
+      loading: true,
+      modalPopupFlag: false
     };
   }
   componentDidMount() {
@@ -97,10 +99,12 @@ class SpeakerList extends Component {
       });
       attendeeCardMethod.generateQRcodeBulk(users);
     } else {
-      alert("Please select speakers for printing");
+      this.setState({ modalPopupFlag: true });
     }
   }
-
+  toggleFunction() {
+    this.setState({ modalPopupFlag: false });
+  }
   onPrintSpeakerQRCode(cell, row) {
     return (
       <Link to={this} onClick={() => attendeeCardMethod.onGenerateQRcode(row)}>
@@ -263,6 +267,11 @@ class SpeakerList extends Component {
                         Print
                       </TableHeaderColumn>
                     </BootstrapTable>
+                    <Modal
+                      openFlag={this.state.modalPopupFlag}
+                      toggleFunction={this.toggleFunction.bind(this)}
+                      message="Please select speakers for printing"
+                    />
                   </FormGroup>
                 </CardBody>
               </Card>

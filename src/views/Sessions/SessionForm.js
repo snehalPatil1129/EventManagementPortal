@@ -5,17 +5,8 @@ import InputElement from "../../components/Input/";
 import CardLayout from "../../components/CardLayout/";
 import SessionIndicator from "../../components/Calendar/SessionIndicator";
 import * as calendarStyle from "../../components/Calendar/CalendarStyles";
-import {
-  Row,
-  Col,
-  Button,
-  FormGroup,
-  Label,
-  Modal,
-  ModalFooter,
-  ModalHeader,
-  ModalBody
-} from "reactstrap";
+import { Row, Col, Button, FormGroup, Label } from "reactstrap";
+import Modal from "../../components/Modal/ModalCart";
 import moment from "moment";
 import Select from "react-select";
 import "react-select/dist/react-select.css";
@@ -111,7 +102,6 @@ class SessionForm extends Component {
   }
 
   navigateEventDate(date) {
-    let eventDate = moment(date).startOf("day");
     this.setState({ eventDate: date });
   }
 
@@ -144,7 +134,6 @@ class SessionForm extends Component {
     let volunteerList = [],
       speakerList = [],
       roomList = [];
-    let calendarSessionList = [];
     let attendees = this.props.attendees;
     let rooms = this.props.rooms;
     let speakers = this.props.speakers;
@@ -330,7 +319,6 @@ class SessionForm extends Component {
 
   onSubmitHandler() {
     let session = { ...this.state.Session };
-    let compRef = this;
     let eventId = this.state.eventValue;
     let room = this.state.roomValue;
 
@@ -379,7 +367,6 @@ class SessionForm extends Component {
   }
 
   onUpdateHandler() {
-    let compRef = this;
     let session = { ...this.state.Session };
     let eventId = this.state.eventValue;
     let room = this.state.roomValue;
@@ -477,8 +464,6 @@ class SessionForm extends Component {
 
   selectSlot(slotInfo) {
     let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
-    let sessionStart = slotInfo.start;
-    let sessionEnd = slotInfo.end;
     let room = this.state.roomValue;
     let selectFlag = true;
     let compRef = this;
@@ -498,10 +483,15 @@ class SessionForm extends Component {
               session.event._id === compRef.state.eventValue &&
               session.room === compRef.state.roomValue
             ) {
-              if (
-                new Date(session.startTime) >= new Date(sessionStart) &&
-                new Date(session.endTime) <= new Date(sessionEnd)
-              ) {
+              let isBetweenStart = moment(slotInfo.start).isBetween(
+                moment(session.startTime),
+                moment(session.endTime)
+              );
+              let isBetweenEnd = moment(slotInfo.end).isBetween(
+                moment(session.startTime),
+                moment(session.endTime)
+              );
+              if (isBetweenStart || isBetweenEnd) {
                 selectFlag = false;
               }
             }
@@ -825,31 +815,11 @@ class SessionForm extends Component {
           </Col>
         </Row>
         <Modal
-          isOpen={this.state.slotPopupFlag}
-          toggle={this.slotConfirmPopup.bind(this)}
-          className={"modal-lg " + this.props.className}
-        >
-          <ModalHeader toggle={this.slotConfirmPopup.bind(this)}>
-            Confirm
-          </ModalHeader>
-          <ModalBody>
-            <div>
-              <span>{this.state.SlotalertMessage}</span>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              color="success"
-              onClick={this.slotConfirmSuccess.bind(this)}
-            >
-              Confirm
-            </Button>
-            &nbsp;
-            <Button color="danger" onClick={this.slotConfirmPopup.bind(this)}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </Modal>
+          openFlag={this.state.slotPopupFlag}
+          toggleFunction={this.slotConfirmPopup.bind(this)}
+          confirmFunction={this.slotConfirmSuccess.bind(this)}
+          message={this.state.SlotalertMessage}
+        />
       </div>
     );
   }
