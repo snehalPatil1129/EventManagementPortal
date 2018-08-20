@@ -19,13 +19,15 @@ import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
+import Modal from "../../components/Modal/MessageModal";
 class RegistrationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       event: "",
       profile: "",
-      loading: true
+      loading: true,
+      modalPopupFlag: false
     };
   }
   componentDidMount() {
@@ -113,10 +115,12 @@ class RegistrationList extends Component {
         this.state.profile
       );
     } else {
-      alert("Please select attendees for printing");
+      this.setState({ modalPopupFlag: true });
     }
   }
-
+  toggleFunction() {
+    this.setState({ modalPopupFlag: false });
+  }
   handleEventChange(value) {
     if (value !== null) {
       this.setState({ event: value });
@@ -312,6 +316,11 @@ class RegistrationList extends Component {
                         Print
                       </TableHeaderColumn>
                     </BootstrapTable>
+                    <Modal
+                      openFlag={this.state.modalPopupFlag}
+                      toggleFunction={this.toggleFunction.bind(this)}
+                      message="Please select attendees for printing"
+                    />
                   </FormGroup>
                 </CardBody>
               </Card>
