@@ -491,7 +491,20 @@ class SessionForm extends Component {
                 moment(session.startTime),
                 moment(session.endTime)
               );
-              if (isBetweenStart || isBetweenEnd) {
+              let isBetweenStartOld = moment(session.startTime).isBetween(
+                moment(slotInfo.start),
+                moment(slotInfo.end)
+              );
+              let isBetweenEndOld = moment(session.endTime).isBetween(
+                moment(slotInfo.start),
+                moment(slotInfo.end)
+              );
+              if (
+                isBetweenStart ||
+                isBetweenEnd ||
+                isBetweenStartOld ||
+                isBetweenEndOld
+              ) {
                 selectFlag = false;
               }
             }
@@ -499,7 +512,7 @@ class SessionForm extends Component {
           if (selectFlag === false) return;
           else {
             let SlotalertMessage =
-              "Confirm slot :" +
+              "Confirm Slot :" +
               " " +
               " " +
               "Start Time :" +
