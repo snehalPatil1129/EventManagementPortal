@@ -30,15 +30,17 @@ class Dashboard extends Component {
   }
   render() {
     var ColorCode = "#808587";
-    if (this.state.loading) {
+    if (this.state.loading || this.props.events.length === 0) {
       return <Loader loading={this.state.loading} />;
-    } else if (this.props.events.length === 0) {
-      return (
-        <div className="animated fadeIn">
-          <h5>No events found...</h5>
-        </div>
-      );
-    } else {
+    }
+    //else if (this.props.events.length === 0) {
+    //   return (
+    //     <div className="animated fadeIn">
+    //       <h5>No events found...</h5>
+    //     </div>
+    //   );
+    // }
+    else {
       return (
         <div className="animated fadeIn">
           <div>
