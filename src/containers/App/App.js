@@ -28,9 +28,9 @@ import { connect } from "react-redux";
 let routes;
 class App extends Component {
   render() {
-    let user = localStorage.getItem("user");
-    //if(this.props.email !== "") {
-    if (user) {
+    // let user = localStorage.getItem("user");
+    // //if(this.props.email !== "") {
+    // if (user) {
       routes = (
         <Layout {...this.props}>
           <Switch>
@@ -66,17 +66,17 @@ class App extends Component {
           </Switch>
         </Layout>
       );
-    } else {
-      routes = (
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Redirect from="/" to="/login" />
-          <Redirect to="/" />
-        </Switch>
-      );
-    }
-    return <div>{routes}</div>;
-  }
+  //   } else {
+  //     routes = (
+  //       <Switch>
+  //         <Route path="/login" component={Login} />
+  //         <Redirect from="/" to="/login" />
+  //         <Redirect to="/" />
+  //       </Switch>
+  //     );
+    //}
+     return <div>{routes}</div>;
+   }
 }
 const mapStateToProps = state => {
   return {

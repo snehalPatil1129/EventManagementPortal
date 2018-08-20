@@ -173,7 +173,7 @@ class SponsorForm extends Component {
         <FormGroup row>
           <Col xs="12" md="6">
             <InputElement
-              icon="icon-tag"
+              icon="fa fa-money"
               type="text"
               placeholder="Sponsor name"
               name="name"

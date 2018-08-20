@@ -27,8 +27,8 @@ class EventForm extends Component {
         eventName: "",
         venue: "",
         description: "",
-        startDate: moment(),
-        endDate: moment()
+        startDate: "",
+        endDate: ""
       },
       submitted: false,
       inValidDates: false,
@@ -240,7 +240,7 @@ class EventForm extends Component {
     ) : (
       <CardLayout name="Event">
         <FormGroup row>
-          <Col xs="12" md="6">
+          <Col xs="12" md="4">
             <InputElement
               type="text"
               placeholder="Event name"
@@ -253,18 +253,16 @@ class EventForm extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Col xs="12" md="2">
-            <h4>Start Date :</h4>
-          </Col>
           <Col md="4">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
               </InputGroupText>
               <DatePicker
+                className="datepicker"
                 selected={this.state.Event.startDate}
                 onChange={event => this.changeFunction(event, "startDate")}
-                placeholderText="Select start date"
+                placeholderText="--Select Start Date--"
               />
             </InputGroup>
             {this.state.startDateRequired ? (
@@ -276,18 +274,16 @@ class EventForm extends Component {
               </div>
             ) : null}
           </Col>
-          <Col xs="12" md="2">
-            <h4>End Date :</h4>
-          </Col>
           <Col xs="12" md="4">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
               </InputGroupText>
               <DatePicker
+                className="datepicker"
                 selected={this.state.Event.endDate}
                 onChange={event => this.changeFunction(event, "endDate")}
-                placeholderText="Select start date"
+                placeholderText="--Select End Date--"
               />
             </InputGroup>
             {this.state.endDateRequired ? (
@@ -302,7 +298,7 @@ class EventForm extends Component {
         </FormGroup>
         <FormGroup row />
         <FormGroup row>
-          <Col xs="12" md="6">
+          <Col xs="12" md="4">
             <InputElement
               type="text"
               placeholder="Venue"
@@ -313,7 +309,7 @@ class EventForm extends Component {
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
-          <Col md="6">
+          <Col md="4">
             <InputElement
               type="text"
               placeholder="Description"

@@ -19,8 +19,8 @@ const InputElement = props => (
       className={props.type}
     />
     {props.required ? (
-      <div style={{ color: "red" }} className="help-block">
-        {props.placeholder} is required
+      <div style={{ color: "red", fontSize: "12px" }} className="help-block">
+        *{props.placeholder} is required
       </div>
     ) : null}
     {props.inValid ? (

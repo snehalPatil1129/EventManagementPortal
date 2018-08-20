@@ -151,7 +151,7 @@ class SpeakerForm extends Component {
     setTimeout(() => {
       let speakerUpdated = this.props.speakerUpdated;
       compRef.Toaster(compRef, speakerUpdated, "Updated");
-    }, 1000);
+    }, 2000);
   }
 
   createSpeaker(speaker, attendeeCount) {
@@ -160,7 +160,7 @@ class SpeakerForm extends Component {
     setTimeout(() => {
       let speakerCreated = this.props.speakerCreated;
       compRef.Toaster(compRef, speakerCreated, "Created");
-    }, 1000);
+    }, 2000);
   }
   onReset() {
     let Speaker = {
