@@ -4,7 +4,7 @@ import * as actions from "../../store/actions/index";
 import InputElement from "../../components/Input/";
 import CardLayout from "../../components/CardLayout/";
 import SessionIndicator from "../../components/Calendar/SessionIndicator";
-import * as calendarStyle from  "../../components/Calendar/CalendarStyles"
+import * as calendarStyle from "../../components/Calendar/CalendarStyles";
 import {
   Row,
   Col,
@@ -23,7 +23,6 @@ import Calendar from "../../components/Calendar/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ValidationError from "../../components/ValidationError/ValidationError";
-import Rectangle from "react-rectangle";
 
 class SessionForm extends Component {
   constructor(props) {
@@ -99,8 +98,12 @@ class SessionForm extends Component {
   }
 
   eventDaysStyleGetter(date) {
-   let eventDaysStyle = calendarStyle.eventDaysStyleGetter(date, this.state.eventStartDate, this.state.eventEndDate);
-   return eventDaysStyle;
+    let eventDaysStyle = calendarStyle.eventDaysStyleGetter(
+      date,
+      this.state.eventStartDate,
+      this.state.eventEndDate
+    );
+    return eventDaysStyle;
   }
   eventStyleGetter(event) {
     let eventStyle = calendarStyle.eventStyleGetter(event);
@@ -476,15 +479,20 @@ class SessionForm extends Component {
     let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
     let sessionStart = slotInfo.start;
     let sessionEnd = slotInfo.end;
-    let room = this.state.roomValue
+    let room = this.state.roomValue;
     let selectFlag = true;
     let compRef = this;
-    setTimeout(()=>{
+    setTimeout(() => {
       if (
         compRef.state.eventStartDate <= dateselected &&
-        dateselected <= compRef.state.eventEndDate && room!==null && room!==""
+        dateselected <= compRef.state.eventEndDate &&
+        room !== null &&
+        room !== ""
       ) {
-        if (compRef.state.eventValue !== null && compRef.state.roomValue !== null) {
+        if (
+          compRef.state.eventValue !== null &&
+          compRef.state.roomValue !== null
+        ) {
           compRef.props.sessions.forEach(session => {
             if (
               session.event._id === compRef.state.eventValue &&
@@ -520,8 +528,7 @@ class SessionForm extends Component {
           }
         }
       }
-    },1000)
-
+    }, 1000);
   }
 
   selectSession(session) {
@@ -554,7 +561,7 @@ class SessionForm extends Component {
         volunteers: [],
         sessionCapacity: "",
         sessionType: "",
-        isRegrequired : false
+        isRegrequired: false
       };
     } else {
       Session = {
@@ -569,7 +576,7 @@ class SessionForm extends Component {
         endTime: "",
         sessionCapacity: "",
         sessionType: "",
-        isRegrequired : false
+        isRegrequired: false
       };
     }
 
