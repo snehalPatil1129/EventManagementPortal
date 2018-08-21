@@ -14,6 +14,7 @@ import Calendar from "../../components/Calendar/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ValidationError from "../../components/ValidationError/ValidationError";
+import Loader from "../../components/Loader/Loader";
 
 class SessionForm extends Component {
   constructor(props) {
@@ -55,7 +56,8 @@ class SessionForm extends Component {
       endTimeRequired: false,
       editDeleteFlag: false,
       createFlag: true,
-      slotPopupFlag: false
+      slotPopupFlag: false,
+      loading: false
     };
   }
 
@@ -78,14 +80,14 @@ class SessionForm extends Component {
   }
 
   ChangeCapacityHandler(session) {
-    if (session.target.value >= 0) {
+    if (session.target.value>0|| session.target.value=="") {
       let sessionDetails = { ...this.state.Session };
       sessionDetails[session.target.name] = session.target.value;
       this.setState({
         Session: sessionDetails,
         sessionCapacityRequired: false
       });
-    } else return;
+    } 
   }
 
   eventDaysStyleGetter(date) {
@@ -218,13 +220,16 @@ class SessionForm extends Component {
         Session.speakers = "";
         Session.volunteers = "";
         Session.sessionCapacity = "";
+        Session.isRegrequired= "";
         this.setState({
           isCommon: true,
           Session: Session,
           speakerValue: "",
           volunteerValue: ""
         });
-      } else this.setState({ isCommon: false });
+      } else {
+        this.setState({ isCommon: false });
+      }
       Session["sessionType"] = value;
       this.setState({
         Session: Session,
@@ -277,11 +282,13 @@ class SessionForm extends Component {
   }
 
   Toaster(successFlag, actionName) {
+    this.setState({ loading: false });
     let compRef = this;
     if (successFlag) {
       toast.success("Session " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
+      compRef.setState({createFlag:true, editDeleteFlag:false})
       compRef.resetField();
     } else {
       toast.error("Something went wrong", {
@@ -332,6 +339,7 @@ class SessionForm extends Component {
         session.endTime &&
         session.room
       ) {
+
         this.createSession(session, eventId, room);
       }
     } else {
@@ -356,6 +364,7 @@ class SessionForm extends Component {
 
   createSession(session, eventId, room) {
     let compRef = this;
+    this.setState({ loading: true });
     this.props.createSession(session);
     setTimeout(() => {
       this.updateCalendar(eventId, room);
@@ -403,6 +412,7 @@ class SessionForm extends Component {
 
   updateSession(session, eventId, room) {
     let compRef = this;
+    this.setState({ loading: true });
     this.props.updateSession(session);
     setTimeout(() => {
       this.updateCalendar(eventId, room);
@@ -418,7 +428,7 @@ class SessionForm extends Component {
     let session = { ...this.state.Session };
     let eventId = session.event._id;
     let room = session.room;
-
+    this.setState({ loading: true });
     this.props.deleteSession(session._id);
     setTimeout(() => {
       this.updateCalendar(eventId, room);
@@ -463,8 +473,15 @@ class SessionForm extends Component {
   }
 
   selectSlot(slotInfo) {
+   
     let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
     let room = this.state.roomValue;
+    if(room==null || room==""){
+      this.setState({roomRequired:true})
+    }
+    else{
+      this.setState({roomRequired:false})
+    }
     let selectFlag = true;
     let compRef = this;
     setTimeout(() => {
@@ -535,6 +552,17 @@ class SessionForm extends Component {
   }
 
   selectSession(session) {
+    this.setState({
+      sessionCapacityRequired: false,
+      sessionNameRequired: false,
+      roomRequired: false,
+      eventRequired: false,
+      startTimeRequired: false,
+      speakersRequired: false,
+      sessionTypeRequired: false,
+      volunteersRequired: false,
+    })
+    
     let sessionObj = Object.assign({}, session);
     if (sessionObj.sessionType === "common") {
       this.setState({ isCommon: true });
@@ -595,7 +623,7 @@ class SessionForm extends Component {
       startTimeRequired: false,
       speakersRequired: false,
       sessionTypeRequired: false,
-      sessionTypeValue: false,
+      sessionTypeValue: "",
       volunteersRequired: false,
       endTimeRequired: false,
       slotConfirmMessage: ""
@@ -603,7 +631,9 @@ class SessionForm extends Component {
   }
 
   render() {
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <div>
         <FormGroup row>
           <Col xs="6" md="12">
@@ -688,9 +718,9 @@ class SessionForm extends Component {
               <FormGroup row>
                 <Col xs="12">
                   <Select
+                    simpleValue
                     onChange={this.changeSessionType.bind(this)}
                     placeholder="Select session type"
-                    simpleValue
                     value={this.state.sessionTypeValue}
                     options={this.props.sessionTypeList}
                   />

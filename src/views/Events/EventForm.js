@@ -198,8 +198,8 @@ class EventForm extends Component {
       eventName: "",
       description: "",
       venue: "",
-      startDate: moment(),
-      endDate: moment()
+      startDate: "",
+      endDate: ""
     };
     this.setState({
       Event: Event,
@@ -282,7 +282,15 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Start date is required
+                *Start date is required
+              </div>
+            ) : null}
+            {this.state.inValidDates ? (
+              <div
+                style={{ color: "red", marginTop: 0 }}
+                className="help-block"
+              >
+                *please enter valid start Date and end Date
               </div>
             ) : null}
           </Col>
@@ -303,7 +311,7 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                End date is required
+               *End date is required
               </div>
             ) : null}
           </Col>
@@ -339,14 +347,7 @@ class EventForm extends Component {
             <ToastContainer autoClose={3000} />
           </Col>
           <Col md="3">
-            {this.state.inValidDates ? (
-              <div
-                style={{ color: "red", marginTop: 0 }}
-                className="help-block"
-              >
-                please enter valid start Date and end Date
-              </div>
-            ) : null}
+           
           </Col>
         </FormGroup>
       </CardLayout>

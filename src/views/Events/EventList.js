@@ -96,28 +96,25 @@ class EventList extends Component {
       defaultSortOrder: "asc",
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "10",
+          value: 10
         },
         {
-          text: "500",
-          value: 500
+          text: "20",
+          value: 20
         },
         {
-          text: "1000",
-          value: 1000
+          text: "30",
+          value: 30
         },
         {
           text: "All",
           value: this.props.events.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 10
     };
-    const selectRowProp = {
-      mode: "checkbox"
-    };
-
+   
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
     ) : (
@@ -152,7 +149,6 @@ class EventList extends Component {
                     data={this.props.events}
                     pagination={true}
                     options={sortingOptions}
-                    selectRow={selectRowProp}
                     exportCSV={true}
                   >
                     <TableHeaderColumn
