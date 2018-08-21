@@ -103,7 +103,7 @@ class Rooms extends Component {
       !Room.roomName ? this.setState({ roomNameRequired: true }) : null;
       !Room.capacity ? this.setState({ capacityRequired: true }) : null;
       !Room.event ? this.setState({ eventRequired: true }) : null;
-      Room.capacity < 0 ? this.setState({ inValidCapacity: true }) : null;
+      Room.capacity <= 0 ? this.setState({ inValidCapacity: true }) : null;
     }
   }
   Toaster(compRef, createEditError, actionName) {
