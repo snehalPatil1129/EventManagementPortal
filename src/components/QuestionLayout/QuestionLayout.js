@@ -30,6 +30,7 @@ const QuestionLayout = props => (
           type="text"
           placeholder="Enter question"
           name={props.name}
+          maxLength="250"
           value={props.questionValue}
           onChange={props.onchanged}
         />

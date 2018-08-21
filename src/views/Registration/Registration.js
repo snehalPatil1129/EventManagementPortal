@@ -269,6 +269,7 @@ class Registration extends Component {
               placeholder="First name"
               name="firstName"
               icon="icon-user"
+              maxLength="20"
               value={Registration.firstName}
               required={this.state.firstNameRequired}
               onchanged={event => this.onChangeInput(event)}
@@ -280,6 +281,7 @@ class Registration extends Component {
               placeholder="Last name"
               name="lastName"
               icon="icon-user"
+              maxLength="20"
               value={Registration.lastName}
               required={this.state.lastNameRequired}
               onchanged={event => this.onChangeInput(event)}
@@ -337,6 +339,7 @@ class Registration extends Component {
               placeholder="Brief info"
               name="briefInfo"
               icon="icon-info"
+              maxLength="250"
               value={Registration.briefInfo}
               onchanged={event => this.onChangeInput(event)}
             />

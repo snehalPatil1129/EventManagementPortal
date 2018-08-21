@@ -246,6 +246,7 @@ class EventForm extends Component {
               placeholder="Event name"
               name="eventName"
               icon="icon-home"
+              maxLength="50"
               value={this.state.Event.eventName}
               required={this.state.eventNameRequired}
               onchanged={event => this.onChangeHandler(event)}
@@ -257,6 +258,7 @@ class EventForm extends Component {
               placeholder="Description"
               name="description"
               icon="icon-note"
+              maxLength="250"
               value={this.state.Event.description}
               onchanged={event => this.onChangeHandler(event)}
             />
@@ -314,12 +316,12 @@ class EventForm extends Component {
               placeholder="Venue"
               name="venue"
               icon="icon-home"
+              maxLength="50"
               value={this.state.Event.venue}
               required={this.state.venueRequired}
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
-       
         </FormGroup>
         <FormGroup row>
           <Col xs="8" md="3">

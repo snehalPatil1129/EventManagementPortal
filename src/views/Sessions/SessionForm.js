@@ -678,6 +678,7 @@ class SessionForm extends Component {
                     maxLength="250"
                     name="sessionName"
                     icon="icon-calendar"
+                    maxLength="100"
                     required={this.state.sessionNameRequired}
                     value={this.state.Session.sessionName}
                     onchanged={session => this.onChangeHandler(session)}
@@ -744,6 +745,7 @@ class SessionForm extends Component {
                     placeholder="Description"
                     name="description"
                     icon="icon-note"
+                    maxLength="250"
                     value={this.state.Session.description}
                     onchanged={session => this.onChangeHandler(session)}
                   />

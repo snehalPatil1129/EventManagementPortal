@@ -177,6 +177,7 @@ class SponsorForm extends Component {
               type="text"
               placeholder="Sponsor name"
               name="name"
+              maxLength="50"
               required={this.state.nameRequired}
               value={Sponsor.name}
               onchanged={event => this.onChangeInput(event)}
@@ -207,6 +208,7 @@ class SponsorForm extends Component {
               type="text"
               placeholder="Description"
               name="description"
+              maxLength="250"
               value={Sponsor.description}
               onchanged={event => this.onChangeInput(event)}
             />
