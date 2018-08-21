@@ -183,6 +183,7 @@ class Rooms extends Component {
               type="text"
               placeholder="Room name"
               name="roomName"
+              maxLength="20"
               required={this.state.roomNameRequired}
               value={Room.roomName}
               onchanged={event => this.onChangeInput(event)}

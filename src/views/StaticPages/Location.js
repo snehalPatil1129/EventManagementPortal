@@ -206,6 +206,7 @@ class EventLocation extends Component {
               type="text"
               placeholder="Event address"
               name="address"
+              maxLength="250"
               required={this.state.addressRequired}
               value={eventLocation.address}
               onchanged={event => this.onChangeInput(event)}

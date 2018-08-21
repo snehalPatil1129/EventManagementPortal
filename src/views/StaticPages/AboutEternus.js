@@ -111,6 +111,7 @@ class AboutEternus extends Component {
               type="text"
               placeholder="Information about eternus"
               name="info"
+              maxLength="250"
               value={info}
               required={this.state.infoRequired}
               onchanged={event => this.onChangeInput(event)}
