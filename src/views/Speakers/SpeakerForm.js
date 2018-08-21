@@ -30,7 +30,8 @@ class SpeakerForm extends Component {
       eventRequired: false,
       editSpeaker: false,
       inValidContact: false,
-      inValidEmail: false
+      inValidEmail: false,
+      invalidProfileUrl: false
     };
   }
   componentDidMount() {
@@ -65,7 +66,8 @@ class SpeakerForm extends Component {
       contactRequired: false,
       eventRequired: false,
       inValidContact: false,
-      inValidEmail: false
+      inValidEmail: false,
+      invalidProfileUrl: false
     });
   }
 
@@ -98,6 +100,13 @@ class SpeakerForm extends Component {
     let attendeeCount = this.props.attendeeCount;
     let validContact;
     let validEmail;
+    let invalidProfileUrl = false;
+    var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+    if (speaker.profileImageURL !== "") {
+      if (!re.test(speaker.profileImageURL)) {
+        invalidProfileUrl = true;
+      }
+    }
     if (speaker.email) {
       validEmail = speaker.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
     }
@@ -111,7 +120,8 @@ class SpeakerForm extends Component {
       speaker.lastName &&
       speaker.email &&
       speaker.contact &&
-      speaker.event
+      speaker.event &&
+      !invalidProfileUrl
     ) {
       let editedSpeaker = _.pick(speaker, [
         "firstName",
@@ -142,6 +152,7 @@ class SpeakerForm extends Component {
       !speaker.contact
         ? this.setState({ contactRequired: true, inValidContact: false })
         : null;
+      invalidProfileUrl ? this.setState({ invalidProfileUrl: true }) : null;
     }
   }
 
@@ -180,7 +191,8 @@ class SpeakerForm extends Component {
       contactRequired: false,
       eventRequired: false,
       inValidContact: false,
-      inValidEmail: false
+      inValidEmail: false,
+      invalidProfileUrl: false
     });
   }
 
@@ -278,6 +290,7 @@ class SpeakerForm extends Component {
               name="contact"
               icon="icon-phone"
               value={Speaker.contact}
+              maxLength="10"
               inValid={this.state.inValidContact}
               required={this.state.emailRequired}
               onchanged={event => this.onChangeInput(event)}
@@ -321,6 +334,7 @@ class SpeakerForm extends Component {
               placeholder="Profile image URL"
               name="profileImageURL"
               icon="icon-link"
+              inValid={this.state.invalidProfileUrl}
               value={Speaker.profileImageURL}
               onchanged={event => this.onChangeInput(event)}
             />

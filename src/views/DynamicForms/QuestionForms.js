@@ -88,7 +88,7 @@ class QuestionForms extends Component {
       this.setState({ event: value, eventRequired: false });
       this.props.getSessions(value);
     } else {
-      this.setState({ event: "" });
+      this.setState({ event: "", session: "", eventRequired: true });
     }
   }
   handleSessionSelectChange(value) {
@@ -99,7 +99,10 @@ class QuestionForms extends Component {
   handleFormSelectChange(value) {
     value !== null
       ? this.setState({ formType: value, formTypeRequired: false })
-      : this.setState({ formType: "" });
+      : this.setState({ formType: "", formTypeRequired: true });
+    if (value === "Home Questions") {
+      this.setState({ sessionRequired: false });
+    }
   }
 
   onDisplayNewQuestion() {
@@ -310,7 +313,10 @@ class QuestionForms extends Component {
       session: "",
       formType: "",
       formData: [],
-      editForm: false
+      formTypeRequired: false,
+      eventRequired: false,
+      sessionRequired: false,
+      invalidForm: false
     });
   }
   render() {

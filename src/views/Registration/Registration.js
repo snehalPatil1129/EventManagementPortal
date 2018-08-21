@@ -33,7 +33,8 @@ class Registration extends Component {
       editAttendee: false,
       inValidContact: false,
       profileRequired: false,
-      inValidEmail: false
+      inValidEmail: false,
+      invalidProfileUrl: false
     };
   }
   componentDidMount() {
@@ -101,7 +102,8 @@ class Registration extends Component {
       eventRequired: false,
       inValidContact: false,
       profileRequired: false,
-      inValidEmail: false
+      inValidEmail: false,
+      invalidProfileUrl: false
     });
   }
   onSubmit() {
@@ -110,6 +112,13 @@ class Registration extends Component {
     let attendee = { ...this.state.Registration };
     let validContact;
     let validEmail;
+    let invalidProfileUrl = false;
+    var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+    if (attendee.profileImageURL !== "") {
+      if (!re.test(attendee.profileImageURL)) {
+        invalidProfileUrl = true;
+      }
+    }
     if (attendee.email) {
       validEmail = attendee.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
     }
@@ -124,7 +133,8 @@ class Registration extends Component {
       attendee.email &&
       attendee.contact &&
       attendee.event &&
-      attendee.profiles.length > 0
+      attendee.profiles.length > 0 &&
+      !invalidProfileUrl
     ) {
       let editedAttendee = _.pick(attendee, [
         "firstName",
@@ -169,6 +179,7 @@ class Registration extends Component {
       !attendee.contact
         ? this.setState({ contactRequired: true, inValidContact: false })
         : null;
+      invalidProfileUrl ? this.setState({ invalidProfileUrl: true }) : null;
     }
   }
   onReset() {
@@ -191,7 +202,8 @@ class Registration extends Component {
       eventRequired: false,
       inValidContact: false,
       profileRequired: false,
-      inValidEmail: false
+      inValidEmail: false,
+      invalidProfileUrl: false
     });
   }
   Toaster(compRef, createEditError, actionName, errorMessage) {
@@ -352,6 +364,7 @@ class Registration extends Component {
               placeholder="Profile image URL"
               name="profileImageURL"
               icon="icon-link"
+              inValid={this.state.invalidProfileUrl}
               value={Registration.profileImageURL}
               onchanged={event => this.onChangeInput(event)}
             />

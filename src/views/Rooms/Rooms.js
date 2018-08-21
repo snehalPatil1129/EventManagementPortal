@@ -16,9 +16,9 @@ class Rooms extends Component {
       Room: {
         roomName: "",
         event: "",
-        capacity: "",
-        bufferCapacity: "",
-        availableServices: []
+        capacity: ""
+        //bufferCapacity: "",
+        //availableServices: []
       },
       events: [],
       editRoom: false,
@@ -34,9 +34,9 @@ class Rooms extends Component {
     if (this.props.match.params.id !== undefined) {
       let currentroom = _.pick(this.props.currentRoom, [
         "roomName",
-        "capacity",
-        "bufferCapacity",
-        "availableServices"
+        "capacity"
+        //"bufferCapacity",
+        //"availableServices"
       ]);
       let Empty = !Object.keys(currentroom).length;
       if (!Empty) {
@@ -53,9 +53,9 @@ class Rooms extends Component {
         setTimeout(function() {
           let currentroom = _.pick(compRef.props.currentRoom, [
             "roomName",
-            "capacity",
-            "bufferCapacity",
-            "availableServices"
+            "capacity"
+            //"bufferCapacity",
+            //"availableServices"
           ]);
           let Empty = !Object.keys(currentroom).length;
           if (Empty) {
@@ -159,7 +159,11 @@ class Rooms extends Component {
     if (value !== null) {
       let Room = { ...this.state.Room };
       Room.event = value;
-      this.setState({ Room: Room });
+      this.setState({ Room: Room, eventRequired: false });
+    } else {
+      let Room = { ...this.state.Room };
+      Room.event = "";
+      this.setState({ Room: Room, eventRequired: true });
     }
   }
   render() {
