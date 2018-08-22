@@ -120,14 +120,14 @@ export const generatePdfBulk = (userCollection, eventName, profileName) => {
     let imgData = user.userInfo.qrCode;
     let attendeeCode = Label + "-" + Count;
     doc.addPage();
-    doc.setFontSize(20); //size in px
-    doc.text(60, 50, fullName || " "); // x axis , y axis in mm
+    doc.setFontSize(30); //size in px
+    doc.text(10, 30, fullName || " "); // x axis , y axis in mm
 
     doc.setFontSize(20); //size in px
-    doc.text(20, 55, briefInfo || " ");
-    doc.addImage(imgData, "JPEG", 10, 90, 20, 20); // x , y , height, width in mm
+    doc.text(15, 45, briefInfo || " ");
+    doc.addImage(imgData, "JPEG", 15, 60, 25, 25); // x , y , height, width in mm
     doc.setFontSize(10);
-    doc.text(8, 110, attendeeCode || "");
+    doc.text(20, 88, attendeeCode || "");
   });
   doc.save(eventName + " " + profileName + ".pdf");
 };
@@ -140,7 +140,7 @@ export const generatePdfSingle = (user, generatedQR) => {
   let briefInfo = user.briefInfo;
   let imgData = generatedQR;
   let attendeeCode = user.attendeeLabel + "-" + user.attendeeCount;
-  doc.setFontSize(35); //size in px
+  doc.setFontSize(30); //size in px
   doc.text(10, 30, fullName || ""); // x axis , y axis in mm
   doc.setFontSize(20); //size in px
   doc.text(15, 45, briefInfo || "");
