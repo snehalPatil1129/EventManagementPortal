@@ -96,25 +96,24 @@ class EventList extends Component {
       defaultSortOrder: "asc",
       sizePerPageList: [
         {
-          text: "10",
-          value: 10
+          text: "50",
+          value: 50
         },
         {
-          text: "20",
-          value: 20
+          text: "100",
+          value: 100
         },
         {
-          text: "30",
-          value: 30
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.events.length
         }
       ],
-      sizePerPage: 10
+      sizePerPage: 50
     };
-   
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
     ) : (

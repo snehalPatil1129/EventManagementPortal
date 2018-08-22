@@ -80,14 +80,14 @@ class SessionForm extends Component {
   }
 
   ChangeCapacityHandler(session) {
-    if (session.target.value>0|| session.target.value=="") {
+    if (session.target.value > 0 || session.target.value == "") {
       let sessionDetails = { ...this.state.Session };
       sessionDetails[session.target.name] = session.target.value;
       this.setState({
         Session: sessionDetails,
         sessionCapacityRequired: false
       });
-    } 
+    }
   }
 
   eventDaysStyleGetter(date) {
@@ -214,13 +214,13 @@ class SessionForm extends Component {
   }
 
   changeSessionType(value) {
+    let Session = { ...this.state.Session };
     if (value != null) {
-      let Session = { ...this.state.Session };
       if (value === "common") {
         Session.speakers = "";
         Session.volunteers = "";
         Session.sessionCapacity = "";
-        Session.isRegrequired= "";
+        Session.isRegistrationRequired = "";
         this.setState({
           isCommon: true,
           Session: Session,
@@ -235,6 +235,13 @@ class SessionForm extends Component {
         Session: Session,
         sessionTypeRequired: false,
         sessionTypeValue: value
+      });
+    } else {
+      Session["sessionType"] = "";
+      this.setState({
+        Session: Session,
+        sessionTypeRequired: true,
+        sessionTypeValue: ""
       });
     }
   }
@@ -277,7 +284,7 @@ class SessionForm extends Component {
 
   toggleSessionRequired() {
     let Session = { ...this.state.Session };
-    Session["isRegrequired"] = !Session.isRegrequired;
+    Session["isRegistrationRequired"] = !Session.isRegistrationRequired;
     this.setState({ Session: Session });
   }
 
@@ -288,7 +295,7 @@ class SessionForm extends Component {
       toast.success("Session " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
-      compRef.setState({createFlag:true, editDeleteFlag:false})
+      compRef.setState({ createFlag: true, editDeleteFlag: false });
       compRef.resetField();
     } else {
       toast.error("Something went wrong", {
@@ -339,7 +346,6 @@ class SessionForm extends Component {
         session.endTime &&
         session.room
       ) {
-
         this.createSession(session, eventId, room);
       }
     } else {
@@ -453,8 +459,8 @@ class SessionForm extends Component {
     let compRef = this;
 
     let slotConfirmMessage =
-      `Start Time : ${sessionStart.toLocaleString()} ` +
-      `,\r\n End Time: ${sessionEnd.toLocaleString()}`;
+      `Start Time : ${moment(sessionStart).format("DD/MM/YYYY,h:mm A")} ` +
+      `,\r\n End Time: ${moment(sessionEnd).format("DD/MM/YYYY,h:mm A")}`;
     compRef.setState({ slotConfirmMessage: slotConfirmMessage });
 
     let Session = { ...compRef.state.Session };
@@ -473,17 +479,16 @@ class SessionForm extends Component {
   }
 
   selectSlot(slotInfo) {
-   
     let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
     let room = this.state.roomValue;
-    if(room==null || room==""){
-      this.setState({roomRequired:true})
-    }
-    else{
-      this.setState({roomRequired:false})
+    if (room == null || room == "") {
+      this.setState({ roomRequired: true });
+    } else {
+      this.setState({ roomRequired: false });
     }
     let selectFlag = true;
     let compRef = this;
+
     setTimeout(() => {
       if (
         compRef.state.eventStartDate <= dateselected &&
@@ -534,16 +539,34 @@ class SessionForm extends Component {
               " " +
               "Start Time :" +
               " " +
-              slotInfo.start.toLocaleString() +
+              moment(slotInfo.start).format("DD/MM/YYYY,h:mm A") +
               " " +
               "and " +
               "" +
               "End Time :" +
               "" +
-              slotInfo.end.toLocaleString();
+              moment(slotInfo.end).format("DD/MM/YYYY,h:mm A");
             let sessionStart = slotInfo.start;
             let sessionEnd = slotInfo.end;
-            compRef.setState({ SlotalertMessage, sessionStart, sessionEnd });
+            let Session = {
+              ...compRef.state.Session,
+              sessionName: "",
+              sessionCapacity: "",
+              description: "",
+              isRegistrationRequired: "",
+              speakers: [],
+              volunteers: [],
+              sessionType: ""
+            };
+            compRef.setState({
+              SlotalertMessage,
+              sessionStart,
+              sessionEnd,
+              Session: Session,
+              speakerValue: "",
+              volunteerValue: "",
+              sessionTypeValue: ""
+            });
             compRef.slotConfirmPopup();
           }
         }
@@ -552,6 +575,10 @@ class SessionForm extends Component {
   }
 
   selectSession(session) {
+    let sessionObj = {};
+    if (session.sessionCapacity == null) {
+      session.sessionCapacity = "";
+    }
     this.setState({
       sessionCapacityRequired: false,
       sessionNameRequired: false,
@@ -560,10 +587,10 @@ class SessionForm extends Component {
       startTimeRequired: false,
       speakersRequired: false,
       sessionTypeRequired: false,
-      volunteersRequired: false,
-    })
-    
-    let sessionObj = Object.assign({}, session);
+      volunteersRequired: false
+    });
+
+    sessionObj = Object.assign({}, session);
     if (sessionObj.sessionType === "common") {
       this.setState({ isCommon: true });
     } else this.setState({ isCommon: false });
@@ -592,7 +619,7 @@ class SessionForm extends Component {
         volunteers: [],
         sessionCapacity: "",
         sessionType: "",
-        isRegrequired: false
+        isRegistrationRequired: false
       };
     } else {
       Session = {
@@ -607,7 +634,7 @@ class SessionForm extends Component {
         endTime: "",
         sessionCapacity: "",
         sessionType: "",
-        isRegrequired: false
+        isRegistrationRequired: false
       };
     }
 
@@ -802,7 +829,7 @@ class SessionForm extends Component {
                   <input
                     disabled={this.state.isCommon}
                     type="checkbox"
-                    checked={this.state.Session.isRegrequired}
+                    checked={this.state.Session.isRegistrationRequired}
                     onChange={this.toggleSessionRequired.bind(this)}
                   />
                   <Label> Registration Required </Label>

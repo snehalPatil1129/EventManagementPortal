@@ -6,14 +6,7 @@ import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import InputElement from "../../components/Input/";
 import CardLayout from "../../components/CardLayout/";
-import {
-  InputGroup,
-  InputGroupText,
-  Col,
-  Button,
-  FormGroup,
-  Label
-} from "reactstrap";
+import { InputGroup, InputGroupText, Col, Button, FormGroup } from "reactstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
@@ -252,7 +245,7 @@ class EventForm extends Component {
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
-          <Col md="4">
+          <Col sm={{ size: 4, order: 2, offset: 1 }}>
             <InputElement
               type="text"
               placeholder="Description"
@@ -265,7 +258,7 @@ class EventForm extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Col md="4">
+          <Col md="5">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
@@ -294,7 +287,7 @@ class EventForm extends Component {
               </div>
             ) : null}
           </Col>
-          <Col xs="12" md="4">
+          <Col md="5">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
@@ -311,7 +304,7 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-               *End date is required
+                *End date is required
               </div>
             ) : null}
           </Col>
@@ -358,9 +351,7 @@ class EventForm extends Component {
             </Button>
             <ToastContainer autoClose={2000} />
           </Col>
-          <Col md="3">
-           
-          </Col>
+          <Col md="3" />
         </FormGroup>
       </CardLayout>
     );
