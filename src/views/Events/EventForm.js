@@ -283,7 +283,7 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                *please enter valid start Date and end Date
+                *Please enter valid Start Date and End Date
               </div>
             ) : null}
           </Col>
