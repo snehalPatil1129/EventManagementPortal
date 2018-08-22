@@ -140,12 +140,20 @@ export const generatePdfSingle = (user, generatedQR) => {
   let briefInfo = user.briefInfo;
   let imgData = generatedQR;
   let attendeeCode = user.attendeeLabel + "-" + user.attendeeCount;
+  // doc.setFontSize(30); //size in px
+  // doc.text(10, 30, fullName || ""); // x axis , y axis in mm
+  // doc.setFontSize(20); //size in px
+  // doc.text(15, 45, briefInfo || "");
+  // doc.addImage(imgData, "JPEG", 15, 60, 25, 25); // x , y , height, width in mm
+  // doc.setFontSize(10);
+  // doc.text(20, 88, attendeeCode || "");
+  // doc.save(fullName + ".pdf");
   doc.setFontSize(30); //size in px
-  doc.text(10, 30, fullName || ""); // x axis , y axis in mm
+  doc.text(25, 48, fullName || ""); // x axis , y axis in mm
   doc.setFontSize(20); //size in px
-  doc.text(15, 45, briefInfo || "");
-  doc.addImage(imgData, "JPEG", 15, 60, 25, 25); // x , y , height, width in mm
+  doc.text(20, 60, briefInfo || "");
+  doc.addImage(imgData, "JPEG", 10, 90, 20, 20); // x , y , height, width in mm
   doc.setFontSize(10);
-  doc.text(20, 88, attendeeCode || "");
+  doc.text(12, 112, attendeeCode || "");
   doc.save(fullName + ".pdf");
 };
