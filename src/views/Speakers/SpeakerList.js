@@ -117,23 +117,23 @@ class SpeakerList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.speakerList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     const selectRowProp = {
       mode: "checkbox"
