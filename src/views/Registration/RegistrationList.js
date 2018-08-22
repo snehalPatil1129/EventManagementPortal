@@ -148,23 +148,23 @@ class RegistrationList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.attendeeList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     const selectRowProp = {
       mode: "checkbox"
@@ -239,6 +239,7 @@ class RegistrationList extends Component {
                       selectRow={selectRowProp}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Attendee List"
                     >
                       <TableHeaderColumn
                         dataField="_id"
@@ -253,6 +254,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="60"
                         csvHeader="First Name"
+                        dataSort={true}
                       >
                         First Name
                       </TableHeaderColumn>
@@ -261,6 +263,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="60"
                         csvHeader="Last Name"
+                        dataSort={true}
                       >
                         Last Name
                       </TableHeaderColumn>
@@ -269,6 +272,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="80"
                         csvHeader="Email"
+                        dataSort={true}
                       >
                         Email
                       </TableHeaderColumn>
@@ -277,6 +281,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="80"
                         csvHeader="Contact"
+                        dataSort={true}
                       >
                         Contact
                       </TableHeaderColumn>
@@ -284,7 +289,8 @@ class RegistrationList extends Component {
                         dataField="eventName"
                         headerAlign="left"
                         width="80"
-                        csvHeader="Event"
+                        csvHeader="Event Name"
+                        dataSort={true}
                       >
                         Event
                       </TableHeaderColumn>

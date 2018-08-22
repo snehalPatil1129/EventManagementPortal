@@ -86,23 +86,23 @@ class FormList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.formList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
@@ -153,6 +153,7 @@ class FormList extends Component {
                         dataField="eventName"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Event Name
                       </TableHeaderColumn>
@@ -160,6 +161,7 @@ class FormList extends Component {
                         dataField="sessionName"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Session Name
                       </TableHeaderColumn>
@@ -167,6 +169,7 @@ class FormList extends Component {
                         dataField="formType"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Form Type
                       </TableHeaderColumn>

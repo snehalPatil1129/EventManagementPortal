@@ -343,7 +343,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select form type
+                *Please select form type
               </div>
             ) : null}
           </Col>
@@ -360,7 +360,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>
@@ -377,7 +377,7 @@ class QuestionForms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select session
+                *Please select session
               </div>
             ) : null}
           </Col>
@@ -417,7 +417,7 @@ class QuestionForms extends Component {
                 color="success"
                 onClick={() => this.onSubmitForm()}
               >
-                Update Form
+                Update
               </Button>
             ) : (
               <Button
@@ -426,7 +426,7 @@ class QuestionForms extends Component {
                 color="success"
                 onClick={() => this.onSubmitForm()}
               >
-                Create Form
+                Create
               </Button>
             )}
           </Col>
@@ -434,11 +434,22 @@ class QuestionForms extends Component {
             <Button
               type="button"
               size="md"
-              color="danger"
-              style={{ marginLeft: -150 }}
+              color="primary"
+              style={{ marginLeft: -182 }}
               onClick={() => this.resetForm()}
             >
-              Reset Form
+              Reset
+            </Button>
+          </Col>
+          <Col md="3">
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              style={{ marginLeft: -370 }}
+              onClick={() => this.redirectFunction()}
+            >
+              Cancel
             </Button>
             <ToastContainer autoClose={2000} />
           </Col>

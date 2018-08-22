@@ -150,6 +150,7 @@ class EventList extends Component {
                     pagination={true}
                     options={sortingOptions}
                     exportCSV={true}
+                    csvFileName="Event List"
                   >
                     <TableHeaderColumn
                       dataField="_id"
@@ -161,8 +162,8 @@ class EventList extends Component {
                       dataField="eventName"
                       headerAlign="left"
                       width="100"
-                      dataSort
-                      csvHeader="eventName"
+                      dataSort={true}
+                      csvHeader="Event Name"
                     >
                       Event Name
                     </TableHeaderColumn>
@@ -170,7 +171,8 @@ class EventList extends Component {
                       dataField="description"
                       headerAlign="left"
                       width="150"
-                      csvHeader="description"
+                      dataSort={true}
+                      csvHeader="Description"
                     >
                       Description
                     </TableHeaderColumn>
@@ -178,6 +180,7 @@ class EventList extends Component {
                       dataField="startDate"
                       headerAlign="left"
                       width="50"
+                      dataSort={true}
                       dataFormat={this.formatStartDate.bind(this)}
                       csvHeader="Start date"
                     >
@@ -187,6 +190,7 @@ class EventList extends Component {
                       dataField="endDate"
                       headerAlign="left"
                       width="50"
+                      dataSort={true}
                       dataFormat={this.formatEndDate.bind(this)}
                       csvHeader="End date"
                     >
@@ -196,7 +200,8 @@ class EventList extends Component {
                       dataField="venue"
                       headerAlign="left"
                       width="50"
-                      csvHeader="venue"
+                      dataSort={true}
+                      csvHeader="Venue"
                     >
                       Venue
                     </TableHeaderColumn>

@@ -157,7 +157,7 @@ class AboutUs extends Component {
                 style={{ color: "red", marginTop: -1 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>

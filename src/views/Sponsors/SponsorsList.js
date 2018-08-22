@@ -89,23 +89,23 @@ class SponsorsList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.sponsorsList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
@@ -156,6 +156,7 @@ class SponsorsList extends Component {
                       search={true}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Sponsors List"
                     >
                       <TableHeaderColumn
                         dataField="_id"
@@ -170,6 +171,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Sponsor Name"
+                        dataSort={true}
                       >
                         Sponsor Name
                       </TableHeaderColumn>
@@ -178,6 +180,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Category"
+                        dataSort={true}
                       >
                         Category
                       </TableHeaderColumn>
@@ -186,6 +189,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Event"
+                        dataSort={true}
                       >
                         Event
                       </TableHeaderColumn>

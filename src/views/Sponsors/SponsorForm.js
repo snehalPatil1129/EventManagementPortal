@@ -232,7 +232,7 @@ class SponsorForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>
@@ -286,7 +286,7 @@ class SponsorForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select category
+                *Please select category
               </div>
             ) : null}
           </Col>
@@ -309,7 +309,7 @@ class SponsorForm extends Component {
                 color="success"
                 onClick={() => this.onSubmit()}
               >
-                Submit
+                Create
               </Button>
             )}
           </Col>
@@ -317,14 +317,23 @@ class SponsorForm extends Component {
             <Button
               type="button"
               size="md"
-              color="danger"
-              style={{ marginLeft: -160 }}
+              color="primary"
+              style={{ marginLeft: -182 }}
               onClick={() => this.onReset()}
             >
               Reset
             </Button>
           </Col>
-          <Col md="6">
+          <Col md="3">
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              style={{ marginLeft: -370 }}
+              onClick={() => this.redirectFunction()}
+            >
+              Cancel
+            </Button>
             <ToastContainer autoClose={2000} />
           </Col>
         </FormGroup>
