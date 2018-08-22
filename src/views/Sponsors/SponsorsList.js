@@ -156,6 +156,7 @@ class SponsorsList extends Component {
                       search={true}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Sponsors List"
                     >
                       <TableHeaderColumn
                         dataField="_id"

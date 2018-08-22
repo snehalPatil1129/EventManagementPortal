@@ -341,7 +341,7 @@ class Registration extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>
@@ -383,7 +383,7 @@ class Registration extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>
@@ -414,11 +414,22 @@ class Registration extends Component {
             <Button
               type="button"
               size="md"
-              color="danger"
-              style={{ marginLeft: -150 }}
+              color="primary"
+              style={{ marginLeft: -180 }}
               onClick={() => this.onReset()}
             >
               Reset
+            </Button>
+          </Col>
+          <Col md="3">
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              style={{ marginLeft: -370 }}
+              onClick={() => this.redirectFunction()}
+            >
+              Cancel
             </Button>
             <ToastContainer autoClose={2000} />
           </Col>

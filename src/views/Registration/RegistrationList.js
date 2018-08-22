@@ -239,6 +239,7 @@ class RegistrationList extends Component {
                       selectRow={selectRowProp}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Attendee List"
                     >
                       <TableHeaderColumn
                         dataField="_id"
@@ -284,7 +285,7 @@ class RegistrationList extends Component {
                         dataField="eventName"
                         headerAlign="left"
                         width="80"
-                        csvHeader="Event"
+                        csvHeader="Event Name"
                       >
                         Event
                       </TableHeaderColumn>

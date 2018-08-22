@@ -228,7 +228,7 @@ class SpeakerForm extends Component {
           color="success"
           onClick={this.onSubmit.bind(this)}
         >
-          <i className="icon-note" /> Update
+          Update
         </Button>
       );
     else
@@ -239,7 +239,7 @@ class SpeakerForm extends Component {
           color="success"
           onClick={this.onSubmit.bind(this)}
         >
-          <i className="icon-note" /> Submit
+          Submit
         </Button>
       );
     return (
@@ -311,7 +311,7 @@ class SpeakerForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>
@@ -348,19 +348,31 @@ class SpeakerForm extends Component {
             <Button
               type="button"
               size="md"
-              color="danger"
-              style={{ marginLeft: -150 }}
+              color="primary"
+              style={{ marginLeft: -182 }}
               onClick={() => this.onReset()}
             >
               Reset
             </Button>
           </Col>
-          <Col md="6">
+          <Col md="3">
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              style={{ marginLeft: -370 }}
+              onClick={() => this.redirectFunction()}
+            >
+              Cancel
+            </Button>
+            <ToastContainer autoClose={2000} />
+          </Col>
+          {/* <Col md="6">
             <ToastContainer autoClose={2000} />
             <div style={{ color: "red" }} className="help-block">
               {this.props.speakerError}
             </div>
-          </Col>
+          </Col> */}
         </FormGroup>
       </CardLayout>
     );

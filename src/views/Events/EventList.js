@@ -154,6 +154,7 @@ class EventList extends Component {
                     options={sortingOptions}
                     selectRow={selectRowProp}
                     exportCSV={true}
+                    csvFileName="Event List"
                   >
                     <TableHeaderColumn
                       dataField="_id"
@@ -166,7 +167,7 @@ class EventList extends Component {
                       headerAlign="left"
                       width="100"
                       dataSort
-                      csvHeader="eventName"
+                      csvHeader="Event Name"
                     >
                       Event Name
                     </TableHeaderColumn>
@@ -174,7 +175,7 @@ class EventList extends Component {
                       dataField="description"
                       headerAlign="left"
                       width="150"
-                      csvHeader="description"
+                      csvHeader="Description"
                     >
                       Description
                     </TableHeaderColumn>
@@ -200,7 +201,7 @@ class EventList extends Component {
                       dataField="venue"
                       headerAlign="left"
                       width="50"
-                      csvHeader="venue"
+                      csvHeader="Venue"
                     >
                       Venue
                     </TableHeaderColumn>

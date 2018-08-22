@@ -220,7 +220,7 @@ class EventForm extends Component {
           color="success"
           onClick={this.onUpdateHandler.bind(this)}
         >
-          <i className="icon-note" /> Update
+          Update
         </Button>
       );
     else
@@ -231,7 +231,7 @@ class EventForm extends Component {
           color="success"
           onClick={this.onSubmitHandler.bind(this)}
         >
-          <i className="icon-note" /> Submit
+          Submit
         </Button>
       );
 
@@ -324,19 +324,31 @@ class EventForm extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Col xs="8" md="3">
+          <Col xs="12" md="3">
             {this.buttons}
           </Col>
           <Col md="3">
             <Button
-              onClick={this.resetField.bind(this)}
-              type="reset"
+              type="button"
               size="md"
-              color="danger"
+              color="primary"
+              style={{ marginLeft: -182 }}
+              onClick={() => this.resetField()}
             >
               Reset
             </Button>
-            <ToastContainer autoClose={3000} />
+          </Col>
+          <Col md="3">
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              style={{ marginLeft: -370 }}
+              onClick={() => this.redirectFunction()}
+            >
+              Cancel
+            </Button>
+            <ToastContainer autoClose={2000} />
           </Col>
           <Col md="3">
             {this.state.inValidDates ? (

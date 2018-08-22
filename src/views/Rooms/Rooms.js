@@ -101,9 +101,13 @@ class Rooms extends Component {
       }, 1000);
     } else {
       !Room.roomName ? this.setState({ roomNameRequired: true }) : null;
-      !Room.capacity ? this.setState({ capacityRequired: true }) : null;
       !Room.event ? this.setState({ eventRequired: true }) : null;
-      Room.capacity <= 0 ? this.setState({ inValidCapacity: true }) : null;
+      Room.capacity <= 0 && Room.capacity
+        ? this.setState({ inValidCapacity: true })
+        : null;
+      !Room.capacity
+        ? this.setState({ capacityRequired: true, inValidCapacity: false })
+        : null;
     }
   }
   Toaster(compRef, createEditError, actionName) {
@@ -206,7 +210,7 @@ class Rooms extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>
@@ -276,11 +280,22 @@ class Rooms extends Component {
             <Button
               type="button"
               size="md"
-              color="danger"
-              style={{ marginLeft: -160 }}
+              color="primary"
+              style={{ marginLeft: -182 }}
               onClick={() => this.onReset()}
             >
               Reset
+            </Button>
+          </Col>
+          <Col md="3">
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              style={{ marginLeft: -370 }}
+              onClick={() => this.redirectFunction()}
+            >
+              Cancel
             </Button>
             <ToastContainer autoClose={2000} />
           </Col>

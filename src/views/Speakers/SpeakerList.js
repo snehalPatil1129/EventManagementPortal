@@ -198,6 +198,7 @@ class SpeakerList extends Component {
                       selectRow={selectRowProp}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Speakers List"
                     >
                       <TableHeaderColumn
                         dataField="_id"

@@ -78,6 +78,13 @@ class EventLocation extends Component {
           });
         }
       }, 1000);
+    } else {
+      let eventLocation = { ...this.state.eventLocation };
+      eventLocation.event = "";
+      this.setState({
+        eventLocation: eventLocation,
+        eventRequired: true
+      });
     }
   }
   getCordinates() {
@@ -98,7 +105,7 @@ class EventLocation extends Component {
           this.onSubmit();
         })
         .catch(error => {
-          this.setState({ cordinateError: "Please Submit Again" });
+          this.setState({ cordinateError: "*Please Submit Again" });
         });
     } else {
       !eventLocation.event ? this.setState({ eventRequired: true }) : null;
@@ -139,7 +146,7 @@ class EventLocation extends Component {
       !eventLocation.event ? this.setState({ eventRequired: true }) : null;
       !eventLocation.address ? this.setState({ addressRequired: true }) : null;
       !eventLocation.latitude || !eventLocation.longitude
-        ? this.setState({ cordinateError: "Please Submit Again" })
+        ? this.setState({ cordinateError: "*Please Submit Again" })
         : null;
     }
   }
@@ -196,7 +203,7 @@ class EventLocation extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>

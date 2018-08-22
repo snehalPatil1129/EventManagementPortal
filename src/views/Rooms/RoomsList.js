@@ -171,6 +171,7 @@ class RoomsList extends Component {
                       search={true}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Rooms List"
                     >
                       <TableHeaderColumn
                         dataField="_id"
