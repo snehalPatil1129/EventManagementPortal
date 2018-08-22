@@ -548,21 +548,11 @@ class SessionForm extends Component {
               moment(slotInfo.end).format("DD/MM/YYYY,h:mm A");
             let sessionStart = slotInfo.start;
             let sessionEnd = slotInfo.end;
-            let Session = {
-              ...compRef.state.Session,
-              sessionName: "",
-              sessionCapacity: "",
-              description: "",
-              isRegistrationRequired: "",
-              speakers: [],
-              volunteers: [],
-              sessionType: ""
-            };
+           
             compRef.setState({
               SlotalertMessage,
               sessionStart,
               sessionEnd,
-              Session: Session,
               speakerValue: "",
               volunteerValue: "",
               sessionTypeValue: ""
