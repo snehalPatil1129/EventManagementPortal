@@ -220,7 +220,7 @@ class SessionForm extends Component {
         Session.speakers = "";
         Session.volunteers = "";
         Session.sessionCapacity = "";
-        Session.isRegistrationRequired = "";
+        Session.isRegistrationRequired = false;
         this.setState({
           isCommon: true,
           Session: Session,
@@ -505,6 +505,13 @@ class SessionForm extends Component {
               session.event._id === compRef.state.eventValue &&
               session.room === compRef.state.roomValue
             ) {
+              let isSameStart = moment(slotInfo.start).isSame(
+                moment(session.startTime)
+              );
+              let isSameEnd = moment(slotInfo.end).isSame(
+                moment(session.endTime)
+              );
+
               let isBetweenStart = moment(slotInfo.start).isBetween(
                 moment(session.startTime),
                 moment(session.endTime)
@@ -525,7 +532,9 @@ class SessionForm extends Component {
                 isBetweenStart ||
                 isBetweenEnd ||
                 isBetweenStartOld ||
-                isBetweenEndOld
+                isBetweenEndOld ||
+                isSameStart ||
+                isSameEnd
               ) {
                 selectFlag = false;
               }
@@ -548,7 +557,7 @@ class SessionForm extends Component {
               moment(slotInfo.end).format("DD/MM/YYYY,h:mm A");
             let sessionStart = slotInfo.start;
             let sessionEnd = slotInfo.end;
-           
+
             compRef.setState({
               SlotalertMessage,
               sessionStart,
