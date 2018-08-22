@@ -453,17 +453,31 @@ class SessionForm extends Component {
   }
 
   slotConfirmSuccess() {
+     let compRef = this;
+    let Session = { ...this.state.Session };
+    if (this.state.editDeleteFlag === true) {
+      Session.sessionName = "";
+      Session.description = "";
+      Session.speakers = [];
+      Session.volunteers = [];
+      Session.sessionCapacity = "";
+      Session.sessionType = "";
+      Session.isRegistrationRequired = false;
+      this.setState({
+        Session: Session,
+        sessionTypeValue: "",
+        speakerValue: "",
+        volunteerValue: ""
+      });
+    }
     let sessionStart = this.state.sessionStart;
     let sessionEnd = this.state.sessionEnd;
-    this.resetField();
-    let compRef = this;
-
+   
     let slotConfirmMessage =
       `Start Time : ${moment(sessionStart).format("DD/MM/YYYY,h:mm A")} ` +
       `,\r\n End Time: ${moment(sessionEnd).format("DD/MM/YYYY,h:mm A")}`;
     compRef.setState({ slotConfirmMessage: slotConfirmMessage });
 
-    let Session = { ...compRef.state.Session };
     Session["startTime"] = sessionStart.toString();
     Session["endTime"] = sessionEnd.toString();
 
@@ -561,10 +575,7 @@ class SessionForm extends Component {
             compRef.setState({
               SlotalertMessage,
               sessionStart,
-              sessionEnd,
-              speakerValue: "",
-              volunteerValue: "",
-              sessionTypeValue: ""
+              sessionEnd
             });
             compRef.slotConfirmPopup();
           }
