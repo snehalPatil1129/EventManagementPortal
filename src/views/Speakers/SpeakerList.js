@@ -19,14 +19,17 @@ import * as attendeeCardMethod from "../../components/AttendeeCard/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
-import Modal from "../../components/Modal/MessageModal";
+import MessageModal from "../../components/Modal/MessageModal";
+import Modal from "../../components/Modal/ModalCart";
 class SpeakerList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       event: "",
       loading: true,
-      modalPopupFlag: false
+      modalPopupFlag: false,
+      deleteFlag: false,
+      speakerId: ""
     };
   }
   componentDidMount() {
@@ -38,9 +41,11 @@ class SpeakerList extends Component {
     }, 1000);
   }
 
-  deleteSpeaker(id) {
+  deleteSpeaker() {
+    let id = this.state.speakerId;
     let compRef = this;
     this.props.deleteSpeaker(id);
+    this.setState({ deleteFlag: false });
     setTimeout(() => {
       let speakerDeleted = this.props.speakerDeleted;
       compRef.Toaster(compRef, speakerDeleted, "Deleted");
@@ -48,10 +53,17 @@ class SpeakerList extends Component {
   }
   ondeleteSpeaker(cell, row) {
     return (
-      <Link to={this} onClick={() => this.deleteSpeaker(row._id)}>
+      <Link to={this} onClick={() => this.confirmDelete(row._id)}>
         <i className="fa fa-trash" />
       </Link>
     );
+  }
+  confirmDelete(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      speakerId: id
+    });
   }
 
   onEditSpeaker(cell, row) {
@@ -117,23 +129,23 @@ class SpeakerList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.speakerList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     const selectRowProp = {
       mode: "checkbox"
@@ -198,6 +210,7 @@ class SpeakerList extends Component {
                       selectRow={selectRowProp}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Speakers List"
                     >
                       <TableHeaderColumn
                         dataField="_id"
@@ -212,6 +225,7 @@ class SpeakerList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="First Name"
+                        dataSort={true}
                       >
                         First Name
                       </TableHeaderColumn>
@@ -220,6 +234,7 @@ class SpeakerList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Last Name"
+                        dataSort={true}
                       >
                         Last Name
                       </TableHeaderColumn>
@@ -228,6 +243,7 @@ class SpeakerList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Email"
+                        dataSort={true}
                       >
                         Email
                       </TableHeaderColumn>
@@ -236,6 +252,7 @@ class SpeakerList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Event"
+                        dataSort={true}
                       >
                         Event
                       </TableHeaderColumn>
@@ -267,10 +284,16 @@ class SpeakerList extends Component {
                         Print
                       </TableHeaderColumn>
                     </BootstrapTable>
-                    <Modal
+                    <MessageModal
                       openFlag={this.state.modalPopupFlag}
                       toggleFunction={this.toggleFunction.bind(this)}
                       message="Please select speakers for printing"
+                    />
+                    <Modal
+                      openFlag={this.state.deleteFlag}
+                      toggleFunction={this.confirmDelete.bind(this)}
+                      confirmFunction={this.deleteSpeaker.bind(this)}
+                      message=" Are you sure you want to permanently delete this speaker ?"
                     />
                   </FormGroup>
                 </CardBody>

@@ -6,14 +6,7 @@ import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 import InputElement from "../../components/Input/";
 import CardLayout from "../../components/CardLayout/";
-import {
-  InputGroup,
-  InputGroupText,
-  Col,
-  Button,
-  FormGroup,
-  Label
-} from "reactstrap";
+import { InputGroup, InputGroupText, Col, Button, FormGroup } from "reactstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
@@ -198,8 +191,8 @@ class EventForm extends Component {
       eventName: "",
       description: "",
       venue: "",
-      startDate: moment(),
-      endDate: moment()
+      startDate: "",
+      endDate: ""
     };
     this.setState({
       Event: Event,
@@ -220,7 +213,7 @@ class EventForm extends Component {
           color="success"
           onClick={this.onUpdateHandler.bind(this)}
         >
-          <i className="icon-note" /> Update
+          Update
         </Button>
       );
     else
@@ -231,7 +224,7 @@ class EventForm extends Component {
           color="success"
           onClick={this.onSubmitHandler.bind(this)}
         >
-          <i className="icon-note" /> Submit
+          Submit
         </Button>
       );
 
@@ -252,7 +245,7 @@ class EventForm extends Component {
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
-          <Col md="4">
+          <Col sm={{ size: 4, order: 2, offset: 1 }}>
             <InputElement
               type="text"
               placeholder="Description"
@@ -265,7 +258,7 @@ class EventForm extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Col md="4">
+          <Col md="5">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
@@ -282,11 +275,19 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Start date is required
+                *Start date is required
+              </div>
+            ) : null}
+            {this.state.inValidDates ? (
+              <div
+                style={{ color: "red", marginTop: 0 }}
+                className="help-block"
+              >
+                *please enter valid start Date and end Date
               </div>
             ) : null}
           </Col>
-          <Col xs="12" md="4">
+          <Col md="5">
             <InputGroup className="mb-3">
               <InputGroupText>
                 <i className="icon-calendar" />
@@ -303,7 +304,7 @@ class EventForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                End date is required
+                *End date is required
               </div>
             ) : null}
           </Col>
@@ -324,30 +325,33 @@ class EventForm extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Col xs="8" md="3">
+          <Col xs="12" md="3">
             {this.buttons}
           </Col>
           <Col md="3">
             <Button
-              onClick={this.resetField.bind(this)}
-              type="reset"
+              type="button"
               size="md"
-              color="danger"
+              color="primary"
+              style={{ marginLeft: -182 }}
+              onClick={() => this.resetField()}
             >
               Reset
             </Button>
-            <ToastContainer autoClose={3000} />
           </Col>
           <Col md="3">
-            {this.state.inValidDates ? (
-              <div
-                style={{ color: "red", marginTop: 0 }}
-                className="help-block"
-              >
-                please enter valid start Date and end Date
-              </div>
-            ) : null}
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              style={{ marginLeft: -370 }}
+              onClick={() => this.redirectFunction()}
+            >
+              Cancel
+            </Button>
+            <ToastContainer autoClose={2000} />
           </Col>
+          <Col md="3" />
         </FormGroup>
       </CardLayout>
     );

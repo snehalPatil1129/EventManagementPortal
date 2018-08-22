@@ -18,7 +18,8 @@ class AboutEternus extends Component {
         url: ""
       },
       infoRequired: false,
-      loading: true
+      loading: true,
+      invalidUrl: false
     };
   }
   componentDidMount() {
@@ -45,11 +46,18 @@ class AboutEternus extends Component {
     let aboutEternus = { ...this.state.aboutEternus };
     aboutEternus[event.target.name] = event.target.value;
     this.setState({
-      aboutEternus: aboutEternus
+      aboutEternus: aboutEternus,
+      infoRequired: false,
+      invalidUrl: false
     });
   }
   onSubmit() {
-    if (this.state.aboutEternus.info) {
+    var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+    var invalidUrl = false;
+    if (!re.test(this.state.aboutEternus.url)) {
+      invalidUrl = true;
+    }
+    if (this.state.aboutEternus.info && !invalidUrl) {
       this.setState({ loading: true });
       let isEmpty = !Object.keys(this.props.aboutEternus).length;
       let aboutEternus = _.pick(this.state.aboutEternus, ["info", "url"]);
@@ -69,6 +77,7 @@ class AboutEternus extends Component {
       !this.state.aboutEternus.info
         ? this.setState({ infoRequired: true })
         : null;
+      invalidUrl ? this.setState({ invalidUrl: true }) : null;
     }
   }
   Toaster(compRef, createEditError, actionName) {
@@ -95,7 +104,8 @@ class AboutEternus extends Component {
         info: "",
         url: ""
       },
-      infoRequired: false
+      infoRequired: false,
+      invalidUrl: false
     }));
   }
   render() {
@@ -121,8 +131,9 @@ class AboutEternus extends Component {
             <InputElement
               icon="icon-link"
               type="text"
-              placeholder="Link to eternus"
+              placeholder="Eternus website Url"
               name="url"
+              inValid={this.state.invalidUrl}
               value={url}
               onchanged={event => this.onChangeInput(event)}
             />

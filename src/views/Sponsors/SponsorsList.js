@@ -18,12 +18,15 @@ import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
+import Modal from "../../components/Modal/ModalCart";
 class SponsorsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       event: "",
-      loading: true
+      loading: true,
+      deleteFlag: false,
+      sponsorId: ""
     };
   }
   componentDidMount() {
@@ -42,14 +45,23 @@ class SponsorsList extends Component {
   }
   onDeleteSponsor(cell, row) {
     return (
-      <Link to={this} onClick={() => this.deleteSponsor(row._id)}>
+      <Link to={this} onClick={() => this.confirmDelete(row._id)}>
         <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
-  deleteSponsor(id) {
+  confirmDelete(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      sponsorId: id
+    });
+  }
+  deleteSponsor() {
+    let id = this.state.sponsorId;
     this.props.deleteSponsor(id);
     let compRef = this;
+    this.setState({ deleteFlag: false });
     setTimeout(() => {
       let deleteSponsorError = compRef.props.deleteSponsorError;
       compRef.Toaster(compRef, deleteSponsorError, "Delete");
@@ -89,23 +101,23 @@ class SponsorsList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.sponsorsList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
@@ -156,6 +168,7 @@ class SponsorsList extends Component {
                       search={true}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Sponsors List"
                     >
                       <TableHeaderColumn
                         dataField="_id"
@@ -170,6 +183,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Sponsor Name"
+                        dataSort={true}
                       >
                         Sponsor Name
                       </TableHeaderColumn>
@@ -178,6 +192,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Category"
+                        dataSort={true}
                       >
                         Category
                       </TableHeaderColumn>
@@ -186,6 +201,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Event"
+                        dataSort={true}
                       >
                         Event
                       </TableHeaderColumn>
@@ -208,6 +224,12 @@ class SponsorsList extends Component {
                         Delete
                       </TableHeaderColumn>
                     </BootstrapTable>
+                    <Modal
+                      openFlag={this.state.deleteFlag}
+                      toggleFunction={this.confirmDelete.bind(this)}
+                      confirmFunction={this.deleteSponsor.bind(this)}
+                      message=" Are you sure you want to permanently delete this sponsor ?"
+                    />
                   </FormGroup>
                 </CardBody>
               </Card>

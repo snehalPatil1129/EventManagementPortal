@@ -14,6 +14,7 @@ import Calendar from "../../components/Calendar/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ValidationError from "../../components/ValidationError/ValidationError";
+import Loader from "../../components/Loader/Loader";
 
 class SessionForm extends Component {
   constructor(props) {
@@ -55,7 +56,8 @@ class SessionForm extends Component {
       endTimeRequired: false,
       editDeleteFlag: false,
       createFlag: true,
-      slotPopupFlag: false
+      slotPopupFlag: false,
+      loading: false
     };
   }
 
@@ -78,14 +80,14 @@ class SessionForm extends Component {
   }
 
   ChangeCapacityHandler(session) {
-    if (session.target.value >= 0) {
+    if (session.target.value > 0 || session.target.value == "") {
       let sessionDetails = { ...this.state.Session };
       sessionDetails[session.target.name] = session.target.value;
       this.setState({
         Session: sessionDetails,
         sessionCapacityRequired: false
       });
-    } else return;
+    }
   }
 
   eventDaysStyleGetter(date) {
@@ -212,24 +214,34 @@ class SessionForm extends Component {
   }
 
   changeSessionType(value) {
+    let Session = { ...this.state.Session };
     if (value != null) {
-      let Session = { ...this.state.Session };
       if (value === "common") {
         Session.speakers = "";
         Session.volunteers = "";
         Session.sessionCapacity = "";
+        Session.isRegistrationRequired = "";
         this.setState({
           isCommon: true,
           Session: Session,
           speakerValue: "",
           volunteerValue: ""
         });
-      } else this.setState({ isCommon: false });
+      } else {
+        this.setState({ isCommon: false });
+      }
       Session["sessionType"] = value;
       this.setState({
         Session: Session,
         sessionTypeRequired: false,
         sessionTypeValue: value
+      });
+    } else {
+      Session["sessionType"] = "";
+      this.setState({
+        Session: Session,
+        sessionTypeRequired: true,
+        sessionTypeValue: ""
       });
     }
   }
@@ -272,16 +284,18 @@ class SessionForm extends Component {
 
   toggleSessionRequired() {
     let Session = { ...this.state.Session };
-    Session["isRegrequired"] = !Session.isRegrequired;
+    Session["isRegistrationRequired"] = !Session.isRegistrationRequired;
     this.setState({ Session: Session });
   }
 
   Toaster(successFlag, actionName) {
+    this.setState({ loading: false });
     let compRef = this;
     if (successFlag) {
       toast.success("Session " + actionName + " Successfully.", {
         position: toast.POSITION.BOTTOM_RIGHT
       });
+      compRef.setState({ createFlag: true, editDeleteFlag: false });
       compRef.resetField();
     } else {
       toast.error("Something went wrong", {
@@ -356,6 +370,7 @@ class SessionForm extends Component {
 
   createSession(session, eventId, room) {
     let compRef = this;
+    this.setState({ loading: true });
     this.props.createSession(session);
     setTimeout(() => {
       this.updateCalendar(eventId, room);
@@ -403,6 +418,7 @@ class SessionForm extends Component {
 
   updateSession(session, eventId, room) {
     let compRef = this;
+    this.setState({ loading: true });
     this.props.updateSession(session);
     setTimeout(() => {
       this.updateCalendar(eventId, room);
@@ -418,7 +434,7 @@ class SessionForm extends Component {
     let session = { ...this.state.Session };
     let eventId = session.event._id;
     let room = session.room;
-
+    this.setState({ loading: true });
     this.props.deleteSession(session._id);
     setTimeout(() => {
       this.updateCalendar(eventId, room);
@@ -443,8 +459,8 @@ class SessionForm extends Component {
     let compRef = this;
 
     let slotConfirmMessage =
-      `Start Time : ${sessionStart.toLocaleString()} ` +
-      `,\r\n End Time: ${sessionEnd.toLocaleString()}`;
+      `Start Time : ${moment(sessionStart).format("DD/MM/YYYY,h:mm A")} ` +
+      `,\r\n End Time: ${moment(sessionEnd).format("DD/MM/YYYY,h:mm A")}`;
     compRef.setState({ slotConfirmMessage: slotConfirmMessage });
 
     let Session = { ...compRef.state.Session };
@@ -465,8 +481,14 @@ class SessionForm extends Component {
   selectSlot(slotInfo) {
     let dateselected = new Date(slotInfo.start).setHours(0, 0, 0, 0);
     let room = this.state.roomValue;
+    if (room == null || room == "") {
+      this.setState({ roomRequired: true });
+    } else {
+      this.setState({ roomRequired: false });
+    }
     let selectFlag = true;
     let compRef = this;
+
     setTimeout(() => {
       if (
         compRef.state.eventStartDate <= dateselected &&
@@ -517,16 +539,34 @@ class SessionForm extends Component {
               " " +
               "Start Time :" +
               " " +
-              slotInfo.start.toLocaleString() +
+              moment(slotInfo.start).format("DD/MM/YYYY,h:mm A") +
               " " +
               "and " +
               "" +
               "End Time :" +
               "" +
-              slotInfo.end.toLocaleString();
+              moment(slotInfo.end).format("DD/MM/YYYY,h:mm A");
             let sessionStart = slotInfo.start;
             let sessionEnd = slotInfo.end;
-            compRef.setState({ SlotalertMessage, sessionStart, sessionEnd });
+            let Session = {
+              ...compRef.state.Session,
+              sessionName: "",
+              sessionCapacity: "",
+              description: "",
+              isRegistrationRequired: "",
+              speakers: [],
+              volunteers: [],
+              sessionType: ""
+            };
+            compRef.setState({
+              SlotalertMessage,
+              sessionStart,
+              sessionEnd,
+              Session: Session,
+              speakerValue: "",
+              volunteerValue: "",
+              sessionTypeValue: ""
+            });
             compRef.slotConfirmPopup();
           }
         }
@@ -535,7 +575,22 @@ class SessionForm extends Component {
   }
 
   selectSession(session) {
-    let sessionObj = Object.assign({}, session);
+    let sessionObj = {};
+    if (session.sessionCapacity == null) {
+      session.sessionCapacity = "";
+    }
+    this.setState({
+      sessionCapacityRequired: false,
+      sessionNameRequired: false,
+      roomRequired: false,
+      eventRequired: false,
+      startTimeRequired: false,
+      speakersRequired: false,
+      sessionTypeRequired: false,
+      volunteersRequired: false
+    });
+
+    sessionObj = Object.assign({}, session);
     if (sessionObj.sessionType === "common") {
       this.setState({ isCommon: true });
     } else this.setState({ isCommon: false });
@@ -564,7 +619,7 @@ class SessionForm extends Component {
         volunteers: [],
         sessionCapacity: "",
         sessionType: "",
-        isRegrequired: false
+        isRegistrationRequired: false
       };
     } else {
       Session = {
@@ -579,7 +634,7 @@ class SessionForm extends Component {
         endTime: "",
         sessionCapacity: "",
         sessionType: "",
-        isRegrequired: false
+        isRegistrationRequired: false
       };
     }
 
@@ -595,7 +650,7 @@ class SessionForm extends Component {
       startTimeRequired: false,
       speakersRequired: false,
       sessionTypeRequired: false,
-      sessionTypeValue: false,
+      sessionTypeValue: "",
       volunteersRequired: false,
       endTimeRequired: false,
       slotConfirmMessage: ""
@@ -603,7 +658,9 @@ class SessionForm extends Component {
   }
 
   render() {
-    return (
+    return this.state.loading ? (
+      <Loader loading={this.state.loading} />
+    ) : (
       <div>
         <FormGroup row>
           <Col xs="6" md="12">
@@ -688,9 +745,9 @@ class SessionForm extends Component {
               <FormGroup row>
                 <Col xs="12">
                   <Select
+                    simpleValue
                     onChange={this.changeSessionType.bind(this)}
                     placeholder="Select session type"
-                    simpleValue
                     value={this.state.sessionTypeValue}
                     options={this.props.sessionTypeList}
                   />
@@ -772,7 +829,7 @@ class SessionForm extends Component {
                   <input
                     disabled={this.state.isCommon}
                     type="checkbox"
-                    checked={this.state.Session.isRegrequired}
+                    checked={this.state.Session.isRegistrationRequired}
                     onChange={this.toggleSessionRequired.bind(this)}
                   />
                   <Label> Registration Required </Label>

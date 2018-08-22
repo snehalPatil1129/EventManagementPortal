@@ -16,11 +16,14 @@ import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
+import Modal from "../../components/Modal/ModalCart";
 class FormList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      deleteFlag: false,
+      formId: ""
     };
   }
   componentDidMount() {
@@ -38,14 +41,23 @@ class FormList extends Component {
   }
   ondeleteForm(cell, row) {
     return (
-      <Link to={this} onClick={() => this.deleteForm(row._id)}>
+      <Link to={this} onClick={() => this.confirmDelete(row._id)}>
         <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
-  deleteForm(id) {
+  confirmDelete(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      formId: id
+    });
+  }
+  deleteForm() {
+    let id = this.state.formId;
     this.props.deleteForm(id);
     let compRef = this;
+    this.setState({ deleteFlag: false });
     setTimeout(() => {
       let deleteFormError = compRef.props.deleteFormError;
       compRef.Toaster(compRef, deleteFormError, "Delete");
@@ -86,23 +98,23 @@ class FormList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.formList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
@@ -153,6 +165,7 @@ class FormList extends Component {
                         dataField="eventName"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Event Name
                       </TableHeaderColumn>
@@ -160,6 +173,7 @@ class FormList extends Component {
                         dataField="sessionName"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Session Name
                       </TableHeaderColumn>
@@ -167,6 +181,7 @@ class FormList extends Component {
                         dataField="formType"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Form Type
                       </TableHeaderColumn>
@@ -198,6 +213,12 @@ class FormList extends Component {
                         Delete
                       </TableHeaderColumn>
                     </BootstrapTable>
+                    <Modal
+                      openFlag={this.state.deleteFlag}
+                      toggleFunction={this.confirmDelete.bind(this)}
+                      confirmFunction={this.deleteForm.bind(this)}
+                      message=" Are you sure you want to permanently delete this form ?"
+                    />
                   </FormGroup>
                 </CardBody>
               </Card>

@@ -18,12 +18,15 @@ import "react-select/dist/react-select.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
+import Modal from "../../components/Modal/ModalCart";
 class RoomsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       event: "",
-      loading: true
+      loading: true,
+      deleteFlag: false,
+      roomId: ""
     };
   }
   componentDidMount() {
@@ -48,14 +51,23 @@ class RoomsList extends Component {
   }
   onDeleteRoom(cell, row) {
     return (
-      <Link to={this} onClick={() => this.deleteRoom(row._id)}>
+      <Link to={this} onClick={() => this.confirmDelete(row._id)}>
         <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
-  deleteRoom(id) {
+  confirmDelete(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      roomId: id
+    });
+  }
+  deleteRoom() {
+    let id = this.state.roomId;
     this.props.deleteRoom(id);
     let compRef = this;
+    this.setState({ deleteFlag: false });
     setTimeout(() => {
       let deleteRoomError = compRef.props.deleteRoomError;
       compRef.Toaster(compRef, deleteRoomError, "Delete");
@@ -105,23 +117,23 @@ class RoomsList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.roomList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
@@ -171,6 +183,7 @@ class RoomsList extends Component {
                       search={true}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Rooms List"
                     >
                       <TableHeaderColumn
                         dataField="_id"
@@ -184,6 +197,7 @@ class RoomsList extends Component {
                         dataField="roomName"
                         headerAlign="left"
                         width="100"
+                        dataSort={true}
                       >
                         Room Name
                       </TableHeaderColumn>
@@ -191,6 +205,7 @@ class RoomsList extends Component {
                         dataField="eventName"
                         headerAlign="left"
                         width="100"
+                        dataSort={true}
                       >
                         Event Name
                       </TableHeaderColumn>
@@ -198,6 +213,7 @@ class RoomsList extends Component {
                         dataField="capacity"
                         headerAlign="left"
                         width="100"
+                        dataSort={true}
                       >
                         Capacity
                       </TableHeaderColumn>
@@ -220,6 +236,12 @@ class RoomsList extends Component {
                         Delete
                       </TableHeaderColumn>
                     </BootstrapTable>
+                    <Modal
+                      openFlag={this.state.deleteFlag}
+                      toggleFunction={this.confirmDelete.bind(this)}
+                      confirmFunction={this.deleteRoom.bind(this)}
+                      message=" Are you sure you want to permanently delete this room ?"
+                    />
                   </FormGroup>
                 </CardBody>
               </Card>

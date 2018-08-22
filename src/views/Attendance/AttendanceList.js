@@ -41,23 +41,23 @@ class AttendanceList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.state.attendance.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     return (
       <CardLayout name="Attendance List">
@@ -101,6 +101,7 @@ class AttendanceList extends Component {
             search={true}
             options={options}
             exportCSV={true}
+            csvFileName="Attendance List"
           >
             <TableHeaderColumn dataField="_id" headerAlign="left" isKey hidden>
               Id
@@ -110,6 +111,7 @@ class AttendanceList extends Component {
               headerAlign="left"
               width="100"
               csvHeader="Attendee Name"
+              dataSort={true}
             >
               Attendee Name
             </TableHeaderColumn>
@@ -118,6 +120,7 @@ class AttendanceList extends Component {
               headerAlign="left"
               width="100"
               csvHeader="Event Name"
+              dataSort={true}
             >
               Event Name
             </TableHeaderColumn>
@@ -125,6 +128,7 @@ class AttendanceList extends Component {
               dataField="sessionName"
               headerAlign="left"
               width="100"
+              dataSort={true}
               csvHeader="Session Name"
             >
               Session Name
@@ -134,6 +138,7 @@ class AttendanceList extends Component {
               headerAlign="left"
               width="100"
               csvHeader="Scanned By"
+              dataSort={true}
             >
               Scanned By
             </TableHeaderColumn>
@@ -142,6 +147,7 @@ class AttendanceList extends Component {
               headerAlign="left"
               width="100"
               csvHeader="Time"
+              dataSort={true}
             >
               Time
             </TableHeaderColumn>

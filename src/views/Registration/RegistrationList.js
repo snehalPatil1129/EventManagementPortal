@@ -19,7 +19,8 @@ import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
-import Modal from "../../components/Modal/MessageModal";
+import MessageModal from "../../components/Modal/MessageModal";
+import Modal from "../../components/Modal/ModalCart";
 class RegistrationList extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +28,9 @@ class RegistrationList extends Component {
       event: "",
       profile: "",
       loading: true,
-      modalPopupFlag: false
+      modalPopupFlag: false,
+      deleteFlag: false,
+      attendeeId: ""
     };
   }
   componentDidMount() {
@@ -55,15 +58,24 @@ class RegistrationList extends Component {
 
   ondeleteAttendee(cell, row) {
     return (
-      <Link to={this} onClick={() => this.deleteAttendee(row._id)}>
+      <Link to={this} onClick={() => this.confirmDelete(row._id)}>
         <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
+  confirmDelete(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      attendeeId: id
+    });
+  }
 
-  deleteAttendee(id) {
+  deleteAttendee() {
+    let id = this.state.attendeeId;
     this.props.deleteAttendee(id);
     let compRef = this;
+    this.setState({ deleteFlag: false });
     setTimeout(() => {
       let deleteAttendeeError = compRef.props.deleteAttendeeError;
       let deleteErrorMsg = compRef.props.deleteError;
@@ -148,23 +160,23 @@ class RegistrationList extends Component {
     const options = {
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.attendeeList.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
     const selectRowProp = {
       mode: "checkbox"
@@ -239,6 +251,7 @@ class RegistrationList extends Component {
                       selectRow={selectRowProp}
                       options={options}
                       exportCSV={true}
+                      csvFileName="Attendee List"
                     >
                       <TableHeaderColumn
                         dataField="_id"
@@ -253,6 +266,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="60"
                         csvHeader="First Name"
+                        dataSort={true}
                       >
                         First Name
                       </TableHeaderColumn>
@@ -261,6 +275,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="60"
                         csvHeader="Last Name"
+                        dataSort={true}
                       >
                         Last Name
                       </TableHeaderColumn>
@@ -269,6 +284,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="80"
                         csvHeader="Email"
+                        dataSort={true}
                       >
                         Email
                       </TableHeaderColumn>
@@ -277,6 +293,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="80"
                         csvHeader="Contact"
+                        dataSort={true}
                       >
                         Contact
                       </TableHeaderColumn>
@@ -284,7 +301,8 @@ class RegistrationList extends Component {
                         dataField="eventName"
                         headerAlign="left"
                         width="80"
-                        csvHeader="Event"
+                        csvHeader="Event Name"
+                        dataSort={true}
                       >
                         Event
                       </TableHeaderColumn>
@@ -316,10 +334,16 @@ class RegistrationList extends Component {
                         Print
                       </TableHeaderColumn>
                     </BootstrapTable>
-                    <Modal
+                    <MessageModal
                       openFlag={this.state.modalPopupFlag}
                       toggleFunction={this.toggleFunction.bind(this)}
                       message="Please select attendees for printing"
+                    />
+                    <Modal
+                      openFlag={this.state.deleteFlag}
+                      toggleFunction={this.confirmDelete.bind(this)}
+                      confirmFunction={this.deleteAttendee.bind(this)}
+                      message=" Are you sure you want to permanently delete this attendee ?"
                     />
                   </FormGroup>
                 </CardBody>

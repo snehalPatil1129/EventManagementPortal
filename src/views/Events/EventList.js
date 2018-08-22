@@ -96,28 +96,24 @@ class EventList extends Component {
       defaultSortOrder: "asc",
       sizePerPageList: [
         {
-          text: "250",
-          value: 250
+          text: "50",
+          value: 50
         },
         {
-          text: "500",
-          value: 500
+          text: "100",
+          value: 100
         },
         {
-          text: "1000",
-          value: 1000
+          text: "200",
+          value: 200
         },
         {
           text: "All",
           value: this.props.events.length
         }
       ],
-      sizePerPage: 250
+      sizePerPage: 50
     };
-    const selectRowProp = {
-      mode: "checkbox"
-    };
-
     return this.state.loading ? (
       <Loader loading={this.state.loading} />
     ) : (
@@ -152,8 +148,8 @@ class EventList extends Component {
                     data={this.props.events}
                     pagination={true}
                     options={sortingOptions}
-                    selectRow={selectRowProp}
                     exportCSV={true}
+                    csvFileName="Event List"
                   >
                     <TableHeaderColumn
                       dataField="_id"
@@ -165,8 +161,8 @@ class EventList extends Component {
                       dataField="eventName"
                       headerAlign="left"
                       width="100"
-                      dataSort
-                      csvHeader="eventName"
+                      dataSort={true}
+                      csvHeader="Event Name"
                     >
                       Event Name
                     </TableHeaderColumn>
@@ -174,7 +170,8 @@ class EventList extends Component {
                       dataField="description"
                       headerAlign="left"
                       width="150"
-                      csvHeader="description"
+                      dataSort={true}
+                      csvHeader="Description"
                     >
                       Description
                     </TableHeaderColumn>
@@ -182,6 +179,7 @@ class EventList extends Component {
                       dataField="startDate"
                       headerAlign="left"
                       width="50"
+                      dataSort={true}
                       dataFormat={this.formatStartDate.bind(this)}
                       csvHeader="Start date"
                     >
@@ -191,6 +189,7 @@ class EventList extends Component {
                       dataField="endDate"
                       headerAlign="left"
                       width="50"
+                      dataSort={true}
                       dataFormat={this.formatEndDate.bind(this)}
                       csvHeader="End date"
                     >
@@ -200,7 +199,8 @@ class EventList extends Component {
                       dataField="venue"
                       headerAlign="left"
                       width="50"
-                      csvHeader="venue"
+                      dataSort={true}
+                      csvHeader="Venue"
                     >
                       Venue
                     </TableHeaderColumn>

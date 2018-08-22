@@ -20,7 +20,8 @@ class AboutUs extends Component {
       },
       loading: true,
       infoRequired: false,
-      eventRequired: false
+      eventRequired: false,
+      invalidUrl: false
     };
   }
   componentDidMount() {
@@ -54,7 +55,8 @@ class AboutUs extends Component {
     this.setState({
       aboutUs: aboutUs,
       infoRequired: false,
-      eventRequired: false
+      eventRequired: false,
+      invalidUrl: false
     });
   }
   handleEventChange(value) {
@@ -64,7 +66,8 @@ class AboutUs extends Component {
       this.setState({
         aboutUs: aboutUs,
         infoRequired: false,
-        eventRequired: false
+        eventRequired: false,
+        invalidUrl: false
       });
       this.props.getAboutUsForEvent(value);
       let compRef = this;
@@ -81,7 +84,12 @@ class AboutUs extends Component {
     }
   }
   onSubmit() {
-    if (this.state.aboutUs.info && this.state.aboutUs.event) {
+    var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+    var invalidUrl = false;
+    if (!re.test(this.state.aboutUs.url)) {
+      invalidUrl = true;
+    }
+    if (this.state.aboutUs.info && this.state.aboutUs.event && !invalidUrl) {
       this.setState({ loading: true });
       let isEmpty = !Object.keys(this.props.aboutUs).length;
       let aboutUs = _.pick(this.state.aboutUs, ["info", "url", "event"]);
@@ -100,6 +108,7 @@ class AboutUs extends Component {
     } else {
       !this.state.aboutUs.info ? this.setState({ infoRequired: true }) : null;
       !this.state.aboutUs.event ? this.setState({ eventRequired: true }) : null;
+      invalidUrl ? this.setState({ invalidUrl: true }) : null;
     }
   }
   Toaster(compRef, createEditError, actionName) {
@@ -124,7 +133,8 @@ class AboutUs extends Component {
         event: ""
       },
       infoRequired: false,
-      eventRequired: false
+      eventRequired: false,
+      invalidUrl: false
     }));
   }
   render() {
@@ -147,7 +157,7 @@ class AboutUs extends Component {
                 style={{ color: "red", marginTop: -1 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>
@@ -169,8 +179,9 @@ class AboutUs extends Component {
             <InputElement
               icon="icon-link"
               type="text"
-              placeholder="Link to our website"
+              placeholder="Website Url"
               name="url"
+              inValid={this.state.invalidUrl}
               value={url}
               onchanged={event => this.onChangeInput(event)}
             />

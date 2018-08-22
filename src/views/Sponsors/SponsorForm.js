@@ -25,6 +25,8 @@ class SponsorForm extends Component {
       nameRequired: false,
       eventRequired: false,
       categoryRequired: false,
+      invalidImageUrl: false,
+      invalidWebsiteUrl: false,
       loading: false
     };
   }
@@ -81,7 +83,9 @@ class SponsorForm extends Component {
     Sponsor[event.target.name] = event.target.value;
     this.setState({
       Sponsor: Sponsor,
-      nameRequired: false
+      nameRequired: false,
+      invalidImageUrl: false,
+      invalidWebsiteUrl: false
     });
   }
   handleEventChange(value) {
@@ -89,6 +93,10 @@ class SponsorForm extends Component {
       let Sponsor = { ...this.state.Sponsor };
       Sponsor.event = value;
       this.setState({ Sponsor: Sponsor, eventRequired: false });
+    } else {
+      let Sponsor = { ...this.state.Sponsor };
+      Sponsor.event = "";
+      this.setState({ Sponsor: Sponsor, eventRequired: true });
     }
   }
   handleCategoryChange(value) {
@@ -96,6 +104,10 @@ class SponsorForm extends Component {
       let Sponsor = { ...this.state.Sponsor };
       Sponsor.category = value;
       this.setState({ Sponsor: Sponsor, categoryRequired: false });
+    } else {
+      let Sponsor = { ...this.state.Sponsor };
+      Sponsor.category = "";
+      this.setState({ Sponsor: Sponsor, categoryRequired: true });
     }
   }
   onSubmit() {
@@ -107,8 +119,27 @@ class SponsorForm extends Component {
       "websiteURL",
       "imageURL"
     ]);
+    let invalidImageUrl = false;
+    let invalidWebsiteUrl = false;
+    var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+    if (Sponsor.imageURL !== "") {
+      if (!re.test(Sponsor.imageURL)) {
+        invalidImageUrl = true;
+      }
+    }
+    if (Sponsor.websiteURL !== "") {
+      if (!re.test(Sponsor.websiteURL)) {
+        invalidWebsiteUrl = true;
+      }
+    }
     let id = this.props.currentSponsor._id;
-    if (Sponsor.name && Sponsor.category && Sponsor.event) {
+    if (
+      Sponsor.name &&
+      Sponsor.category &&
+      Sponsor.event &&
+      !invalidImageUrl &&
+      !invalidWebsiteUrl
+    ) {
       this.state.editSponsor
         ? this.props.editSponsor(id, Sponsor)
         : this.props.createSponsor(Sponsor);
@@ -124,6 +155,8 @@ class SponsorForm extends Component {
       !Sponsor.name ? this.setState({ nameRequired: true }) : null;
       !Sponsor.category ? this.setState({ categoryRequired: true }) : null;
       !Sponsor.event ? this.setState({ eventRequired: true }) : null;
+      invalidWebsiteUrl ? this.setState({ invalidWebsiteUrl: true }) : null;
+      invalidImageUrl ? this.setState({ invalidImageUrl: true }) : null;
     }
   }
   Toaster(compRef, creatEditSponsorError, actionName) {
@@ -158,7 +191,9 @@ class SponsorForm extends Component {
       },
       nameRequired: false,
       eventRequired: false,
-      categoryRequired: false
+      categoryRequired: false,
+      invalidImageUrl: false,
+      invalidWebsiteUrl: false
     }));
   }
 
@@ -189,6 +224,7 @@ class SponsorForm extends Component {
               value={Sponsor.event}
               options={eventOptions}
               simpleValue
+              clearable
               onChange={this.handleEventChange.bind(this)}
             />
             {this.state.eventRequired ? (
@@ -196,7 +232,7 @@ class SponsorForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select event
+                *Please select event
               </div>
             ) : null}
           </Col>
@@ -219,6 +255,7 @@ class SponsorForm extends Component {
               type="text"
               placeholder="Website URL"
               name="websiteURL"
+              inValid={this.state.invalidWebsiteUrl}
               value={Sponsor.websiteURL}
               onchanged={event => this.onChangeInput(event)}
             />
@@ -231,6 +268,7 @@ class SponsorForm extends Component {
               type="text"
               placeholder="Image URL"
               name="imageURL"
+              inValid={this.state.invalidImageUrl}
               value={Sponsor.imageURL}
               onchanged={event => this.onChangeInput(event)}
             />
@@ -248,7 +286,7 @@ class SponsorForm extends Component {
                 style={{ color: "red", marginTop: 0 }}
                 className="help-block"
               >
-                Please select category
+                *Please select category
               </div>
             ) : null}
           </Col>
@@ -271,7 +309,7 @@ class SponsorForm extends Component {
                 color="success"
                 onClick={() => this.onSubmit()}
               >
-                Submit
+                Create
               </Button>
             )}
           </Col>
@@ -279,14 +317,23 @@ class SponsorForm extends Component {
             <Button
               type="button"
               size="md"
-              color="danger"
-              style={{ marginLeft: -160 }}
+              color="primary"
+              style={{ marginLeft: -182 }}
               onClick={() => this.onReset()}
             >
               Reset
             </Button>
           </Col>
-          <Col md="6">
+          <Col md="3">
+            <Button
+              type="button"
+              size="md"
+              color="danger"
+              style={{ marginLeft: -370 }}
+              onClick={() => this.redirectFunction()}
+            >
+              Cancel
+            </Button>
             <ToastContainer autoClose={2000} />
           </Col>
         </FormGroup>
