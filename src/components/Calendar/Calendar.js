@@ -12,7 +12,7 @@ const Calendar = props => {
         events={props.events}
         defaultView="week"
         selectable={true}
-        //selectable= "ignoreEvents"
+        selectable="ignoreEvents"
         onSelectEvent={props.selectSession}
         onSelectSlot={props.onSelectSlot}
         //startAccessor={new Date("2018, 8, 9, 08:00")}
