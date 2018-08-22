@@ -283,8 +283,8 @@ input[type="checkbox"] {
 /* 16 Aug,2018 */
 
 .datepicker {
-  width: 318px;
-  height: 34px;
+  width: 168%;
+  height: 33px;
 }
 
 .rbc-btn-group > button:not(:first-child):not(:last-child) {

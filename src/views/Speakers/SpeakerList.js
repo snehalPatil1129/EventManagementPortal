@@ -19,14 +19,17 @@ import * as attendeeCardMethod from "../../components/AttendeeCard/";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
-import Modal from "../../components/Modal/MessageModal";
+import MessageModal from "../../components/Modal/MessageModal";
+import Modal from "../../components/Modal/ModalCart";
 class SpeakerList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       event: "",
       loading: true,
-      modalPopupFlag: false
+      modalPopupFlag: false,
+      deleteFlag: false,
+      speakerId: ""
     };
   }
   componentDidMount() {
@@ -38,9 +41,11 @@ class SpeakerList extends Component {
     }, 1000);
   }
 
-  deleteSpeaker(id) {
+  deleteSpeaker() {
+    let id = this.state.speakerId;
     let compRef = this;
     this.props.deleteSpeaker(id);
+    this.setState({ deleteFlag: false });
     setTimeout(() => {
       let speakerDeleted = this.props.speakerDeleted;
       compRef.Toaster(compRef, speakerDeleted, "Deleted");
@@ -48,10 +53,17 @@ class SpeakerList extends Component {
   }
   ondeleteSpeaker(cell, row) {
     return (
-      <Link to={this} onClick={() => this.deleteSpeaker(row._id)}>
+      <Link to={this} onClick={() => this.confirmDelete(row._id)}>
         <i className="fa fa-trash" />
       </Link>
     );
+  }
+  confirmDelete(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      speakerId: id
+    });
   }
 
   onEditSpeaker(cell, row) {
@@ -272,10 +284,16 @@ class SpeakerList extends Component {
                         Print
                       </TableHeaderColumn>
                     </BootstrapTable>
-                    <Modal
+                    <MessageModal
                       openFlag={this.state.modalPopupFlag}
                       toggleFunction={this.toggleFunction.bind(this)}
                       message="Please select speakers for printing"
+                    />
+                    <Modal
+                      openFlag={this.state.deleteFlag}
+                      toggleFunction={this.confirmDelete.bind(this)}
+                      confirmFunction={this.deleteSpeaker.bind(this)}
+                      message=" Are you sure you want to permanently delete this speaker ?"
                     />
                   </FormGroup>
                 </CardBody>

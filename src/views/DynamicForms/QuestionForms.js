@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import CardLayout from "../../components/CardLayout/";
 import QuestionLayout from "../../components/QuestionLayout/";
 import AnswerLayout from "../../components/AnswerLayout/";
-import { FormGroup, Col, Button } from "reactstrap";
+import { FormGroup, Col, Button, Row } from "reactstrap";
 import Select from "react-select";
 import "react-select/dist/react-select.css";
 import { connect } from "react-redux";
@@ -25,7 +25,11 @@ class QuestionForms extends Component {
       eventRequired: false,
       sessionRequired: false,
       invalidForm: false,
-      loading: false
+      loading: false,
+      blankAnswerField: false,
+      blankQuestionField: false,
+      emptyForm: false,
+      inputValueAbsent: false
     };
   }
   componentDidMount() {
@@ -129,7 +133,7 @@ class QuestionForms extends Component {
     Question.push(newQuestion);
     this.setState({
       formData: Question,
-      invalidForm: false
+      emptyForm: false
     });
   }
   displayAnswerField(que, id) {
@@ -150,7 +154,8 @@ class QuestionForms extends Component {
     optionsValue[parseInt(event.target.name)].value = event.target.value;
     questionArray[id].options = optionsValue;
     this.setState({
-      formData: questionArray
+      formData: questionArray,
+      blankAnswerField: false
     });
   }
   onAddOption(id) {
@@ -183,29 +188,39 @@ class QuestionForms extends Component {
       questionArray[id].options = [{ value: "" }];
     }
     this.setState({
-      formData: questionArray
+      formData: questionArray,
+      inputValueAbsent: false
     });
   }
   onInputQuestion(event) {
     let questionArray = [...this.state.formData];
     questionArray[parseInt(event.target.name)].question = event.target.value;
     this.setState({
-      formData: questionArray
+      formData: questionArray,
+      blankQuestionField: false
     });
   }
   onDeleteQuestion(id) {
     let questionArray = [...this.state.formData];
     questionArray.splice(id, 1);
     this.setState({
-      formData: questionArray
+      formData: questionArray,
+      blankAnswerField: false,
+      blankQuestionField: false,
+      emptyForm: false
     });
   }
   handleFormValidations() {
     let blankQuestionsPresent = false;
+    let blankAnswerChoice = false;
+    let inputValueAbsent = false;
     let formData = [...this.state.formData];
     formData.forEach(fItem => {
       if (fItem.question === "" || fItem.question === null) {
         blankQuestionsPresent = true;
+      }
+      if (fItem.inputType === "" || fItem.inputType === null) {
+        inputValueAbsent = true;
       }
       if (
         fItem.inputType === "Multiple choice" ||
@@ -216,15 +231,16 @@ class QuestionForms extends Component {
             fItem.options[i].value === "" ||
             fItem.options[i].value === null
           ) {
-            blankQuestionsPresent = true;
+            blankAnswerChoice = true;
           }
         }
       }
     });
-    this.setState({
-      blankQuestionsPresent: blankQuestionsPresent
-    });
-    return blankQuestionsPresent;
+    return {
+      blankQuestion: blankQuestionsPresent,
+      blankAnswer: blankAnswerChoice,
+      inputValueAbsent: inputValueAbsent
+    };
   }
   onSubmitForm() {
     let formData = { ...this.state };
@@ -235,13 +251,19 @@ class QuestionForms extends Component {
       "formData"
     ]);
     let id = this.props.currentFormData._id;
-    let invalid = this.handleFormValidations();
+    let {
+      blankAnswer,
+      blankQuestion,
+      inputValueAbsent
+    } = this.handleFormValidations();
     if (
       (this.state.formType === "Polling Questions" ||
         this.state.formType === "Feedback Questions") &&
       (this.state.event && this.state.session) &&
       this.state.formData.length !== 0 &&
-      !invalid
+      !blankAnswer &&
+      !blankQuestion &&
+      !inputValueAbsent
     ) {
       this.state.editForm
         ? this.props.editForm(id, formObject)
@@ -258,7 +280,9 @@ class QuestionForms extends Component {
       this.state.formType === "Home Questions" &&
       this.state.event &&
       this.state.formData.length !== 0 &&
-      !invalid
+      !blankAnswer &&
+      !blankQuestion &&
+      !inputValueAbsent
     ) {
       formObject.session = null;
       this.state.editForm
@@ -282,8 +306,17 @@ class QuestionForms extends Component {
       if (!formData.formType) {
         this.setState({ formTypeRequired: true });
       }
-      if (this.state.formData.length === 0 || invalid) {
-        this.setState({ invalidForm: true });
+      if (this.state.formData.length === 0) {
+        this.setState({ emptyForm: true });
+      }
+      if (blankAnswer) {
+        this.setState({ blankAnswerField: true });
+      }
+      if (blankQuestion) {
+        this.setState({ blankQuestionField: true });
+      }
+      if (inputValueAbsent) {
+        this.setState({ inputValueAbsent: true });
       }
     }
   }
@@ -316,7 +349,10 @@ class QuestionForms extends Component {
       formTypeRequired: false,
       eventRequired: false,
       sessionRequired: false,
-      invalidForm: false
+      blankAnswerField: false,
+      blankQuestionField: false,
+      emptyForm: false,
+      inputValueAbsent: false
     });
   }
   render() {
@@ -383,7 +419,7 @@ class QuestionForms extends Component {
           </Col>
         </FormGroup>
         <FormGroup row>
-          <Col xs="12" md="6">
+          <Col xs="12" md="8">
             <Button
               type="button"
               size="md"
@@ -392,17 +428,46 @@ class QuestionForms extends Component {
             >
               Add Question{" "}
             </Button>
-          </Col>
-          <Col md="6">
-            {this.state.invalidForm ? (
+            {this.state.emptyForm ? (
               <div
-                style={{ color: "red", fontSize: 15, marginTop: 10 }}
+                style={{ color: "red", fontSize: 12, marginTop: 10 }}
                 className="help-block"
               >
-                *Invalid form - Questions /Multiple Choice/ Check Box fields
-                can't be empty
+                *Please Add Question
               </div>
             ) : null}
+          </Col>
+          <Col md="4">
+            <FormGroup row>
+              {this.state.blankQuestionField ? (
+                <div
+                  style={{ color: "red", fontSize: 12, marginTop: 10 }}
+                  className="help-block"
+                >
+                  *Question field cannot be empty
+                </div>
+              ) : null}
+            </FormGroup>
+            <FormGroup row>
+              {this.state.inputValueAbsent ? (
+                <div
+                  style={{ color: "red", fontSize: 12, marginTop: 10 }}
+                  className="help-block"
+                >
+                  *Every question must have input field
+                </div>
+              ) : null}
+            </FormGroup>
+            <FormGroup row>
+              {this.state.blankAnswerField ? (
+                <div
+                  style={{ color: "red", fontSize: 12, marginTop: 10 }}
+                  className="help-block"
+                >
+                  *Multiple choice / check box values cannot be empty
+                </div>
+              ) : null}
+            </FormGroup>
           </Col>
         </FormGroup>
         <FormGroup row>

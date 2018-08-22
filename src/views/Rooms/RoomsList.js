@@ -18,12 +18,15 @@ import "react-select/dist/react-select.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
+import Modal from "../../components/Modal/ModalCart";
 class RoomsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       event: "",
-      loading: true
+      loading: true,
+      deleteFlag: false,
+      roomId: ""
     };
   }
   componentDidMount() {
@@ -48,14 +51,23 @@ class RoomsList extends Component {
   }
   onDeleteRoom(cell, row) {
     return (
-      <Link to={this} onClick={() => this.deleteRoom(row._id)}>
+      <Link to={this} onClick={() => this.confirmDelete(row._id)}>
         <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
-  deleteRoom(id) {
+  confirmDelete(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      roomId: id
+    });
+  }
+  deleteRoom() {
+    let id = this.state.roomId;
     this.props.deleteRoom(id);
     let compRef = this;
+    this.setState({ deleteFlag: false });
     setTimeout(() => {
       let deleteRoomError = compRef.props.deleteRoomError;
       compRef.Toaster(compRef, deleteRoomError, "Delete");
@@ -224,6 +236,12 @@ class RoomsList extends Component {
                         Delete
                       </TableHeaderColumn>
                     </BootstrapTable>
+                    <Modal
+                      openFlag={this.state.deleteFlag}
+                      toggleFunction={this.confirmDelete.bind(this)}
+                      confirmFunction={this.deleteRoom.bind(this)}
+                      message=" Are you sure you want to permanently delete this room ?"
+                    />
                   </FormGroup>
                 </CardBody>
               </Card>

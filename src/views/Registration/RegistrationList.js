@@ -19,7 +19,8 @@ import "react-bootstrap-table/dist/react-bootstrap-table.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../components/Loader/Loader";
-import Modal from "../../components/Modal/MessageModal";
+import MessageModal from "../../components/Modal/MessageModal";
+import Modal from "../../components/Modal/ModalCart";
 class RegistrationList extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +28,9 @@ class RegistrationList extends Component {
       event: "",
       profile: "",
       loading: true,
-      modalPopupFlag: false
+      modalPopupFlag: false,
+      deleteFlag: false,
+      attendeeId: ""
     };
   }
   componentDidMount() {
@@ -55,15 +58,24 @@ class RegistrationList extends Component {
 
   ondeleteAttendee(cell, row) {
     return (
-      <Link to={this} onClick={() => this.deleteAttendee(row._id)}>
+      <Link to={this} onClick={() => this.confirmDelete(row._id)}>
         <i className="fa fa-trash" title="Delete" />
       </Link>
     );
   }
+  confirmDelete(id) {
+    let deleteFlag = this.state.deleteFlag;
+    this.setState({
+      deleteFlag: !deleteFlag,
+      attendeeId: id
+    });
+  }
 
-  deleteAttendee(id) {
+  deleteAttendee() {
+    let id = this.state.attendeeId;
     this.props.deleteAttendee(id);
     let compRef = this;
+    this.setState({ deleteFlag: false });
     setTimeout(() => {
       let deleteAttendeeError = compRef.props.deleteAttendeeError;
       let deleteErrorMsg = compRef.props.deleteError;
@@ -322,10 +334,16 @@ class RegistrationList extends Component {
                         Print
                       </TableHeaderColumn>
                     </BootstrapTable>
-                    <Modal
+                    <MessageModal
                       openFlag={this.state.modalPopupFlag}
                       toggleFunction={this.toggleFunction.bind(this)}
                       message="Please select attendees for printing"
+                    />
+                    <Modal
+                      openFlag={this.state.deleteFlag}
+                      toggleFunction={this.confirmDelete.bind(this)}
+                      confirmFunction={this.deleteAttendee.bind(this)}
+                      message=" Are you sure you want to permanently delete this attendee ?"
                     />
                   </FormGroup>
                 </CardBody>
