@@ -185,6 +185,7 @@ class RoomsList extends Component {
                         dataField="roomName"
                         headerAlign="left"
                         width="100"
+                        dataSort={true}
                       >
                         Room Name
                       </TableHeaderColumn>
@@ -192,6 +193,7 @@ class RoomsList extends Component {
                         dataField="eventName"
                         headerAlign="left"
                         width="100"
+                        dataSort={true}
                       >
                         Event Name
                       </TableHeaderColumn>
@@ -199,6 +201,7 @@ class RoomsList extends Component {
                         dataField="capacity"
                         headerAlign="left"
                         width="100"
+                        dataSort={true}
                       >
                         Capacity
                       </TableHeaderColumn>

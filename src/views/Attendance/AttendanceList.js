@@ -111,6 +111,7 @@ class AttendanceList extends Component {
               headerAlign="left"
               width="100"
               csvHeader="Attendee Name"
+              dataSort={true}
             >
               Attendee Name
             </TableHeaderColumn>
@@ -119,6 +120,7 @@ class AttendanceList extends Component {
               headerAlign="left"
               width="100"
               csvHeader="Event Name"
+              dataSort={true}
             >
               Event Name
             </TableHeaderColumn>
@@ -126,6 +128,7 @@ class AttendanceList extends Component {
               dataField="sessionName"
               headerAlign="left"
               width="100"
+              dataSort={true}
               csvHeader="Session Name"
             >
               Session Name
@@ -135,6 +138,7 @@ class AttendanceList extends Component {
               headerAlign="left"
               width="100"
               csvHeader="Scanned By"
+              dataSort={true}
             >
               Scanned By
             </TableHeaderColumn>
@@ -143,6 +147,7 @@ class AttendanceList extends Component {
               headerAlign="left"
               width="100"
               csvHeader="Time"
+              dataSort={true}
             >
               Time
             </TableHeaderColumn>

@@ -213,6 +213,7 @@ class SpeakerList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="First Name"
+                        dataSort={true}
                       >
                         First Name
                       </TableHeaderColumn>
@@ -221,6 +222,7 @@ class SpeakerList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Last Name"
+                        dataSort={true}
                       >
                         Last Name
                       </TableHeaderColumn>
@@ -229,6 +231,7 @@ class SpeakerList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Email"
+                        dataSort={true}
                       >
                         Email
                       </TableHeaderColumn>
@@ -237,6 +240,7 @@ class SpeakerList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Event"
+                        dataSort={true}
                       >
                         Event
                       </TableHeaderColumn>

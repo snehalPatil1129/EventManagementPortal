@@ -171,6 +171,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Sponsor Name"
+                        dataSort={true}
                       >
                         Sponsor Name
                       </TableHeaderColumn>
@@ -179,6 +180,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Category"
+                        dataSort={true}
                       >
                         Category
                       </TableHeaderColumn>
@@ -187,6 +189,7 @@ class SponsorsList extends Component {
                         headerAlign="left"
                         width="100"
                         csvHeader="Event"
+                        dataSort={true}
                       >
                         Event
                       </TableHeaderColumn>

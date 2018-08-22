@@ -254,6 +254,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="60"
                         csvHeader="First Name"
+                        dataSort={true}
                       >
                         First Name
                       </TableHeaderColumn>
@@ -262,6 +263,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="60"
                         csvHeader="Last Name"
+                        dataSort={true}
                       >
                         Last Name
                       </TableHeaderColumn>
@@ -270,6 +272,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="80"
                         csvHeader="Email"
+                        dataSort={true}
                       >
                         Email
                       </TableHeaderColumn>
@@ -278,6 +281,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="80"
                         csvHeader="Contact"
+                        dataSort={true}
                       >
                         Contact
                       </TableHeaderColumn>
@@ -286,6 +290,7 @@ class RegistrationList extends Component {
                         headerAlign="left"
                         width="80"
                         csvHeader="Event Name"
+                        dataSort={true}
                       >
                         Event
                       </TableHeaderColumn>

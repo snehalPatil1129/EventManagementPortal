@@ -153,6 +153,7 @@ class FormList extends Component {
                         dataField="eventName"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Event Name
                       </TableHeaderColumn>
@@ -160,6 +161,7 @@ class FormList extends Component {
                         dataField="sessionName"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Session Name
                       </TableHeaderColumn>
@@ -167,6 +169,7 @@ class FormList extends Component {
                         dataField="formType"
                         headerAlign="left"
                         width="80"
+                        dataSort={true}
                       >
                         Form Type
                       </TableHeaderColumn>

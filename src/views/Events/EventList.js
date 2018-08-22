@@ -166,7 +166,7 @@ class EventList extends Component {
                       dataField="eventName"
                       headerAlign="left"
                       width="100"
-                      dataSort
+                      dataSort={true}
                       csvHeader="Event Name"
                     >
                       Event Name
@@ -175,6 +175,7 @@ class EventList extends Component {
                       dataField="description"
                       headerAlign="left"
                       width="150"
+                      dataSort={true}
                       csvHeader="Description"
                     >
                       Description
@@ -183,6 +184,7 @@ class EventList extends Component {
                       dataField="startDate"
                       headerAlign="left"
                       width="50"
+                      dataSort={true}
                       dataFormat={this.formatStartDate.bind(this)}
                       csvHeader="Start date"
                     >
@@ -192,6 +194,7 @@ class EventList extends Component {
                       dataField="endDate"
                       headerAlign="left"
                       width="50"
+                      dataSort={true}
                       dataFormat={this.formatEndDate.bind(this)}
                       csvHeader="End date"
                     >
@@ -201,6 +204,7 @@ class EventList extends Component {
                       dataField="venue"
                       headerAlign="left"
                       width="50"
+                      dataSort={true}
                       csvHeader="Venue"
                     >
                       Venue
