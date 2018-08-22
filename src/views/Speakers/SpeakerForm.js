@@ -35,6 +35,7 @@ class SpeakerForm extends Component {
     };
   }
   componentDidMount() {
+    this.props.getEvents();
     let isEmpty = !Object.keys(this.props.speakerData).length;
     if (this.props.match.params.id !== undefined && !isEmpty) {
       let Speaker = _.pick(this.props.speakerData, [
@@ -397,7 +398,8 @@ const mapDispatchToProps = dispatch => {
     editSpeakerData: (id, speaker) =>
       dispatch(actions.editSpeakerData(id, speaker)),
     getAttendeeCountForEvent: id =>
-      dispatch(actions.getAttendeeCountForEvent(id))
+      dispatch(actions.getAttendeeCountForEvent(id)),
+    getEvents: () => dispatch(actions.getEvents())
   };
 };
 export default connect(
