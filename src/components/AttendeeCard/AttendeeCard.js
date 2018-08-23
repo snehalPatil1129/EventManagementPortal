@@ -122,9 +122,18 @@ export const generatePdfBulk = (userCollection, eventName, profileName) => {
 
     doc.addPage();
     doc.setFontSize(30); //size in px
-    doc.text(50, 55, fullName, "center" || ""); // x axis , y axis in mm
-    doc.setFontSize(20); //size in px
-    doc.text(50, 65, briefInfo, "center" || "");
+    let name = doc.splitTextToSize(fullName, 100);
+    doc.text(50, 55, name, "center" || ""); // x axis , y axis in mm
+    if (name.length == 1) {
+      doc.setFontSize(20);
+      let info = doc.splitTextToSize(briefInfo, 80);
+      doc.text(50, 65, info, "center" || "");
+    }
+    if (name.length == 2) {
+      doc.setFontSize(20);
+      let info = doc.splitTextToSize(briefInfo, 80);
+      doc.text(50, 78, info, "center" || "");
+    }
     doc.addImage(imgData, "JPEG", 10, 95, 20, 20); // x , y , height, width in mm
     doc.setFontSize(10);
     doc.text(12, 117, attendeeCode || "");
@@ -140,20 +149,20 @@ export const generatePdfSingle = (user, generatedQR) => {
   let briefInfo = user.briefInfo;
   let imgData = generatedQR;
   let attendeeCode = user.attendeeLabel + "-" + user.attendeeCount;
-  // doc.setFontSize(30); //size in px
-  // doc.text(50, 55, fullName, "center" || ""); // x axis , y axis in mm
-  // doc.setFontSize(20); //size in px
-  // doc.text(50, 65, briefInfo, "center" || "");
-  // doc.addImage(imgData, "JPEG", 10, 95, 20, 20); // x , y , height, width in mm
-  // doc.setFontSize(10);
-  // doc.text(12, 117, attendeeCode || "");
-
   doc.setFontSize(30); //size in px
   let name = doc.splitTextToSize(fullName, 100);
   doc.text(50, 55, name, "center" || "");
-  doc.setFontSize(20);
-  let info = doc.splitTextToSize(briefInfo, 80);
-  doc.text(50, 65, info, "center" || "");
+  if (name.length == 1) {
+    doc.setFontSize(20);
+    let info = doc.splitTextToSize(briefInfo, 80);
+    doc.text(50, 65, info, "center" || "");
+  }
+  if (name.length == 2) {
+    doc.setFontSize(20);
+    let info = doc.splitTextToSize(briefInfo, 80);
+    doc.text(50, 78, info, "center" || "");
+  }
+
   doc.addImage(imgData, "JPEG", 10, 95, 20, 20); // x , y , height, width in mm
   doc.setFontSize(10);
   doc.text(12, 117, attendeeCode || "");
