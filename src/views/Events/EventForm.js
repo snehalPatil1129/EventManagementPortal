@@ -21,7 +21,8 @@ class EventForm extends Component {
         venue: "",
         description: "",
         startDate: "",
-        endDate: ""
+        endDate: "",
+        eventLogo: ""
       },
       submitted: false,
       inValidDates: false,
@@ -30,7 +31,8 @@ class EventForm extends Component {
       eventNameRequired: false,
       venueRequired: false,
       startDateRequired: false,
-      loading: false
+      loading: false,
+      invalidEventLogo: false
     };
     this.redirectFunction = this.redirectFunction.bind(this);
   }
@@ -65,7 +67,8 @@ class EventForm extends Component {
       venue: currentEvent.venue,
       description: currentEvent.description,
       startDate: moment(currentEvent.startDate),
-      endDate: moment(currentEvent.endDate)
+      endDate: moment(currentEvent.endDate),
+      eventLogo: currentEvent.eventLogo
     };
     this.setState({
       Event: Event,
@@ -94,7 +97,8 @@ class EventForm extends Component {
     this.setState({
       Event: eventDetailArray,
       eventNameRequired: false,
-      venueRequired: false
+      venueRequired: false,
+      invalidEventLogo: false
     });
   }
 
@@ -102,11 +106,19 @@ class EventForm extends Component {
     let event = { ...this.state.Event };
     let startDate = new Date(event["startDate"]).setHours(0, 0, 0, 0);
     let endDate = new Date(event["endDate"]).setHours(0, 0, 0, 0);
+    let invalidEventLogo = false;
+    var validLogo = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+    if (event.eventLogo !== "") {
+      if (!validLogo.test(event.eventLogo)) {
+        invalidEventLogo = true;
+      }
+    }
     !event.eventName ? this.setState({ eventNameRequired: true }) : null;
     !event.startDate ? this.setState({ startDateRequired: true }) : null;
     !event.endDate ? this.setState({ endDateRequired: true }) : null;
     !event.venue ? this.setState({ venueRequired: true }) : null;
     endDate < startDate ? this.setState({ inValidDates: true }) : null;
+    invalidEventLogo ? this.setState({ invalidEventLogo: true }) : null;
   }
 
   onSubmitHandler() {
@@ -123,6 +135,7 @@ class EventForm extends Component {
     if (
       event.eventName &&
       !this.state.inValidDates &&
+      !this.state.invalidEventLogo &&
       event.venue &&
       event.startDate &&
       event.endDate
@@ -172,6 +185,7 @@ class EventForm extends Component {
     let compRef = this;
     if (
       event.eventName &&
+      !this.state.invalidEventLogo &&
       !this.state.inValidDates &&
       event.venue &&
       event.startDate &&
@@ -200,7 +214,8 @@ class EventForm extends Component {
       eventNameRequired: false,
       venueRequired: false,
       startDateRequired: false,
-      inValidDates: false
+      inValidDates: false,
+      invalidEventLogo: false
     });
   }
 
@@ -320,6 +335,17 @@ class EventForm extends Component {
               maxLength="50"
               value={this.state.Event.venue}
               required={this.state.venueRequired}
+              onchanged={event => this.onChangeHandler(event)}
+            />
+          </Col>
+          <Col sm={{ size: 4, order: 2, offset: 1 }}>
+            <InputElement
+              icon="icon-link"
+              type="text"
+              placeholder="Event Logo"
+              name="eventLogo"
+              inValid={this.state.invalidEventLogo}
+              value={this.state.Event.eventLogo}
               onchanged={event => this.onChangeHandler(event)}
             />
           </Col>
