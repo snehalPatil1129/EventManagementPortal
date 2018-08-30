@@ -8,7 +8,7 @@ const initialState = {
   eventUpdated: false,
   eventDeleted: false,
   errorMessage: "",
-  currentEvent : [],
+  currentEvent: [],
   error: false
 };
 const eventReducer = (state = initialState, action) => {
@@ -18,22 +18,22 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         events: action.events,
         eventList: action.eventList,
-        getEventflag : true
+        getEventflag: true
       };
     case actionTypes.GET_EVENTS_FAIL:
       return {
         ...state,
         error: true,
         errorMessage: action.error,
-        getEventflag : false
+        getEventflag: false
       };
-      case actionTypes.STORE_CURRENT_EVENT:
+    case actionTypes.STORE_CURRENT_EVENT:
       return {
-          ...state,
-          currentEvent: action.currentEvent,
-          eventCreated: false,
-          eventUpdated: false,
-          eventDeleted: false
+        ...state,
+        currentEvent: action.currentEvent,
+        eventCreated: false,
+        eventUpdated: false,
+        eventDeleted: false
       };
     case actionTypes.CREATE_EVENT_SUCCESS:
       const newEvent = {

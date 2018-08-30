@@ -108,7 +108,8 @@ export const createEvent = event => {
     "venue",
     "description",
     "startDate",
-    "endDate"
+    "endDate",
+    "eventLogo"
   ]);
 
   return dispatch => {
@@ -140,7 +141,8 @@ export const updateEvent = event => {
     "venue",
     "description",
     "startDate",
-    "endDate"
+    "endDate",
+    "eventLogo"
   ]);
   return dispatch => {
     axios
