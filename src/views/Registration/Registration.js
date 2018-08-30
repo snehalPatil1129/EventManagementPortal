@@ -351,7 +351,7 @@ class Registration extends Component {
               placeholder="Brief info"
               name="briefInfo"
               icon="icon-info"
-              maxLength="250"
+              maxLength="60"
               value={Registration.briefInfo}
               onchanged={event => this.onChangeInput(event)}
             />

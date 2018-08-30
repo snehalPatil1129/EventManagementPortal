@@ -119,15 +119,24 @@ export const generatePdfBulk = (userCollection, eventName, profileName) => {
     let briefInfo = user.userInfo.briefInfo;
     let imgData = user.userInfo.qrCode;
     let attendeeCode = Label + "-" + Count;
+
     doc.addPage();
     doc.setFontSize(30); //size in px
-    doc.text(10, 30, fullName || " "); // x axis , y axis in mm
-
-    doc.setFontSize(20); //size in px
-    doc.text(15, 45, briefInfo || " ");
-    doc.addImage(imgData, "JPEG", 15, 60, 25, 25); // x , y , height, width in mm
+    let name = doc.splitTextToSize(fullName, 100);
+    doc.text(50, 55, name, "center" || ""); // x axis , y axis in mm
+    if (name.length == 1) {
+      doc.setFontSize(20);
+      let info = doc.splitTextToSize(briefInfo, 80);
+      doc.text(50, 65, info, "center" || "");
+    }
+    if (name.length == 2) {
+      doc.setFontSize(20);
+      let info = doc.splitTextToSize(briefInfo, 80);
+      doc.text(50, 78, info, "center" || "");
+    }
+    doc.addImage(imgData, "JPEG", 10, 95, 20, 20); // x , y , height, width in mm
     doc.setFontSize(10);
-    doc.text(20, 88, attendeeCode || "");
+    doc.text(12, 117, attendeeCode || "");
   });
   doc.save(eventName + " " + profileName + ".pdf");
 };
@@ -140,20 +149,22 @@ export const generatePdfSingle = (user, generatedQR) => {
   let briefInfo = user.briefInfo;
   let imgData = generatedQR;
   let attendeeCode = user.attendeeLabel + "-" + user.attendeeCount;
-  // doc.setFontSize(30); //size in px
-  // doc.text(10, 30, fullName || ""); // x axis , y axis in mm
-  // doc.setFontSize(20); //size in px
-  // doc.text(15, 45, briefInfo || "");
-  // doc.addImage(imgData, "JPEG", 15, 60, 25, 25); // x , y , height, width in mm
-  // doc.setFontSize(10);
-  // doc.text(20, 88, attendeeCode || "");
-  // doc.save(fullName + ".pdf");
   doc.setFontSize(30); //size in px
-  doc.text(25, 48, fullName || ""); // x axis , y axis in mm
-  doc.setFontSize(20); //size in px
-  doc.text(20, 60, briefInfo || "");
-  doc.addImage(imgData, "JPEG", 10, 90, 20, 20); // x , y , height, width in mm
+  let name = doc.splitTextToSize(fullName, 100);
+  doc.text(50, 55, name, "center" || "");
+  if (name.length == 1) {
+    doc.setFontSize(20);
+    let info = doc.splitTextToSize(briefInfo, 80);
+    doc.text(50, 65, info, "center" || "");
+  }
+  if (name.length == 2) {
+    doc.setFontSize(20);
+    let info = doc.splitTextToSize(briefInfo, 80);
+    doc.text(50, 78, info, "center" || "");
+  }
+
+  doc.addImage(imgData, "JPEG", 10, 95, 20, 20); // x , y , height, width in mm
   doc.setFontSize(10);
-  doc.text(12, 112, attendeeCode || "");
+  doc.text(12, 117, attendeeCode || "");
   doc.save(fullName + ".pdf");
 };
