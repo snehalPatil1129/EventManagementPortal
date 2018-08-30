@@ -99,6 +99,7 @@ class SponsorForm extends Component {
       this.setState({ Sponsor: Sponsor, eventRequired: true });
     }
   }
+
   handleCategoryChange(value) {
     if (value !== null) {
       let Sponsor = { ...this.state.Sponsor };
@@ -110,6 +111,45 @@ class SponsorForm extends Component {
       this.setState({ Sponsor: Sponsor, categoryRequired: true });
     }
   }
+
+  //Method to get orderNumber
+  getOrderNumber(category) {
+    let orderNumber = 0;
+    switch (category) {
+      case "Gold Sponsor":
+        orderNumber = 1;
+        break;
+      case "Associate Sponsor":
+        orderNumber = 2;
+        break;
+      case "Award Sponsor":
+        orderNumber = 3;
+        break;
+      case "Lanyard & Badge Sponsor":
+        orderNumber = 4;
+        break;
+      case "Strategic Communication Partner":
+        orderNumber = 5;
+        break;
+      case "Technoloogy Partner":
+        orderNumber = 6;
+        break;
+      case "Ecosystem Partner":
+        orderNumber = 7;
+        break;
+      case "Radio Partner":
+        orderNumber = 8;
+        break;
+      case "Post Event Engagement Partner":
+        orderNumber = 9;
+        break;
+      case "Other":
+        orderNumber = 10;
+        break;
+    }
+    return orderNumber;
+  }
+
   onSubmit() {
     let Sponsor = _.pick(this.state.Sponsor, [
       "name",
@@ -117,8 +157,12 @@ class SponsorForm extends Component {
       "category",
       "description",
       "websiteURL",
-      "imageURL"
+      "imageURL",
+      "orderNumber"
     ]);
+    let orderNumber;
+    orderNumber = this.getOrderNumber(Sponsor.category);
+    Sponsor.orderNumber = orderNumber;
     let invalidImageUrl = false;
     let invalidWebsiteUrl = false;
     var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
